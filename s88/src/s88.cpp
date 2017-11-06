@@ -13,6 +13,7 @@
 
 #include "IMemoryUnit.h"
 #include "IMemoryRegion.h"
+#include "ioutbox.h"
 
 using namespace std;
 
@@ -36,6 +37,18 @@ int main() {
 
 	IMemoryRegion* pMr;
 	IMemoryUnit* pWorldClass;
+
+	IOutbox* outbox;
+
+	outbox->addOutboxItem(NULL);	// Out of the box
+	outbox->addOutboxItem(NULL);
+
+	// Different
+
+
+
+	// Word order
+
 
 	//
 	//	Stick them together
