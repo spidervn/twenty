@@ -15,6 +15,17 @@ public:
 	IMemoryUnit() {};
 	virtual ~IMemoryUnit();
 
+	virtual IMemoryRegion center() = 0;
+
+	virtual IMemoryRegion west() = 0;
+
+	virtual IMemoryRegion east() = 0;
+
+	virtual IMemoryRegion north() = 0;
+
+	virtual IMemoryRegion south() = 0;
+
+	/*
 	virtual IMemoryRegion center()
 	{
 		return IMemoryRegion();
@@ -39,6 +50,8 @@ public:
 	{
 		return IMemoryRegion();
 	}
+	*/
+	// Iterator implementation
 };
 
 #endif /* IMEMORYUNIT_H_ */

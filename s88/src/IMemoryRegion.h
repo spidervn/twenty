@@ -12,10 +12,7 @@
 
 class IMemoryRegion {
 public:
-	virtual std::string getName()
-	{
-		return "";
-	};
+	virtual std::string getName() = 0;
 };
 
 #endif /* IMEMORYREGION_H_ */

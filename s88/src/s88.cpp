@@ -34,8 +34,8 @@ int main() {
 	v1.push_back(1);
 	v1.push_back(2);
 
-	IMemoryRegion mr;
-	IMemoryUnit worldClass;
+	IMemoryRegion* pMr;
+	IMemoryUnit* pWorldClass;
 
 	//
 	//	Stick them together
