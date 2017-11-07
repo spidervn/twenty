@@ -46,12 +46,7 @@ int main() {
 	// Different
 
 
-
 	// Word order
-
-
-	//
-	//	Stick them together
 
 	return 0;
 }
