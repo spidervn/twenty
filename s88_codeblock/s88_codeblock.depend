@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1510105937 source:/home/spider/mycode/github/twenty/s88_codeblock/main.cpp
+	<iostream>
+	"CTestSM.h"
+
+1510105757 /home/spider/mycode/github/twenty/s88_codeblock/include/CTestSM.h
+
