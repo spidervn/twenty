@@ -49,6 +49,14 @@ namespace
 	{
 		int current_calculation;
 
+		template<class Event, class Fsm>
+		void on_entry(Event const& evt, Fsm& fsm)
+		{
+			// Pass data to substates/sub machines
+			launcher_::Launching& s = fms.get_state<launcher_::Launching&>();
+			s.data = fms.current_calculation;
+		}
+
 		template<class Fire>
 		void send_rocket(Fire const& evt)
 		{
