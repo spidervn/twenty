@@ -15,7 +15,57 @@
 #include "IMemoryRegion.h"
 #include "ioutbox.h"
 
+#include <boost/msm/back/state_machine.hpp>
+#include <boost/msm/front/state_machine_def.hpp>
+#include <iostream>
+
+
 using namespace std;
+using namespace boost;
+
+/*
+ * State machine for memory unit
+ *	Including
+ *
+ */
+
+namespace
+{
+	// What do you actually do inside actions/guards?
+	template<class Fire>
+	void send_rocket(Fire const&)
+	{
+		fire_rocket();
+	}
+
+	// Event
+	struct Fire { int direction; };
+	template<class Fire> void send_rocket(Fire const& evt)
+	{
+		fire_rocket(evt.direction);
+	}
+
+	struct launcher_: public msm::front::state_machine_def<launcher_>
+	{
+		int current_calculation;
+
+		template<class Fire>
+		void send_rocket(Fire const& evt)
+		{
+			fire_rocket(evt.direction, current_calculation);
+		}
+
+		//---
+		struct Launching: public msm::front::state<>
+		{
+			template<class Event, class Fsm>
+			void on_entry(Event const& evt, Fsm& fsm)
+			{
+				fire_rocket(evt.direction, fsm.current_calculation);
+			}
+		};
+	};
+};
 
 int main() {
 	cout << "!!!Hello World!!!" << endl;
@@ -26,9 +76,6 @@ int main() {
 	 *	=> Remember item
 	 *		=> 5_breakdown = Parse item into 05 pieces (W, E,N, S, C)
 	 */
-
-	//	Accuracy remember unit
-	//		5_breakdown
 
 	vector<int> v1;
 

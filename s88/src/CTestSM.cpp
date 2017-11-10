@@ -196,7 +196,7 @@ void CTestSM::testStateMachine()
 			{
 				cout << "No transition from state  " << state
 						<< " on event" << typeid(e).name() << endl;
-			}
+			};
 		};
 
 		// Pick a back-end
@@ -214,7 +214,6 @@ void CTestSM::testStateMachine()
 			player p;
 
 			// needed to start the highest-level SM. This will call on_entry and mark tne start of SM
-
 			p.start();
 
 			p.process_event(open_close());	pstate(p);
@@ -233,5 +232,5 @@ void CTestSM::testStateMachine()
 			cout << "stop fsm" << endl;
 			p.stop();
 		}
-	}
+	};
 }
