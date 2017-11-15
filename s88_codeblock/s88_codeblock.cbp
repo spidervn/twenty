@@ -34,8 +34,12 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/CSMExplicitEntry.h" />
+		<Unit filename="include/CSMInternal.h" />
 		<Unit filename="include/CTestSM.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/CSMExplicitEntry.cpp" />
+		<Unit filename="src/CSMInternal.cpp" />
 		<Unit filename="src/CTestSM.cpp" />
 		<Extensions>
 			<code_completion />

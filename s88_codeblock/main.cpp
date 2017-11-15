@@ -3,6 +3,10 @@
 #include <boost/msm/back/state_machine.hpp>
 #include <boost/msm/front/state_machine_def.hpp>
 #include <iostream>
+#include <stdlib.h>
+#include <stdio.h>
+#include "CSMInternal.h"
+#include "CSMExplicitEntry.h"
 
 namespace msm = boost::msm;
 namespace mpl = boost::mpl;
@@ -115,13 +119,12 @@ namespace
 
         struct Paused: public msm::front::state<>
         {
-
         };
 
         typedef Empty initial_state;
 
         // transition actions
-        void start_playback(play const&) { cout << "Player::start_playback\n"; }
+        void start_playback(play const&) { cout << "player::start_playback\n"; }
         void open_drawer(open_close const&) { cout << "player::open_drawer\n"; }
         void close_drawer(open_close const&) { cout << "player::close_drawer\n";}
         void store_cd_info(cd_detected const&) { cout << "player::store_cd_info\n"; }
@@ -199,13 +202,13 @@ namespace
 
         p.start();
 
-        p.process_event(open_close());	pstate(p);
+        p.process_event(open_close()); pstate(p);
         p.process_event(open_close()); pstate(p);
 
         p.process_event(cd_detected("louie, louie", DISK_DVD));	pstate(p);
         p.process_event(cd_detected("louie, louie", DISK_CD)); pstate(p);
 
-        p.process_event(pause());	pstate(p);
+        p.process_event(pause()); pstate(p);
 
         p.process_event(end_pause()); pstate(p);
         p.process_event(pause()); pstate(p);
@@ -217,10 +220,113 @@ namespace
     }
 };
 
+namespace
+{
+    struct trigger {};
+
+    struct switcher: public msm::front::state_machine_def<switcher>
+    {
+        template<class Event, class FSM>
+        void on_entry(Event const&, FSM&)
+        {
+            std::cout << "entering: Swicher" << std::endl;
+        }
+
+        void sayHi()
+        {
+            std::cout << "HI" << std::endl;
+        }
+
+        void sayBye()
+        {
+            std::cout << "Bye" << endl;
+        }
+
+        struct StateOn : public msm::front::state<msm::front::default_base_state, msm::front::sm_ptr>
+        {
+            // every (optional) entry/exit methods get the event passed.
+            template<class Event,class FSM>
+            void on_entry(Event const&, FSM&)
+            {
+                _p->sayHi();
+                cout << "entering: OnState" << std::endl;
+            }
+
+            template<class Event,class FSM>
+            void on_exit(Event const&, FSM& )
+            {
+                _p->sayBye();
+                cout << "leaving: OnState" << endl;
+            }
+
+            void set_sm_ptr(switcher* p)
+            {
+                _p = p;
+            }
+
+            switcher* _p;
+        };
+
+        struct StateOff : public msm::front::state<>
+        {
+            template<class Event, class FSM>
+            void on_entry(Event const&, FSM&)
+            {
+                cout << "entering StateOff" << endl;
+            }
+
+            template<class Event, class FSM>
+            void on_exit(Event const&, FSM&)
+            {
+                cout << "leaving StateOff" << endl;
+            }
+        };
+
+        void func_trigger(trigger)
+        {
+            printf("Function trigger\n");
+        }
+
+        void on_trigger(trigger const&)
+        {
+            printf("ON trigger\n");
+        }
+
+        typedef StateOn initial_state;
+
+        // transition table for player
+        struct transition_table: mpl::vector<
+            // Start    Event       Next    Action      Guard
+            a_row< StateOn, trigger,   StateOff, &switcher::on_trigger>,
+            a_row< StateOff, trigger,   StateOn, &switcher::on_trigger>
+
+        > {};
+    };
+
+    void test2()
+    {
+        boost::msm::back::state_machine<switcher> sw;
+        sw.start();
+        sw.process_event(trigger());
+        sw.process_event(trigger());
+        sw.process_event(trigger());
+        sw.process_event(trigger());
+        sw.stop();
+
+        printf("Test2\r\n");
+    }
+}
+
 int main()
 {
     cout << "Hello world!" << endl;
 
-    test();
+    // test();
+    // test2();
+    CSMInternal sminternal;
+    CSMExplicitEntry smee;
+
+    smee.runTest();
+
     return 0;
 }
