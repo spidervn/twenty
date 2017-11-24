@@ -43,7 +43,7 @@ namespace
 			template <class Event,class FSM>
             void on_entry(Event const&,FSM& ) 
             {
-            		std::cout << "entering: CommandLine" << std::endl;
+            	std::cout << "entering: CommandLine" << std::endl;
             }
 
             template <class Event,class FSM>
