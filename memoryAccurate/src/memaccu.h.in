@@ -1,0 +1,4 @@
+
+// the configured options and settings for Tutorial
+#define MemoryAccurate_VERSION_MAJOR @MemoryAccurate_VERSION_MAJOR@
+#define MemoryAccurate_VERSION_MINOR @MemoryAccurate_VERSION_MINOR@

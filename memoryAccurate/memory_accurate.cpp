@@ -171,6 +171,13 @@ namespace
 	}
 };
 
+// MVC Here 
+namespace mvc
+{
+	// We choose Ncurses for MVC
+	
+}
+
 int main(int argc, char const *argv[])
 {
 	const char* szTest = "Test";
