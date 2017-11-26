@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1511664735 source:/home/spider/mycode/github/twenty/memoryAccurate/app/CMemAccuUI.cpp
+	"CMemAccuUI.h"
+	<stdlib.h>
+	<ncurses.h>
+	<curses.h>
+	<string.h>
+	<menu.h>
+
+1511661505 /home/spider/mycode/github/twenty/memoryAccurate/app/CMemAccuUI.h
+
+1511659668 source:/home/spider/mycode/github/twenty/memoryAccurate/app/main.cpp
+	<iostream>
+	"CMemAccuUI.h"
+
