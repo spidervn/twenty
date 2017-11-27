@@ -6,6 +6,7 @@
 #include <vector>
 #include <ncurses.h>
 #include <menu.h>
+#include "arch/pyramid.h"
 
 class IUIEngine
 {
@@ -102,6 +103,38 @@ public:
 	virtual void stop()
 	{
 	}
+};
+
+class ICursesPyr : public IPyramidPenta
+{
+protected:
+
+public:
+	virtual int initialize()
+	{
+		return 0;	// Init curses&mode + declare all windows/panel/menu
+	}
+
+	virtual int shutdown()
+	{
+		return 0;	// shutdown curses
+	}
+
+	virtual int getModel()
+	{
+		return 0;
+	}
+
+	virtual int main()
+	{
+		return 0;	// main procedure of functions (Million line of code inside here)
+	}
+
+};
+
+class IWindowManagerPyr
+{
+
 };
 
 #endif

@@ -13,5 +13,11 @@ int main() {
 	app.start();
 	app.stop();
 
+	CMemAccuUI ui;
+	ui.run();
+
+	ICursesPyr curses;
+	curses.initialize();
+	curses.shutdown();
 	return 0;
 }

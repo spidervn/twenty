@@ -13,3 +13,17 @@
 	<iostream>
 	"CMemAccuUI.h"
 
+1511647096 source:/home/ducvd/projects/twenty/memoryAccurate/app/CMemAccuUI.cpp
+	"CMemAccuUI.h"
+	<stdlib.h>
+	<ncurses.h>
+	<curses.h>
+	<string.h>
+	<menu.h>
+
+1511647096 /home/ducvd/projects/twenty/memoryAccurate/app/CMemAccuUI.h
+
+1511647096 source:/home/ducvd/projects/twenty/memoryAccurate/app/main.cpp
+	<iostream>
+	"CMemAccuUI.h"
+
