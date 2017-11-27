@@ -2,7 +2,7 @@
 #include "CMemAccuUI.h"
 using namespace std;
 
-int main()
+int main2()
 {
     CMemAccuUI ui;
 

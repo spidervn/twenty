@@ -108,6 +108,8 @@ void CMemAccuUI::run()
             // attron(A_BOLD);
             // printw("%c", ch);
             // attroff(A_BOLD);
+            destroyWindowMenu(mywin, my_menu);
+            mywin = NULL;
         }
 	}
 	refresh();			/* Print it on to the real screen */
@@ -217,4 +219,3 @@ void destroy_win(WINDOW *local_win)
 	wrefresh(local_win);
 	delwin(local_win);
 }
-

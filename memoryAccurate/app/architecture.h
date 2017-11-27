@@ -33,7 +33,10 @@ public:
 class IComponent
 {
 public:
+	virtual int initialize() { return 0; }
+	virtual int shutdown() { return 0; }
 	virtual std::string name() { return ""; }
+	virtual int main() { return 0; }			// Main procedure
 	virtual ~IComponent() {};
 };
 
@@ -51,26 +54,54 @@ public:
 	 * 	i. raw or noraw
 	 * 	ii. cbreak/halfmode/keypad ...
 	 */
-	virtual void initialize() {};
-
+	// Workflow functions
+	virtual void initialize() {};		// Force to call
+	virtual void shutdown() {};			// How to force calling
+	virtual int start() { return 0; }
 	/*
 	 * Show all application logic by curses
 	 */
-	virtual void showApp() {};
 
 	virtual int addWindow() { return 0; }
 	virtual int addPanel() { return 0; }
 	virtual int addMenu(WINDOW* win, MENU* m) { return 0; }
-
 	virtual int declareEvent(int eventCode, void* function) { return 0; }
 
-	virtual int start() { return 0; }
-
-	virtual std::vector<IComponent> getDependencies() { return std::vector<IComponent>(); }
 
 	virtual ~ICursesEngine();
+};
 
+class IMemoryAccurateApp : public IComponent
+{
+	/*
+	 * Rules:
+	 * 	1. MUST call initialize before start
+	 * 	2. Start all Components inside start
+	 *
+	 */
+	std::vector<IComponent> _components;
+public:
+	virtual void registerComponent(IComponent& comp)
+	{
+		_components.push_back(comp);
+	}
 
+	virtual int initialize()
+	{
+		for (int i = 0; i< _components.size(); ++i) {
+			_components[i].initialize();
+		}
+
+		return 1;
+	}
+
+	virtual void start()
+	{
+	}
+
+	virtual void stop()
+	{
+	}
 };
 
 #endif
