@@ -22,7 +22,7 @@ CMemAccuUI::CMemAccuUI()
 
 CMemAccuUI::~CMemAccuUI()
 {
-    //dtor
+    //dtor    
 }
 
 void CMemAccuUI::run()
@@ -52,7 +52,7 @@ void CMemAccuUI::run()
         "Choice 4",
         "Exit"
     };
-
+    
     n_choices = ARRAY_SIZE(choices);
 	my_items = (ITEM **)calloc(n_choices + 1, sizeof(ITEM *));
 

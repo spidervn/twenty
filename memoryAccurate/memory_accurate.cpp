@@ -182,7 +182,7 @@ int main(int argc, char const *argv[])
 {
 	const char* szTest = "Test";
 	printf("%s\r\n", szTest);
-
+	
 	test();
 	return 0;
 }

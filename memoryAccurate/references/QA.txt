@@ -3,3 +3,16 @@ Problem 01.
   Hiển thị tùy chọn tại vị trí con nhắc?
 Problem 02. 
   Lưu toàn bộ lệnh đang gõ và lịch sử phiên hiện hành vào bộ nhớ 
+
+
+Abstraction need
+		i. Clearly design 
+		ii. Not design for change (Change behavior & change system requirements => Must change design)
+		iii. Completely API
+			<=> If fill enough code into Interface => Works
+		iv(*). Deal with not-sure code_able.
+
+1. Design for curses only?
+2. Design for both curses & boost::msm
+3. Design for both curses & other msm
+  
