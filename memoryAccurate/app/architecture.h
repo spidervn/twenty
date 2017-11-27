@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <ncurses.h>
+#include <menu.h>
 
 class IUIEngine
 {
@@ -55,6 +57,14 @@ public:
 	 * Show all application logic by curses
 	 */
 	virtual void showApp() {};
+
+	virtual int addWindow() { return 0; }
+	virtual int addPanel() { return 0; }
+	virtual int addMenu(WINDOW* win, MENU* m) { return 0; }
+
+	virtual int declareEvent(int eventCode, void* function) { return 0; }
+
+	virtual int start() { return 0; }
 
 	virtual std::vector<IComponent> getDependencies() { return std::vector<IComponent>(); }
 
