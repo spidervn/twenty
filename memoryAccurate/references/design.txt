@@ -1,0 +1,19 @@
+Thiết kế chương trình MemoryAccurateApp
+
+1. Định nghĩa chương trình
+    app = { curses_ui, sm, memorylib }
+    cursess_ui= { không quy tắc(quy tắc riêng của curses) }
+    	curses_ui = { ncurses_logic, stdscr, windows, panels, keyboard}
+
+2. Danh mục thuật ngữ
+	i. curses_ui: 		chương trình Ncurses.
+	ii. sm: 			state machine
+	iii. memorylib: 	bộ thư viện hỗ trợ tất cả các cấu trúc dữ liệu & công thức & phương trình cho việc tính toán Memory Accurate.
+
+curses_ui = 
+  - command line util (Nhập dòng lệnh. Hỗ trợ Auto completion/ Lịch sử)
+  - Window memory test (win_mem_test)
+  - Window display score (win_display_score)
+  - Add New memory test (win_add_mem)
+
+3. 

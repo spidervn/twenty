@@ -56,8 +56,8 @@ public:
 	 * 	ii. cbreak/halfmode/keypad ...
 	 */
 	// Workflow functions
-	virtual void initialize() {};		// Force to call
-	virtual void shutdown() {};			// How to force calling
+	virtual int initialize() {};		// Force to call
+	virtual int shutdown() {};			// How to force calling
 	virtual int start() { return 0; }
 	/*
 	 * Show all application logic by curses
@@ -69,7 +69,7 @@ public:
 	virtual int declareEvent(int eventCode, void* function) { return 0; }
 
 
-	virtual ~ICursesEngine();
+	virtual ~ICursesEngine() {};
 };
 
 class IMemoryAccurateApp : public IComponent
@@ -115,6 +115,11 @@ public:
 		return 0;	// Init curses&mode + declare all windows/panel/menu
 	}
 
+	virtual int start()
+	{
+		return 0;
+	}
+
 	virtual int shutdown()
 	{
 		return 0;	// shutdown curses
@@ -129,12 +134,22 @@ public:
 	{
 		return 0;	// main procedure of functions (Million line of code inside here)
 	}
-
 };
 
 class IWindowManagerPyr
 {
+public:
+	virtual void addWindow() {}
+	virtual void destroyWindow() {}
+	virtual ~IWindowManagerPyr() {}
+};
 
+class ICursesWinPyr
+{
+public:
+	virtual void initialize() {};
+	virtual int main() { return 0; };	// Main procedure
+	virtual ~ICursesWinPyr() {};
 };
 
 #endif

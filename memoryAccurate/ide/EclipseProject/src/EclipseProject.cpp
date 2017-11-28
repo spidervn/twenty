@@ -1,23 +1,16 @@
 #include <iostream>
 #include "app/CMemAccuUI.h"
 #include "app/architecture.h"
+#include "app/mainapp/CAppUI.h"
 
 using namespace std;
 
 int main() {
-	IMemoryAccurateApp app;
-	ICursesEngine curses;
+	ICursesPyr* pcur = new CAppUI();
 
-	app.registerComponent(curses);
-	app.name();		// Start the app
-	app.start();
-	app.stop();
+	pcur->initialize();
+	pcur->start();
+	pcur->shutdown();
 
-	CMemAccuUI ui;
-	ui.run();
-
-	ICursesPyr curses;
-	curses.initialize();
-	curses.shutdown();
 	return 0;
 }

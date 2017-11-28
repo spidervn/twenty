@@ -11,7 +11,6 @@
 #include <stdlib.h>
 #include <vector>
 
-
 class IPyramid
 {
 private:
@@ -43,14 +42,7 @@ public:
 
 	IPyramid& getAssist(int i)
 	{
-		if (i < _assists.size())
-		{
-			return _assists[i];
-		}
-		else
-		{
-			return NULL;
-		}
+		return _assists[i];
 	}
 
 	virtual ~IPyramid() {}
@@ -85,7 +77,6 @@ protected:
 	{
 		return HEPTA;
 	}
-
 };
 
 #endif /* APP_ARCH_PYRAMID_H_ */
