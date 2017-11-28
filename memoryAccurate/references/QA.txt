@@ -15,4 +15,15 @@ Abstraction need
 1. Design for curses only?
 2. Design for both curses & boost::msm
 3. Design for both curses & other msm
-  
+
+Problem 4. 
+	Detail Curses app abstraction for CommandLine ?
+Problem 5. 
+	Detail curses app abstraction for QuizWindow ?
+Problem 6. 
+	Detail curses app abstraction for Memory score ?
+Problem 07.
+	Two fds that help ?
+	
+Answer 01.
+

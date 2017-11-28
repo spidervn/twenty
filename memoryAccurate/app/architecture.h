@@ -56,8 +56,8 @@ public:
 	 * 	ii. cbreak/halfmode/keypad ...
 	 */
 	// Workflow functions
-	virtual int initialize() {};		// Force to call
-	virtual int shutdown() {};			// How to force calling
+	virtual int initialize() { return 0; };		// Force to call
+	virtual int shutdown() { return 0; };		// How to force calling
 	virtual int start() { return 0; }
 	/*
 	 * Show all application logic by curses

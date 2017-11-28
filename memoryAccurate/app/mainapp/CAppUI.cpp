@@ -31,6 +31,7 @@ int CAppUI::start()
 int CAppUI::shutdown()
 {
 	endwin();			/* End curses mode		  */
+	return 0;
 }
 
 int CAppUI::getModel()

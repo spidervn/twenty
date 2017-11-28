@@ -8,6 +8,8 @@
 #ifndef APP_MAINAPP_CAPPUI_H_
 #define APP_MAINAPP_CAPPUI_H_
 
+#include <architecture.h>
+
 class CAppUI: public ICursesPyr {
 public:
 	CAppUI();
