@@ -12,6 +12,7 @@
 #include <mainapp/ui/ICursesCmdLine.h>
 #include <mainapp/ui/ICursesWinQuiz.h>
 #include <mainapp/lib/IAutoComplete.h>
+#include <mainapp/lib/ICommandParser.h>
 
 using namespace std;
 
@@ -26,18 +27,15 @@ int CUserCaseDesign::cmdLineExecute()
 	IApp pApp;
 	ICursesCmdLine icmd;
 	ICursesWinQuiz quiz;
-
-	int EVT_ON_CMD = 0;
-	int EVT_DO_MODAL = 1;
-
-	pApp.start();
+	IAutoComplete icomplete;
+	ICommandParser iparser;
 
 	icmd.initialize();
-	icmd.declareEvents();
 
-	icmd.onExeCmd();	// Execute command here
-	quiz.doModal();		// Show quiz here
-						// ...
+	if (iparser.parseCmd(icmd.getModel()) == 0)
+	{
+		icmd.eventHandler()->onExeCmd("");
+	}
 	return 0;
 }
 
@@ -45,13 +43,17 @@ int CUserCaseDesign::cmdLineTyping()
 {
 	IApp app;
 	ICursesCmdLine icmd;
-	IAutoComplete icomplete;
+	ICommandParser iparser;
 	vector<string> vhints;
 
-	icmd.getEventHandle()->onTyping();
-	vhints = icomplete.autoComplete("", "");
-	icmd.viewAutoComplete();
-	icmd.processAutoComplete();
+	icmd.eventHandler()->onTyping();
+	vhints = iparser.autoComplete("", "");
+	icmd.grammarWork()->showAutoComplete(vhints);	// User interation here
+
+	icmd.grammarWork()->onSelect();					// User select onComplete
+	icmd.grammarWork()->onCancel();					// User do not select onComplete
+
+	// ON_ENTER inside GrammarWork auto complete?
 
 	return 0;
 }
