@@ -33,6 +33,8 @@ Answer04.
 		registerEvents()	// Register every Event Handler
 
 Problem 08. Curses independent design ?
+Problem 09. Design clearly works for ICurses & ICmdLine?
+	
 Answers 08:
 	The design:
 		ICurses = 
@@ -50,3 +52,6 @@ Answers 08:
 		
 		=> This design do not care about what curses is, because ICurses is totally independent.
 
+Answer 09.
+	The design:
+		

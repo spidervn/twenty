@@ -7,6 +7,7 @@
 #include <ncurses.h>
 #include <menu.h>
 #include "arch/pyramid.h"
+#include "arch/abstract.h"
 
 class IUIEngine
 {
@@ -105,7 +106,7 @@ public:
 	}
 };
 
-class ICursesPyr : public IPyramidPenta
+class ICursesPyr : public IPyramidPenta, public IEventDispatching
 {
 protected:
 
