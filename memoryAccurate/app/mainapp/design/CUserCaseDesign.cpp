@@ -9,6 +9,11 @@
 
 #include <architecture.h>
 #include <mainapp/IApp.h>
+#include <mainapp/ui/ICursesCmdLine.h>
+#include <mainapp/ui/ICursesWinQuiz.h>
+#include <mainapp/lib/IAutoComplete.h>
+
+using namespace std;
 
 CUserCaseDesign::CUserCaseDesign() {
 }
@@ -29,20 +34,33 @@ int CUserCaseDesign::cmdLineExecute()
 
 	icmd.initialize();
 	icmd.declareEvents();
-	icmd.registerEvent(EVT_ON_CMD, &quiz, EVT_DO_MODAL);
 
-
-
+	icmd.onExeCmd();	// Execute command here
+	quiz.doModal();		// Show quiz here
+						// ...
 	return 0;
 }
 
 int CUserCaseDesign::cmdLineTyping()
 {
+	IApp app;
+	ICursesCmdLine icmd;
+	IAutoComplete icomplete;
+	vector<string> vhints;
+
+	icmd.getEventHandle()->onTyping();
+	vhints = icomplete.autoComplete("", "");
+	icmd.viewAutoComplete();
+	icmd.processAutoComplete();
+
 	return 0;
 }
 
 int CUserCaseDesign::cmdLineShowAutoCompletion()
 {
+	IApp app;
+	ICursesCmdLine icmd;
+
 	return 0;
 }
 
