@@ -9,6 +9,7 @@
 
 #include <architecture.h>
 #include <mainapp/IApp.h>
+#include <mainapp/CAppUI.h>
 #include <mainapp/ui/ICursesCmdLine.h>
 #include <mainapp/ui/ICursesWinQuiz.h>
 #include <mainapp/lib/IAutoComplete.h>
@@ -42,18 +43,26 @@ int CUserCaseDesign::cmdLineExecute()
 int CUserCaseDesign::cmdLineTyping()
 {
 	IApp app;
+	CAppUI appUI;
 	ICursesCmdLine icmd;
 	ICommandParser iparser;
+	ICursesPyr curses;
 	vector<string> vhints;
 
+	int EVT_WAITKEY = 0;
+	int EVT_WORK = 1;
+
 	icmd.eventHandler()->onTyping();
-	vhints = iparser.autoComplete("", "");
-	icmd.grammarWork()->showAutoComplete(vhints);	// User interation here
+	vhints = iparser.autoComplete(icmd.getModel(), "");
+
+	icmd.grammarWork()->showAutoComplete(vhints);	// User interation here (Do Modal)
+	icmd.sendEvent(EVT_WORK, &curses);				// Curses work
+	curses.onEvent(EVT_WORK, &icmd);
 
 	icmd.grammarWork()->onSelect();					// User select onComplete
 	icmd.grammarWork()->onCancel();					// User do not select onComplete
 
-	// ON_ENTER inside GrammarWork auto complete?
+	appUI.windowManager()->setActiveWindow(&icmd);
 
 	return 0;
 }
@@ -67,6 +76,11 @@ int CUserCaseDesign::cmdLineShowAutoCompletion()
 }
 
 int CUserCaseDesign::cmdLineDoQuiz()
+{
+	return 0;
+}
+
+int CUserCaseDesign::cmdLineOnResize()
 {
 	return 0;
 }

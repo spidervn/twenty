@@ -17,7 +17,7 @@ public:
 	int cmdLineTyping();
 	int cmdLineShowAutoCompletion();
 	int cmdLineDoQuiz();
-
+	int cmdLineOnResize();
 
 };
 

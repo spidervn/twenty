@@ -8,9 +8,11 @@
 #ifndef APP_MAINAPP_CAPPUI_H_
 #define APP_MAINAPP_CAPPUI_H_
 
+#include <stdlib.h>
 #include <architecture.h>
+#include <arch/abstract.h>
 
-class CAppUI: public ICursesPyr {
+class CAppUI: public ICursesPyr, public IEventDispatching {
 public:
 	CAppUI();
 	virtual ~CAppUI();
@@ -24,6 +26,15 @@ public:
 	int getModel();
 
 	int main();
+
+	class WindowManager;
+	WindowManager* windowManager() { return NULL; }
+};
+
+class CAppUI::WindowManager
+{
+public:
+	int setActiveWindow(IPyramid* win) { return 0; }
 };
 
 #endif /* APP_MAINAPP_CAPPUI_H_ */

@@ -9,11 +9,12 @@
 #define APP_MAINAPP_UI_ICURSESCMDLINE_H_
 
 #include <architecture.h>
+#include <arch/abstract.h>
 #include <string>
 #include <vector>
 #include "ICmdLineEventHandler.h"
 
-class ICursesCmdLine : public IPyramidPenta {
+class ICursesCmdLine : public IPyramidPenta, public IEventDispatching {
 public:
 	ICursesCmdLine();
 	virtual ~ICursesCmdLine();

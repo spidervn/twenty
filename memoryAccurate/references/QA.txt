@@ -31,3 +31,22 @@ Answer04.
 	ICursesCmdLine
 		initialize()
 		registerEvents()	// Register every Event Handler
+
+Problem 08. Curses independent design ?
+Answers 08:
+	The design:
+		ICurses = 
+			{
+				curses program and
+				the most complicated source code and implementation ever in Human history :) ;
+				and it works in a seperated thread (not interrupt anyone)
+			}
+
+		IOtherProgram = { Program which works with Ncurses }
+
+		Design is 
+			IOtherProgram->sendEvent(icurses)
+			ICurses->sendEvent(iotherprogram)
+		
+		=> This design do not care about what curses is, because ICurses is totally independent.
+
