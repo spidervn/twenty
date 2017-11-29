@@ -26,4 +26,8 @@ Problem 07.
 	Two fds that help ?
 	
 Answer 01.
-
+	
+Answer04.
+	ICursesCmdLine
+		initialize()
+		registerEvents()	// Register every Event Handler

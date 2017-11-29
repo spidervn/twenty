@@ -11,6 +11,8 @@
 #include <architecture.h>
 
 class ICursesCmdLine : public IPyramid {
+private:
+	class EventHandler;
 public:
 	ICursesCmdLine();
 	virtual ~ICursesCmdLine();

@@ -10,10 +10,13 @@
 
 #include <architecture.h>
 
-class ICursesWinQuiz  {
+class ICursesWinQuiz : public IPyramid  {
 public:
 	ICursesWinQuiz();
 	virtual ~ICursesWinQuiz();
+
+	virtual void doModal() {};
+
 };
 
 #endif /* APP_MAINAPP_UI_ICURSESWINQUIZ_H_ */

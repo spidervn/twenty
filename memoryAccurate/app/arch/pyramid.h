@@ -45,6 +45,10 @@ public:
 		return _assists[i];
 	}
 
+	void registerEvent(int EVENT, IPyramid* pDestination, int EVENT_DESTINATION)
+	{
+	}
+
 	virtual ~IPyramid() {}
 };
 
