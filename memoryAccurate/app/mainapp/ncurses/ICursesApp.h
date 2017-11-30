@@ -9,6 +9,7 @@
 #define APP_MAINAPP_NCURSES_ICURSESAPP_H_
 
 #include <arch/pyramid.h>
+#include "ICursesUI.h"
 
 // Including raw/noraw/halfdelay/keypad
 struct CursesMode

@@ -21,6 +21,12 @@ Problem 07. Two fds that help ?
 Problem 08. Curses independent design ?
 Problem 09. Design clearly works for ICurses & ICmdLine?
 Problem 10. Design for two ICurses.UI works concurrently with ICurses ?
+Problem 11. Design for keyboard handling works with two ICursesUI Conccurently?
+Problem 12. Design for mouse & keyboard handling works with two ICursesUI ?
+Problem 13. Design for ICmdLine & IWinQuiz ?
+Problem 14. Design for IWinQuiz & IDB ?
+Problem 15. Design list command support ?
+Problem 16. Current cursor autocomplete design ?
 
 Answer 01.
 Answer04.
@@ -98,3 +104,103 @@ Answer 10.
 		onMouseEvent(e)
 			u_active.mouseEvent(e)
 
+Answer 11.
+----------
+	u1 = ICurses.UI1
+	u2 = ICurses.UI2
+	ic = ICurses (Curses Main)
+
+	Flow chart of Keyboard Handling
+
+		ic.AddUI(u1);
+		ic.AddUI(u2);
+
+		ic.start();
+		u1.start();
+		u2.start();
+
+		ic.onKeyboard(e)
+		u = ic.getActive()
+		u.onKeyboard(e)
+
+
+Answer 12.
+----------
+	ic = ICurses
+	u1 = ICurses.UI
+	u2 = ICurses.UI
+
+	Keyboard/Mouse Handling
+		ic.addUI(u1);
+		ic.addUI(u2);
+
+		ic.start();
+		u1.start();
+		u2.start();
+
+		e1 = ic.onKeyboard();
+		e2 = ic.onMouse();
+
+		ic.enqueueEvent(e1);
+		ic.enqueueEvent(e2);
+
+		us = ic.getActives();
+		for u : us		
+			ic.sendEvent(u, e1)
+			ic.sendEvent(u, e2)
+
+Answer 13.
+----------
+	ic = ICurses
+	icm = ICmdLine
+	grm = ICmdLine.Grammar
+	iqu = IWinQuiz
+
+	icm.add(grm)
+	ic.addUI(icm)
+	ic.addUI(iqr)
+
+	CmdLine
+		icm.onKeyboard()	
+			icm.onTyping()			
+			icm.Grammar.show()
+			icm.Grammar.onSelect()
+		icm.onEnter
+			icm.Grammar.check()
+			icm.onExeCmd()
+		icm.onMouse()
+			___	
+	WinQuiz
+		ic.setActive(iqu)
+		iqu.onEnter()
+		iqu.onCancel()
+
+	Curses
+		ic.initialize()
+		ic.start()
+			iqu.onKeyboard()
+			iqu.onEnter()
+
+
+	Note - More about abstraction
+		prog(n) = { a program named N which has 1..billions lines of ultimately complex code }
+
+		parallel([a1,a2,...,an]) = 
+			{ A program which has n program run parallel }
+
+		sequence([a1, a2, ..., an]) = 
+			{ A program which has n program run in sequence }
+
+		prog(curses)
+			= sequence([
+				prog(init),
+				prog(main_curses),
+				prog(end)
+			])
+
+	
+Answer 14.
+----------
+	
+Answer 15.
+----------
