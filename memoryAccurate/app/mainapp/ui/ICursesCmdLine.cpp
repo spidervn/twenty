@@ -10,7 +10,7 @@
 
 using namespace std;
 
-ICursesCmdLine::ICursesCmdLine():pEvent(NULL)
+ICursesCmdLine::ICursesCmdLine():pEvent(NULL), pGrammar(NULL)
 {
 }
 
@@ -20,5 +20,7 @@ ICursesCmdLine::~ICursesCmdLine() {
 
 int ICursesCmdLine::initialize()
 {
+	pGrammar->initialize();	// Init UI here
+
 	return 0;
 }

@@ -8,11 +8,8 @@
 #include "ICursesWinNewStick.h"
 
 ICursesWinNewStick::ICursesWinNewStick() {
-	// TODO Auto-generated constructor stub
-
 }
 
 ICursesWinNewStick::~ICursesWinNewStick() {
-	// TODO Auto-generated destructor stub
 }
 

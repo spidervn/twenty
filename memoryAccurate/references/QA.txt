@@ -1,4 +1,3 @@
-
 Problem 01. 
   Hiển thị tùy chọn tại vị trí con nhắc?
 Problem 02. 
@@ -12,46 +11,90 @@ Abstraction need
 			<=> If fill enough code into Interface => Works
 		iv(*). Deal with not-sure code_able.
 
-1. Design for curses only?
-2. Design for both curses & boost::msm
-3. Design for both curses & other msm
+Problem 01. Design for curses only?
+Problem 02. Design for both curses & boost::msm
+Problem 03. Design for both curses & other msm
+Problem 04. Detail Curses app abstraction for CommandLine ?
+Problem 05. Detail curses app abstraction for QuizWindow ?
+Problem 06. Detail curses app abstraction for Memory score ?
+Problem 07. Two fds that help ?
+Problem 08. Curses independent design ?
+Problem 09. Design clearly works for ICurses & ICmdLine?
+Problem 10. Design for two ICurses.UI works concurrently with ICurses ?
 
-Problem 4. 
-	Detail Curses app abstraction for CommandLine ?
-Problem 5. 
-	Detail curses app abstraction for QuizWindow ?
-Problem 6. 
-	Detail curses app abstraction for Memory score ?
-Problem 07.
-	Two fds that help ?
-	
 Answer 01.
-	
 Answer04.
+----------
 	ICursesCmdLine
 		initialize()
 		registerEvents()	// Register every Event Handler
-
-Problem 08. Curses independent design ?
-Problem 09. Design clearly works for ICurses & ICmdLine?
-	
-Answers 08:
+Answers 08
+----------
 	The design:
 		ICurses = 
-			{
-				curses program and
-				the most complicated source code and implementation ever in Human history :) ;
-				and it works in a seperated thread (not interrupt anyone)
-			}
+		{
+			curses program and
+			the most complicated source code and implementation ever in Human history :) ;
+			and it works in a seperated thread (not interrupt anyone)
+		}
 
 		IOtherProgram = { Program which works with Ncurses }
-
 		Design is 
 			IOtherProgram->sendEvent(icurses)
 			ICurses->sendEvent(iotherprogram)
-		
 		=> This design do not care about what curses is, because ICurses is totally independent.
-
 Answer 09.
-	The design:
-		
+----------
+	The design
+	ICurses
+	{
+		Most-inner-interaction complex in the world
+	}
+
+	ICmdLine
+	{
+		1 billions line of code in one file.
+	}
+
+	Assume that everything (which is not unlogic) is impossible. 
+	Design for every detail interface between ICmdLine & ICurses (curses lib).
+
+		ICmdLine.Model = 
+		{
+			string typo;
+			string currentword;
+			vector<string> typo_history;
+			vector<string> out_put_history;
+		}
+
+		ICurses.UI
+		{
+			// Could implement whatever UI needs for Terminal inside ncurses ability
+		}
+
+		ICmdLine.UI : public ICurses.UI {}
+
+	IProgram = 
+	{ 
+		ICmdLine.UI;
+		ICmdLine.Model;
+		ICurses
+	}
+
+Answer 10.
+----------
+	Use cases 
+		u1 = ICmdLine.UI
+		u2 = ICmdLine.UI
+	For u1 & u2 take input together => u1 input first then switch to u2 (and vice-versa)
+		ICurses.focus(u1)
+		ICurses.focus(u2)
+	For u1 & u2 waiting Keyboard together
+		u_active = { u which is active }
+		ICurses.waitKey()
+			=> u_active => Recive
+	For u1 & u2 waiting Mouse event
+		u_active = { u which is active }
+		onMouseEvent(e)
+			u_active.mouseEvent(e)
+

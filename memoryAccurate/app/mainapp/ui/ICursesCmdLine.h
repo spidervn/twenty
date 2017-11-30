@@ -10,11 +10,12 @@
 
 #include <architecture.h>
 #include <arch/abstract.h>
+#include <mainapp/ncurses/ICursesUI.h>
 #include <string>
 #include <vector>
 #include "ICmdLineEventHandler.h"
 
-class ICursesCmdLine : public IPyramidPenta, public IEventDispatching {
+class ICursesCmdLine : public ICursesUI, public IEventDispatching {
 public:
 	ICursesCmdLine();
 	virtual ~ICursesCmdLine();
@@ -42,6 +43,7 @@ public:
 class ICursesCmdLine::GrammarWork : public IPyramidPenta
 {
 public:
+	int initialize() { return 0; }
 	void showAutoComplete(std::vector<std::string> list) {};
 	int onSelect() { return 0; }
 	int onCancel() { return 0; }

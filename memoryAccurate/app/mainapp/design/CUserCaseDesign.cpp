@@ -14,6 +14,7 @@
 #include <mainapp/ui/ICursesWinQuiz.h>
 #include <mainapp/lib/IAutoComplete.h>
 #include <mainapp/lib/ICommandParser.h>
+#include <mainapp/ncurses/ICursesApp.h>
 
 using namespace std;
 
@@ -42,7 +43,6 @@ int CUserCaseDesign::cmdLineExecute()
 
 int CUserCaseDesign::cmdLineTyping()
 {
-	IApp app;
 	CAppUI appUI;
 	ICursesCmdLine icmd;
 	ICommandParser iparser;
@@ -59,6 +59,7 @@ int CUserCaseDesign::cmdLineTyping()
 	icmd.sendEvent(EVT_WORK, &curses);				// Curses work
 	curses.onEvent(EVT_WORK, &icmd);
 
+	// Keyboard enter here ?
 	icmd.grammarWork()->onSelect();					// User select onComplete
 	icmd.grammarWork()->onCancel();					// User do not select onComplete
 

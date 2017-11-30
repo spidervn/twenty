@@ -11,8 +11,9 @@
 #include <stdlib.h>
 #include <architecture.h>
 #include <arch/abstract.h>
+#include <mainapp/ncurses/ICursesApp.h>
 
-class CAppUI: public ICursesPyr, public IEventDispatching {
+class CAppUI: public ICursesApp, public IEventDispatching {
 public:
 	CAppUI();
 	virtual ~CAppUI();
