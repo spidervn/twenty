@@ -21,10 +21,13 @@ public:
 	virtual ~ICursesCmdLine();
 
 	int initialize();						// Declare all needs here
+	int run();
 	std::string getModel() { return ""; }	// Current Model (Command)
+
 
 	class EventHandler;
 	class GrammarWork;
+	class Toolkit;
 	EventHandler* eventHandler() { return pEvent;}
 	GrammarWork* grammarWork() { return pGrammar;}
 private:

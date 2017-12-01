@@ -2,15 +2,18 @@
 #include "app/CMemAccuUI.h"
 #include "app/architecture.h"
 #include "app/mainapp/CAppUI.h"
+#include "app/mainapp/ncurses/ICursesApp.h"
+#include "app/mainapp/ui/ICursesCmdLine.h"
 
 using namespace std;
 
 int main() {
-	ICursesPyr* pcur = new CAppUI();
+	ICursesCmdLine* icmd = new ICursesCmdLine();
 
-	pcur->initialize();
-	pcur->start();
-	pcur->shutdown();
+	icmd->initialize();
+	icmd->run();
 
+
+	delete icmd;
 	return 0;
 }

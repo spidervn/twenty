@@ -8,11 +8,8 @@
 #include "ICursesWinQuiz.h"
 
 ICursesWinQuiz::ICursesWinQuiz() {
-	// TODO Auto-generated constructor stub
-
 }
 
 ICursesWinQuiz::~ICursesWinQuiz() {
-	// TODO Auto-generated destructor stub
 }
 

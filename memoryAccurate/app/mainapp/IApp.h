@@ -15,7 +15,7 @@ public:
 	IApp();
 	virtual ~IApp();
 
-	virtual void start();
+	virtual void start() {};
 
 };
 

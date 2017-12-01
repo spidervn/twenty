@@ -8,11 +8,8 @@
 #include <mainapp/ncurses/ICursesApp.h>
 
 ICursesApp::ICursesApp() {
-	// TODO Auto-generated constructor stub
-
 }
 
 ICursesApp::~ICursesApp() {
-	// TODO Auto-generated destructor stub
 }
 
