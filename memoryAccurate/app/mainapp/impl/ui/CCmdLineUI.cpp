@@ -120,6 +120,10 @@ int CCmdLineUI::run()
 	            Toolkit::destroyWindowMenu(mywin, my_menu);
 	            mywin = Toolkit::createWindowMenu(y,x+1,my_menu);
 	        }
+	        else if (ch == 'q' or ch =='Q')
+	        {
+	        	break;
+	        }
 	        else
 	        {	// printw("The pressed key is ");
 	            // attron(A_BOLD);
