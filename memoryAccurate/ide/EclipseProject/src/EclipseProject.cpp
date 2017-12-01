@@ -3,12 +3,12 @@
 #include "app/architecture.h"
 #include "app/mainapp/CAppUI.h"
 #include "app/mainapp/ncurses/ICursesApp.h"
-#include "app/mainapp/ui/ICursesCmdLine.h"
+#include "app/mainapp/impl/ui/CCmdLineUI.h"
 
 using namespace std;
 
 int main() {
-	ICursesCmdLine* icmd = new ICursesCmdLine();
+	ICursesCmdLine* icmd = new CCmdLineUI();
 
 	icmd->initialize();
 	icmd->run();

@@ -1,11 +1,11 @@
 /*
- * ICursesCmdLine.cpp
+ * CCmdLineUI.cpp
  *
- *  Created on: Nov 28, 2017
+ *  Created on: Dec 1, 2017
  *      Author: ducvd
  */
 
-#include "ICursesCmdLine.h"
+#include <mainapp/impl/ui/CCmdLineUI.h>
 #include <string>
 #include <stdlib.h>
 #include <ncurses.h>			/* ncurses.h includes stdio.h */
@@ -16,7 +16,7 @@
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 #define CTRLD 	4
 
-class ICursesCmdLine::Toolkit
+class CCmdLineUI::Toolkit
 {
 public:
 	static void print_in_middle(WINDOW *win, int starty, int startx, int width, char *string, chtype color);
@@ -27,24 +27,22 @@ public:
 	static void destroy_win(WINDOW *local_win);
 };
 
-using namespace std;
-
-ICursesCmdLine::ICursesCmdLine():pEvent(NULL), pGrammar(NULL)
-{
+CCmdLineUI::CCmdLineUI() {
+	pEvent = new EventHandler();
+	pGrammar = new GrammarWork();
 }
 
-ICursesCmdLine::~ICursesCmdLine() {
-
+CCmdLineUI::~CCmdLineUI() {
+	delete pEvent;
+	delete pGrammar;
 }
 
-int ICursesCmdLine::initialize()
+int CCmdLineUI::initialize()
 {
-	pGrammar->initialize();	// Init UI here
-
 	return 0;
 }
 
-int ICursesCmdLine::run()
+int CCmdLineUI::run()
 {
 	int ch;
 	    ITEM **my_items;
@@ -143,7 +141,7 @@ int ICursesCmdLine::run()
 	return 0;
 }
 
-void ICursesCmdLine::Toolkit::print_in_middle(WINDOW *win, int starty, int startx, int width, char *string, chtype color)
+void CCmdLineUI::Toolkit::print_in_middle(WINDOW *win, int starty, int startx, int width, char *string, chtype color)
 {	int length, x, y;
 	float temp;
 
@@ -166,7 +164,7 @@ void ICursesCmdLine::Toolkit::print_in_middle(WINDOW *win, int starty, int start
 	refresh();
 }
 
-WINDOW* ICursesCmdLine::Toolkit::createWindowMenu(int starty, int startx, MENU* my_menu)
+WINDOW* CCmdLineUI::Toolkit::createWindowMenu(int starty, int startx, MENU* my_menu)
 {
     WINDOW* my_menu_win = newwin(10, 40, starty, startx);
     keypad(my_menu_win, TRUE);
@@ -184,7 +182,7 @@ WINDOW* ICursesCmdLine::Toolkit::createWindowMenu(int starty, int startx, MENU* 
 	return my_menu_win;
 }
 
-void ICursesCmdLine::Toolkit::destroyWindowMenu(WINDOW* win, MENU* menu)
+void CCmdLineUI::Toolkit::destroyWindowMenu(WINDOW* win, MENU* menu)
 {
     if (win != NULL)
     {
@@ -194,7 +192,7 @@ void ICursesCmdLine::Toolkit::destroyWindowMenu(WINDOW* win, MENU* menu)
     }
 }
 
-void ICursesCmdLine::Toolkit::destroyWin(WINDOW* win)
+void CCmdLineUI::Toolkit::destroyWin(WINDOW* win)
 {
     if (win != NULL)
     {
@@ -205,7 +203,7 @@ void ICursesCmdLine::Toolkit::destroyWin(WINDOW* win)
     }
 }
 
-WINDOW* ICursesCmdLine::Toolkit::create_newwin(int height, int width, int starty, int startx)
+WINDOW* CCmdLineUI::Toolkit::create_newwin(int height, int width, int starty, int startx)
 {	WINDOW *local_win;
 
 	local_win = newwin(height, width, starty, startx);
@@ -217,7 +215,7 @@ WINDOW* ICursesCmdLine::Toolkit::create_newwin(int height, int width, int starty
 	return local_win;
 }
 
-void ICursesCmdLine::Toolkit::destroy_win(WINDOW *local_win)
+void CCmdLineUI::Toolkit::destroy_win(WINDOW *local_win)
 {
 	/* box(local_win, ' ', ' '); : This won't produce the desired
 	 * result of erasing the window. It will leave it's four corners
@@ -238,3 +236,4 @@ void ICursesCmdLine::Toolkit::destroy_win(WINDOW *local_win)
 	wrefresh(local_win);
 	delwin(local_win);
 }
+

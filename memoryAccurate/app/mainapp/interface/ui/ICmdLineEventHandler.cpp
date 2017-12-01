@@ -5,7 +5,7 @@
  *      Author: ducvd
  */
 
-#include <mainapp/ui/ICmdLineEventHandler.h>
+#include <mainapp/interface/ui/ICmdLineEventHandler.h>
 
 ICmdLineEventHandler::ICmdLineEventHandler() {
 }
