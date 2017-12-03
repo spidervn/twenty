@@ -8,11 +8,8 @@
 #include <mainapp/lib/IAutoComplete.h>
 
 IAutoComplete::IAutoComplete() {
-
-
 }
 
 IAutoComplete::~IAutoComplete() {
-	// TODO Auto-generated destructor stub
 }
 

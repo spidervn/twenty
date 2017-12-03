@@ -1,0 +1,35 @@
+Ducvd
+December 2017
+
+	Lotus Memory
+
+Status of this memo
+   This document is the design for LotusMemory.
+   LotusMemory is an applicaton for practicing memory, encouraging people to remember-less but more accurate about their memory in life.
+
+1. Introduction
+
+
+2. Design 
+	This program uses ncurses library for User-interface development; which provides text-based UI in terminal.
+
+3. Pyramid philosophy
+	Pyramid is a philosophy which state that and Object has not more than N public method (Constructors & destructors is not counted); and has not more than N public child sub Pyramid.
+
+	The purpose of this philosophy make easier for coding management. 
+
+	For example:
+		A normal class definition
+		class X
+		{
+		public:
+
+		}
+
+4. Design
+	Interface design
+
+5. Database
+	SQLite
+
+

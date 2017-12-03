@@ -23,10 +23,9 @@ public:
 	virtual void initialize(CursesMode) {};
 	virtual void registerUI(ICursesUI* ui) {}
 	virtual ICursesUI* getActiveUI() { return NULL; }
+
 	virtual int onKeyPress() { return 0; };
 	virtual int onMouseEvent() { return 0; };
-
 };
-
 
 #endif /* APP_MAINAPP_NCURSES_ICURSESAPP_H_ */

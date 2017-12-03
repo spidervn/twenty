@@ -3,7 +3,6 @@ Problem 01.
 Problem 02. 
   Lưu toàn bộ lệnh đang gõ và lịch sử phiên hiện hành vào bộ nhớ 
 
-
 Abstraction need
 		i. Clearly design 
 		ii. Not design for change (Change behavior & change system requirements => Must change design)
@@ -25,8 +24,15 @@ Problem 11. Design for keyboard handling works with two ICursesUI Conccurently?
 Problem 12. Design for mouse & keyboard handling works with two ICursesUI ?
 Problem 13. Design for ICmdLine & IWinQuiz ?
 Problem 14. Design for IWinQuiz & IDB ?
+
 Problem 15. Design list command support ?
 Problem 16. Current cursor autocomplete design ?
+Problem 17. Datastructure for ICmdLine?
+Problem 18. Datastructure for IWinquiz ?
+Problem 19. Design for doing quiz ?
+
+Problem 20. Window resize ?
+
 
 Answer 01.
 Answer04.
@@ -194,27 +200,57 @@ Answer 13.
 		])
 
 	Note - More about abstraction
-		prog(n) = { a program named N which has 1..billions lines of ultimately complex code }
+		prog(n, input, output) = { a program named N which has 1..billions lines of ultimately complex code }
 
-		parallel([a1,a2,...,an]) = 
+		parallel([a1,a2,...,an], input, output) = 
 			{ A program which has n program run parallel }
 
-		sequence([a1, a2, ..., an]) = 
+		sequence([a1, a2, ..., an], input, output) = 
 			{ A program which has n program run in sequence }
 
-		unknown([a1,a2,...,an])
+		unknown([a1,a2,...,an], input, output)
 			= { a program contains n program a1,a2,...,an. And these program can work in any order, any-contrainst, from simplest to most complex }
 
 		prog(curses)
-		= sequence([
-			prog(init),
-			prog(main_curses),
-			prog(end)
-		])
-		prog(main_curses)
-
+			= sequence([
+				prog(init),
+				prog(main_curses),
+				prog(end)
+			])
+		prog(curses)[main_curses] = 
+			unknown([ prog(keyboard), prog(mouse), prog(icmdline), prog(iquiz) ])
 Answer 14.
 ----------
-	
+	iquiz = IWinquiz
+	idb = IDB 
+
+	iquiz.doModal()
+	iquiz.onCompleteQuiz()
+	idb.saveHighScore()
+
 Answer 15.
 ----------
+	Commands:
+		quiz find
+		quiz do
+		quiz add
+		exit
+
+Answer 16
+----------
+	You have to rewrite Ncurses on specific position.
+	Redraw whole screen :)
+	or Redraw just the current line.
+
+Answer 17.
+----------
+	ICmdLine
+	{
+		string currentLine;
+		string currentWord;
+		int currenCursor;
+		vector<string> cmdHistory;
+		vector<string> output;
+	}
+
+	

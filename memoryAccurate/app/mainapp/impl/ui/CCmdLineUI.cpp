@@ -13,6 +13,8 @@
 #include <string.h>
 #include <menu.h>
 
+#include <mainapp/interface/model/cmdline_model.h>
+
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 #define CTRLD 	4
 
@@ -25,6 +27,8 @@ public:
 	static void destroyWin(WINDOW* win);
 	static WINDOW *create_newwin(int height, int width, int starty, int startx);
 	static void destroy_win(WINDOW *local_win);
+
+	static void handleResiz();
 };
 
 CCmdLineUI::CCmdLineUI() {
@@ -45,103 +49,178 @@ int CCmdLineUI::initialize()
 int CCmdLineUI::run()
 {
 	int ch;
-	    ITEM **my_items;
-		MENU *my_menu;
-		WINDOW *my_menu_win;
-		WINDOW* mywin = NULL;
-		int n_choices, i;
+	ITEM **my_items;
+	MENU *my_menu;
+	WINDOW* mywin = NULL;
+	int n_choices, i;
+	int PAIR_BLUE = 1;
+	int PAIR_MAGENTA = 2;
+	int PAIR_GREEN = 3;
+	bool isCursor = false;
+	CmdLineModel cmdLine;
 
-		initscr();			/* Start curses mode 		*/
-		raw();				/* Line buffering disabled	*/
-		start_color();
-		keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
-		// noecho();			/* Don't echo() while we do getch */
-	    // halfdelay(10);
+	cmdLine.outputHistory.push_back("ls -lah");
+	cmdLine.outputHistory.push_back("tpcdump 0001");
 
-	    init_pair(1, COLOR_RED, COLOR_BLACK);
-		init_pair(2, COLOR_CYAN, COLOR_BLACK);
+	initscr();			/* Start curses mode 		*/
+	raw();				/* Line buffering disabled	*/
+	start_color();
+	keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
+	// noecho();			/* Don't echo() while we do getch */
+	// halfdelay(10);
 
-	    // Menu Initialization
-	    const char *choices[] = {
-	        "Choice 1",
-	        "Choice 2",
-	        "Choice 3",
-	        "Choice 4",
-	        "Exit"
-	    };
+	init_pair(PAIR_BLUE, COLOR_WHITE, PAIR_BLUE);
+	init_pair(PAIR_MAGENTA, COLOR_WHITE, COLOR_MAGENTA);
+	init_pair(PAIR_GREEN, COLOR_WHITE, COLOR_GREEN);
 
-	    n_choices = ARRAY_SIZE(choices);
-		my_items = (ITEM **)calloc(n_choices + 1, sizeof(ITEM *));
+	// Menu Initialization
+	const char *choices[] = {
+		"Choice 1",
+		"Choice 2",
+		"Choice 3",
+		"Choice 4",
+		"Exit"
+	};
 
-		for(i = 0; i < n_choices; ++i) {
-	        my_items[i] = new_item(choices[i], choices[i]);
-	    }
+	n_choices = ARRAY_SIZE(choices);
+	my_items = (ITEM **)calloc(n_choices + 1, sizeof(ITEM *));
 
-		my_items[n_choices] = (ITEM *)NULL;
-		my_menu = new_menu((ITEM **)my_items);
-		set_menu_format(my_menu, 5, 1);
-	    set_menu_mark(my_menu, " * "); /* Set menu mark to the string " * " */
+	for(i = 0; i < n_choices; ++i) {
+		my_items[i] = new_item(choices[i], choices[i]);
+		set_item_userptr(my_items[i], NULL);
+	}
 
-	    printw("Type any character to see it in bold\n");
-		while (1)
+	my_items[n_choices] = (ITEM *)NULL;
+	my_menu = new_menu((ITEM **)my_items);
+
+	set_menu_format(my_menu, 5, 1);
+	set_menu_fore(my_menu,  COLOR_PAIR(PAIR_BLUE) | A_REVERSE);
+	set_menu_back(my_menu, COLOR_PAIR(PAIR_MAGENTA));
+	set_menu_back(my_menu, COLOR_PAIR(PAIR_GREEN));
+	set_menu_mark(my_menu, " * "); /* Set menu mark to the string " * " */
+
+
+	printw("Type any character to see it in bold\n");
+	for (unsigned int i=0;i<cmdLine.outputHistory.size();i++)
+	{
+		char szBuff[200];
+		sprintf(szBuff, "# %s\r\n", cmdLine.outputHistory[i].c_str());
+		printw(szBuff);
+	}
+
+	while (1)
+	{
+		ch = getch();			/* If raw() hadn't been called
+									* we have to press enter before it
+									* gets to the program 		*/
+		if(ch == KEY_F(1))		/* Without keypad enabled this will */
 		{
-	        ch = getch();			/* If raw() hadn't been called
-	                                    * we have to press enter before it
-	                                    * gets to the program 		*/
-	        if(ch == KEY_F(1))		/* Without keypad enabled this will */
-	        {
-	            printw("F1 Key pressed");/*  not get to us either	*/
-	                                        /* Without noecho() some ugly escape
-	                                         * charachters might have been printed
-	                                         * on screen			*/
-	            break;
-	        }
-	        else if (ch == KEY_ENTER)
-	        {
-	            int y, x;
-	            //printw("\r\n");
-	            char szTemp[200];
-
-	            getyx(stdscr, y, x);
-	            sprintf(szTemp, "%d-%d", y, x);
-	            printw(szTemp);
-
-	            mvwprintw(stdscr, y+1, x, "#");
-	        }
-	        else if (ch == 'a' or ch == 'A')
-	        {
-	            // post_menu(my_menu);
-	            // refresh();
-	            int y, x;
-	            getyx(stdscr, y, x);
-
-	            //destroy_win(mywin);
-	            //mywin = create_newwin(10,10,y,x+1);
-	            Toolkit::destroyWindowMenu(mywin, my_menu);
-	            mywin = Toolkit::createWindowMenu(y,x+1,my_menu);
-	        }
-	        else if (ch == 'q' or ch =='Q')
-	        {
-	        	break;
-	        }
-	        else
-	        {	// printw("The pressed key is ");
-	            // attron(A_BOLD);
-	            // printw("%c", ch);
-	            // attroff(A_BOLD);
-	            Toolkit::destroyWindowMenu(mywin, my_menu);
-	            mywin = NULL;
-	        }
+			printw("F1 Key pressed");/*  not get to us either	*/
+										/* Without noecho() some ugly escape
+										 * charachters might have been printed
+										 * on screen			*/
+			break;
 		}
-		refresh();			/* Print it on to the real screen */
+		else if (ch == KEY_ENTER || ch == 13)
+		{
+			int y, x;
+			//printw("\r\n");
+			char szTemp[200];
+			getyx(stdscr, y, x);
+			sprintf(szTemp, "%d-%d", y, x);
+			printw(szTemp);
 
-		unpost_menu(my_menu);
-	    free_menu(my_menu);
-	    for(i = 0; i < n_choices; ++i) {
-	        free_item(my_items[i]);
-	    }
-	    // getch();			/* Wait for user input */
-		endwin();			/* End curses mode		  */
+			mvwprintw(stdscr, y+1, 0, "#");
+			move(y+1,0);
+		}
+		else if (ch == 'r' || ch == 'R')
+		{
+			if (isCursor)
+				curs_set(1);
+			else
+				curs_set(0);
+			isCursor = !isCursor;
+		}
+		else if (ch == 'a' or ch == 'A')
+		{
+			int y, x;
+			int c;
+			bool bExitMenu = false;
+			getyx(stdscr, y, x);
+			char szMenuSelected[255];
+
+			// Turn off echo
+			noecho();
+			Toolkit::destroyWindowMenu(mywin, my_menu);
+			mywin = Toolkit::createWindowMenu(y+1,x,my_menu);
+
+			while((c = wgetch(mywin)) != 'q' and !bExitMenu)
+			{
+				switch(c)
+				{
+					case KEY_DOWN:
+						menu_driver(my_menu, REQ_DOWN_ITEM);
+						break;
+					case KEY_UP:
+						menu_driver(my_menu, REQ_UP_ITEM);
+						break;
+					case KEY_NPAGE:
+						menu_driver(my_menu, REQ_SCR_DPAGE);
+						break;
+					case KEY_PPAGE:
+						menu_driver(my_menu, REQ_SCR_UPAGE);
+						break;
+					case 10:
+					case 13:
+						bExitMenu = true;
+						ITEM* curItem;
+						curItem = current_item(my_menu);
+						strcpy(szMenuSelected, item_name(curItem));
+						break;
+				}
+				wrefresh(mywin);
+			}
+
+			// Turn on echo
+			echo();
+			move(y,x);
+			// clrtoeol();
+			mvprintw(y,x, szMenuSelected);
+			Toolkit::destroyWindowMenu(mywin, my_menu);
+			mywin = NULL;
+
+			wrefresh(stdscr);
+		}
+		else if (ch == 'q' or ch =='Q')
+		{
+			break;
+		}
+		else if (ch == 8)
+		{
+			// Back-space
+			int y, x;
+			getyx(stdscr, y, x);
+			mvwprintw(stdscr,y,x-1, " ");
+		}
+		else
+		{
+			// printw("The pressed key is ");
+			// attron(A_BOLD);
+			// printw("%c", ch);
+			// attroff(A_BOLD);
+			Toolkit::destroyWindowMenu(mywin, my_menu);
+			mywin = NULL;
+		}
+	}
+	refresh();			/* Print it on to the real screen */
+
+	unpost_menu(my_menu);
+	free_menu(my_menu);
+	for(i = 0; i < n_choices; ++i) {
+		free_item(my_items[i]);
+	}
+	// getch();			/* Wait for user input */
+	endwin();			/* End curses mode		  */
 	return 0;
 }
 
@@ -170,15 +249,15 @@ void CCmdLineUI::Toolkit::print_in_middle(WINDOW *win, int starty, int startx, i
 
 WINDOW* CCmdLineUI::Toolkit::createWindowMenu(int starty, int startx, MENU* my_menu)
 {
-    WINDOW* my_menu_win = newwin(10, 40, starty, startx);
+    WINDOW* my_menu_win = newwin(10, 40, 0, 0); // starty, startx);
     keypad(my_menu_win, TRUE);
     set_menu_win(my_menu, my_menu_win);
     set_menu_sub(my_menu, derwin(my_menu_win, 6, 38, 3, 1));
 
-    box(my_menu_win, 0, 0);
-	mvwaddch(my_menu_win, 2, 0, ACS_LTEE);
-	mvwhline(my_menu_win, 2, 1, ACS_HLINE, 38);
-	mvwaddch(my_menu_win, 2, 39, ACS_RTEE);
+    // box(my_menu_win, 0, 0);
+	//mvwaddch(my_menu_win, 2, 0, ACS_LTEE);
+	//mvwhline(my_menu_win, 2, 1, ACS_HLINE, 38);
+	//mvwaddch(my_menu_win, 2, 39, ACS_RTEE);
 
     post_menu(my_menu);
 	wrefresh(my_menu_win);
@@ -191,6 +270,7 @@ void CCmdLineUI::Toolkit::destroyWindowMenu(WINDOW* win, MENU* menu)
     if (win != NULL)
     {
         unpost_menu(menu);
+        wborder(win, ' ', ' ', ' ',' ',' ',' ',' ',' ');
         wrefresh(win);
         delwin(win);
     }

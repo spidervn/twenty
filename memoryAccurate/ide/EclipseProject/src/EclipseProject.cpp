@@ -13,7 +13,6 @@ int main() {
 	icmd->initialize();
 	icmd->run();
 
-
 	delete icmd;
 	return 0;
 }
