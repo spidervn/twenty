@@ -5,7 +5,7 @@
  *      Author: ducvd
  */
 
-#include <mainapp/impl/ui/CCmdLineUI.h>
+#include "mainapp/impl/ui/CCmdLineUI.h"
 #include <string>
 #include <stdlib.h>
 #include <ncurses.h>			/* ncurses.h includes stdio.h */
@@ -13,10 +13,12 @@
 #include <string.h>
 #include <menu.h>
 
-#include <mainapp/interface/model/cmdline_model.h>
+#include "mainapp/interface/model/cmdline_model.h"
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 #define CTRLD 	4
+
+using namespace std;
 
 class CCmdLineUI::Toolkit
 {
@@ -34,6 +36,7 @@ public:
 CCmdLineUI::CCmdLineUI() {
 	pEvent = new EventHandler();
 	pGrammar = new GrammarWork();
+	pUI = new UI();
 }
 
 CCmdLineUI::~CCmdLineUI() {
@@ -58,6 +61,7 @@ int CCmdLineUI::run()
 	int PAIR_GREEN = 3;
 	bool isCursor = false;
 	CmdLineModel cmdLine;
+	string strCurrentCmd("");
 
 	cmdLine.outputHistory.push_back("ls -lah");
 	cmdLine.outputHistory.push_back("tpcdump 0001");
@@ -66,7 +70,7 @@ int CCmdLineUI::run()
 	raw();				/* Line buffering disabled	*/
 	start_color();
 	keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
-	// noecho();			/* Don't echo() while we do getch */
+	noecho();			/* Don't echo() while we do getch */
 	// halfdelay(10);
 
 	init_pair(PAIR_BLUE, COLOR_WHITE, PAIR_BLUE);
@@ -101,10 +105,12 @@ int CCmdLineUI::run()
 
 
 	printw("Type any character to see it in bold\n");
+	printw("Type any character to see it in bold\n");
+	printw("Type any character to see it in bold\n");
 	for (unsigned int i=0;i<cmdLine.outputHistory.size();i++)
 	{
 		char szBuff[200];
-		sprintf(szBuff, "# %s\r\n", cmdLine.outputHistory[i].c_str());
+		sprintf(szBuff, "# %s\n", cmdLine.outputHistory[i].c_str());
 		printw(szBuff);
 	}
 
@@ -121,17 +127,27 @@ int CCmdLineUI::run()
 										 * on screen			*/
 			break;
 		}
-		else if (ch == KEY_ENTER || ch == 13)
+		else if (ch == KEY_ENTER || ch == 13 || ch == 10)
 		{
 			int y, x;
 			//printw("\r\n");
-			char szTemp[200];
+			printw("\n");
+			printw("# ");
+			strCurrentCmd = "";
+			// mvwprintw(stdscr, y+1, 0, "# ");
+			// move(y+1,0);
+		}
+		else if (ch == KEY_LEFT)
+		{
+			int y,x;
 			getyx(stdscr, y, x);
-			sprintf(szTemp, "%d-%d", y, x);
-			printw(szTemp);
-
-			mvwprintw(stdscr, y+1, 0, "#");
-			move(y+1,0);
+			move(y,x-1);
+		}
+		else if (ch == KEY_RIGHT)
+		{
+			int y,x;
+			getyx(stdscr, y, x);
+			move(y,x+1);
 		}
 		else if (ch == 'r' || ch == 'R')
 		{
@@ -144,17 +160,21 @@ int CCmdLineUI::run()
 		else if (ch == 'a' or ch == 'A')
 		{
 			int y, x;
+			int menuy, menux;
+			int screenRows, screenCols;
 			int c;
 			bool bExitMenu = false;
 			getyx(stdscr, y, x);
+			getmaxyx(stdscr, screenRows, screenCols);
 			char szMenuSelected[255];
 
 			// Turn off echo
 			noecho();
+			pUI->layout()->arrangePopup(y+1, x,screenCols, screenCols, 10, 40, menuy, menux);
 			Toolkit::destroyWindowMenu(mywin, my_menu);
-			mywin = Toolkit::createWindowMenu(y+1,x,my_menu);
+			mywin = Toolkit::createWindowMenu(menuy,menux,my_menu);
 
-			while((c = wgetch(mywin)) != 'q' and !bExitMenu)
+			while(!bExitMenu && (c = wgetch(mywin)) != 'q' )
 			{
 				switch(c)
 				{
@@ -195,12 +215,36 @@ int CCmdLineUI::run()
 		{
 			break;
 		}
-		else if (ch == 8)
+		else if (ch == KEY_BACKSPACE || ch == 8 || ch == 9)
 		{
+			printw("----");
 			// Back-space
-			int y, x;
+			/*
+			if (strCurrentCmd.length() > 0)
+			{
+				int y, x;
+				// delch();
+				strCurrentCmd.erase(strCurrentCmd.end()-1);
+			}
+			*/
+
+			int y,x;
 			getyx(stdscr, y, x);
-			mvwprintw(stdscr,y,x-1, " ");
+			move(y,x-1);
+			delch();
+			move(y,x-2);
+			delch();
+			move(y,x-3);
+			delch();
+			refresh();
+		}
+		else if (ch =='s' || ch =='S')
+		{
+			int screenY, screenX;
+			char szTmp[200];
+			getmaxyx(stdscr, screenY, screenX);
+			sprintf(szTmp, "ScreenWH=%d,%d", screenY, screenX);
+			printw(szTmp);
 		}
 		else
 		{
@@ -208,8 +252,12 @@ int CCmdLineUI::run()
 			// attron(A_BOLD);
 			// printw("%c", ch);
 			// attroff(A_BOLD);
-			Toolkit::destroyWindowMenu(mywin, my_menu);
-			mywin = NULL;
+			// Toolkit::destroyWindowMenu(mywin, my_menu);
+			// mywin = NULL;
+			strCurrentCmd = strCurrentCmd + (char)ch;
+			char szTemp[2];
+			sprintf(szTemp, "%c", ch);
+			printw(szTemp);
 		}
 	}
 	refresh();			/* Print it on to the real screen */
@@ -249,10 +297,10 @@ void CCmdLineUI::Toolkit::print_in_middle(WINDOW *win, int starty, int startx, i
 
 WINDOW* CCmdLineUI::Toolkit::createWindowMenu(int starty, int startx, MENU* my_menu)
 {
-    WINDOW* my_menu_win = newwin(10, 40, 0, 0); // starty, startx);
+    WINDOW* my_menu_win = newwin(10, 40, starty, startx); // starty, startx);
     keypad(my_menu_win, TRUE);
     set_menu_win(my_menu, my_menu_win);
-    set_menu_sub(my_menu, derwin(my_menu_win, 6, 38, 3, 1));
+    set_menu_sub(my_menu, derwin(my_menu_win, 10,38,0,0) ); // derwin(my_menu_win, 6, 38, 3, 1));
 
     // box(my_menu_win, 0, 0);
 	//mvwaddch(my_menu_win, 2, 0, ACS_LTEE);

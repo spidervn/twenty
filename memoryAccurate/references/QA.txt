@@ -33,6 +33,13 @@ Problem 19. Design for doing quiz ?
 
 Problem 20. Window resize ?
 
+Problem Tree(2,1) 1
+	Problem 1. Enter => Go to the next line 
+	Problem 1.1. Draw cursor # at the current line
+	Problem 1.2. Process <- (Backspace key)
+	Problem 2. Show menu just under the Current key
+	Problem 2.1. Show menu on the top of current word if Screen too small to display under the current Key
+	Problem 2.2. Remove the Menu's Window's topbar.
 
 Answer 01.
 Answer04.
@@ -253,4 +260,27 @@ Answer 17.
 		vector<string> output;
 	}
 
-	
+
+Answer ProblemTree(2,1)
+---------------
+	Problem 1.
+		Go to the next line by printw("\n") instead of move(y+1,x)
+		[Done]
+	Problem 1.1. 
+		[Done]
+	Problem 1.2.
+		Backspace Key <=> 
+	Problem 2.
+		Change (y,x) position => [Done]
+	Problem 2.1.
+		int CCmdLineUI::UI::Layout::arrangePopup(
+			int candidatey, 
+			int candidatex, 
+			int screenRows, 
+			int screenCols, 
+			int popupRows, 
+			int popupCols, 
+			int& outputy, 
+			int& outputx)
+	Problem 2.2.
+		Change set_menu_sub() parameters.
