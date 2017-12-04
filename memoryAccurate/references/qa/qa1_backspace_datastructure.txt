@@ -1,0 +1,21 @@
+*----------------------------------------------------------------------*
+| Question about backspace and Data structure                          |
++----------------------------------------------------------------------+
+| 1 | How to handle backspace key pressed ?                            |
+|___|                                                                  |
+|     ____________________________________________________________     |
+||[1.1] When the cursor reach the boundary of the sceen, how does app  |
+||      react with arrow keys pressed ?                                |
+||    ____________________________________________________________     |
+||[1.2] Vietnamese keyboard testing ?                                  |
+|______________________________________________________________________|
+| 2 | Datastructure for Cmdline ?                                      |
+|___|                                                                  |
+|     ____________________________________________________________     |
+||[2.1] How to handle cmdline history after program exit ?             |
+||    ____________________________________________________________     |
+||[2.2] How to process Grammar formular for each command ?             |
+*----------------------------------------------------------------------*
+
+Answer
+-----

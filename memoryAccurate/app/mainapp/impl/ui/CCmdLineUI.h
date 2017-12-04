@@ -29,6 +29,8 @@ private:
 	IEventHandler* pEvent;
 	IGrammarWork* pGrammar;
 	UI* pUI;
+
+	void drawModel();
 };
 
 class CCmdLineUI::EventHandler : public IEventHandler

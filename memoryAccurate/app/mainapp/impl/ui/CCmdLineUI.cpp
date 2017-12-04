@@ -12,6 +12,7 @@
 #include <curses.h>
 #include <string.h>
 #include <menu.h>
+#include <csignal>				// Signal
 
 #include "mainapp/interface/model/cmdline_model.h"
 
@@ -30,7 +31,7 @@ public:
 	static WINDOW *create_newwin(int height, int width, int starty, int startx);
 	static void destroy_win(WINDOW *local_win);
 
-	static void handleResiz();
+	static void handleResize(int );
 };
 
 CCmdLineUI::CCmdLineUI() {
@@ -72,6 +73,7 @@ int CCmdLineUI::run()
 	keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
 	noecho();			/* Don't echo() while we do getch */
 	// halfdelay(10);
+	signal(SIGWINCH, Toolkit::handleResize);
 
 	init_pair(PAIR_BLUE, COLOR_WHITE, PAIR_BLUE);
 	init_pair(PAIR_MAGENTA, COLOR_WHITE, COLOR_MAGENTA);
@@ -217,7 +219,7 @@ int CCmdLineUI::run()
 		}
 		else if (ch == KEY_BACKSPACE || ch == 8 || ch == 9)
 		{
-			printw("----");
+			// printw("----");
 			// Back-space
 			/*
 			if (strCurrentCmd.length() > 0)
@@ -232,11 +234,13 @@ int CCmdLineUI::run()
 			getyx(stdscr, y, x);
 			move(y,x-1);
 			delch();
+			/*
 			move(y,x-2);
 			delch();
 			move(y,x-3);
 			delch();
 			refresh();
+			*/
 		}
 		else if (ch =='s' || ch =='S')
 		{
@@ -270,6 +274,11 @@ int CCmdLineUI::run()
 	// getch();			/* Wait for user input */
 	endwin();			/* End curses mode		  */
 	return 0;
+}
+
+void CCmdLineUI::drawModel()
+{
+	CmdLineModel model;
 }
 
 void CCmdLineUI::Toolkit::print_in_middle(WINDOW *win, int starty, int startx, int width, char *string, chtype color)
@@ -369,3 +378,7 @@ void CCmdLineUI::Toolkit::destroy_win(WINDOW *local_win)
 	delwin(local_win);
 }
 
+void CCmdLineUI::Toolkit::handleResize(int )
+{
+	printw("resize windows");
+}
