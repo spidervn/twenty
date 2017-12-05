@@ -7,6 +7,9 @@
 
 
 #include "CCmdLineUI.h"
+#include <string>
+
+using namespace std;
 
 void CCmdLineUI::EventHandler::onEnter()
 {
@@ -32,8 +35,13 @@ void CCmdLineUI::EventHandler::onEnter()
 
 void CCmdLineUI::EventHandler::onExeCmd(std::string)
 {
+	CCmdLineUI* pCmdUI =  vertex<CCmdLineUI>();	
 }
 
 void CCmdLineUI::EventHandler::onTyping()
 {
+	string currentCmd;
+	string currentWord;
+
+	
 }

@@ -14,7 +14,8 @@
 class IPyramid
 {
 private:
-	IPyramid* pParent;
+	IPyramid* pMaster;
+	std::vector<IPyramid*> _vertex;
 	std::vector<IPyramid*> _vertex;
 	// 	Network
 	// 	SubPyramids
@@ -22,6 +23,7 @@ private:
 	//	Ecosystem
 	//  AddNetwork
 	//
+	std::map<int,IPyramid*> _populations;
 protected:
 
 	static const int TRIO = 3;
@@ -33,27 +35,50 @@ protected:
 		return TRIO;
 	}
 
+	void declarePopulation(IPyramid* p)
+	{
+		_vertex.push_back(p);
+		int type_code = typeid(*p).hash_code();
+
+		_populations[type_code] = p;
+	}
+
 public:
 	IPyramid()
 	{
-		pParent = NULL;
+		pMaster = NULL;
 	}
 
-	IPyramid(IPyramid* parent)
+	IPyramid(IPyramid* master)
 	{
-		pParent = parent;
+		pMaster = master;
 	}
 
+	IPyramid* pyramidHierarchy()
+	{
+		// Return all related-hierarchy for this pyramid
+		// An array of 
+		return NULL;
+	}
+
+	// Py only support one Parent ?
 	int addVertex(IPyramid* py)
 	{
-		if (py->pParent != NULL)
+		if (py->pMaster != NULL)
 		{
-			return 2;	// Already has parent
+			return 2;	// Already has master
 		}
 		else if (_vertex.size() < pyramid_cout())
 		{
 			_vertex.push_back(py);
-			return 0;					// Success
+
+			IPyramid* pEnum = pMaster;
+			while (pEnum->pMaster != NULL)
+			{
+				declarePopulation(pEnum->pMaster);
+				pEnum = pEnum->pMaster;
+			}
+			return 0;	// Success
 		}
 		else
 		{
@@ -61,7 +86,7 @@ public:
 		}
 	}
 
-	IPyramid& vertex(int i)
+	IPyramid* vertex(int i)
 	{
 		return _vertex[i];
 	}
@@ -69,6 +94,15 @@ public:
 	template <class T>
 	T* vertex()
 	{
+		// Find by type
+		if (typeof(T) == typeof(*pMaster))
+		{
+			return pMaster;
+		}
+		else 
+		{
+			if (_populations.)
+		}
 		return NULL;
 	}
 
@@ -81,7 +115,6 @@ class IPyramidTrio : public IPyramid
 public:
 	IPyramidTrio()
 	{
-
 	};
 };
 

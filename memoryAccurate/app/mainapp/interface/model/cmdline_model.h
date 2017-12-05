@@ -18,5 +18,11 @@ typedef struct
 
 } CmdLineModel;
 
+typedef struct 
+{
+	std::string code;
+	std::string name;
+	std::vector<std::string> memUnits;
+} QuizModel;
 
 #endif /* APP_MAINAPP_INTERFACE_CMDLINE_MODEL_H_ */
