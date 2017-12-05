@@ -8,5 +8,5 @@
 
 CCmdLineUI::UI::UI()
 {
-	pLayout = NULL;
+	// pLayout = NULL;
 }

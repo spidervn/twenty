@@ -30,7 +30,11 @@ private:
 	IGrammarWork* pGrammar;
 	UI* pUI;
 
+	IPyramid* pUILayout;
+
+
 	void drawModel();
+	void designPyramid();
 };
 
 class CCmdLineUI::EventHandler : public IEventHandler
@@ -40,7 +44,6 @@ public:
 	void onExeCmd(std::string);
 	void onTyping();
 };
-
 
 class CCmdLineUI::GrammarWork : public IGrammarWork
 {

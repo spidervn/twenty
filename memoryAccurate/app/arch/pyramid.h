@@ -14,6 +14,13 @@
 #include <typeinfo>
 #include <type_traits>
 
+/*
+@TODO:
+	- Good Naming for Vertex; Ally class
+*/
+
+class IPyramidArchitecture;
+
 class IPyramid
 {
 private:
@@ -26,6 +33,7 @@ private:
 	//  AddNetwork
 	//
 	std::map<int,IPyramid*> _populations;
+	friend class IPyramidArchitecture;
 protected:
 
 	static const int TRIO = 3;
@@ -59,13 +67,6 @@ public:
 		pMaster = master;
 	}
 
-	IPyramid* pyramidHierarchy()
-	{
-		// Return all related-hierarchy for this pyramid
-		// An array of 
-		return NULL;
-	}
-
 	// Py only support one Parent ?
 	int addVertex(IPyramid* py)
 	{
@@ -73,6 +74,12 @@ public:
 		{
 			return 2;	// Already has master
 		}
+		/*
+		else if (std::is_same<decltype(py->_pAllyPrototype), decltype(this)>::value)
+		{
+			return 4;	// Unsupported Ally
+		}
+		*/
 		else if (_vertex.size() < pyramid_cout())
 		{
 			_vertex.push_back(py);
@@ -96,8 +103,22 @@ public:
 		return _vertex[i];
 	}
 
-	template <class T>
+	template<class T>
 	T* vertex()
+	{
+		for (int i=0;i<_vertex.size();i++)
+		{
+			if (std::is_same<T*,decltype(_vertex[i])>::value)
+			{
+				return (T*)_vertex[i];
+			}
+		}
+
+		return NULL;
+	}
+
+	template <class T>
+	T* vertexHigher()
 	{
 		// Find by type
 		if (std::is_same<T,decltype(*pMaster)>::value)
@@ -118,8 +139,9 @@ public:
 	virtual ~IPyramid() {}
 };
 
+
 // Families which not contains more than 3 public methods (not count Constructors & destructors)
-class IPyramidTrio : public IPyramid
+class IPyramidTrio : public IPyramid 
 {
 public:
 	IPyramidTrio()
@@ -128,7 +150,7 @@ public:
 };
 
 // Families which not contains more than 5 public methods (not count Constructors & destructors)
-class IPyramidPenta : public IPyramid
+class IPyramidPenta : public IPyramid 
 {
 protected:
 	virtual int pyramid_cout()
@@ -147,5 +169,18 @@ protected:
 		return HEPTA;
 	}
 };
+
+// Deprecated
+class IPyramidArchitecture
+{
+private:
+	void tiePyramid(IPyramid* pHigher, IPyramid* pLower)
+	{
+		pHigher->addVertex(pLower);
+	}
+public:
+	virtual void designPyramid()=0;
+};
+
 
 #endif /* APP_ARCH_PYRAMID_H_ */

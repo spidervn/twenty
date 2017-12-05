@@ -38,11 +38,20 @@ CCmdLineUI::CCmdLineUI() {
 	pEvent = new EventHandler();
 	pGrammar = new GrammarWork();
 	pUI = new UI();
+
+
 }
 
 CCmdLineUI::~CCmdLineUI() {
 	delete pEvent;
 	delete pGrammar;
+}
+
+void CCmdLineUI::designPyramid()
+{
+	tiePyramid(this, pUI);
+	tiePyramid(this, pEvent);
+	tiePyramid(this, pGrammar);
 }
 
 int CCmdLineUI::initialize()

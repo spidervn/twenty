@@ -15,7 +15,7 @@
 struct CursesMode
 {};
 
-class ICursesApp: public IPyramidPenta {
+class ICursesApp: public IPyramidPenta<void> {
 public:
 	ICursesApp();
 	virtual ~ICursesApp();
