@@ -81,11 +81,9 @@ int CCmdLineUI::run()
 
 	// Menu Initialization
 	const char *choices[] = {
-		"Choice 1",
-		"Choice 2",
-		"Choice 3",
-		"Choice 4",
-		"Exit"
+		"add",
+		"doquiz",
+		"quit",
 	};
 
 	n_choices = ARRAY_SIZE(choices);
@@ -279,6 +277,15 @@ int CCmdLineUI::run()
 void CCmdLineUI::drawModel()
 {
 	CmdLineModel model;
+	move(0,0);
+
+	for (int i=0;i<model.outputHistory.size();i++)
+	{
+		printw(model.outputHistory[i].c_str());
+		printw("\n");
+	}
+	printw(model.currentCommand.c_str());
+	printw("\n");
 }
 
 void CCmdLineUI::Toolkit::print_in_middle(WINDOW *win, int starty, int startx, int width, char *string, chtype color)

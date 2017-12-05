@@ -36,10 +36,11 @@ private:
 class CCmdLineUI::EventHandler : public IEventHandler
 {
 public:
-	void onEnter() {}
-	void onExeCmd(std::string) {}
-	void onTyping() {}
+	void onEnter();
+	void onExeCmd(std::string);
+	void onTyping();
 };
+
 
 class CCmdLineUI::GrammarWork : public IGrammarWork
 {

@@ -14,7 +14,14 @@
 class IPyramid
 {
 private:
-	std::vector<IPyramid> _assists;
+	IPyramid* pParent;
+	std::vector<IPyramid*> _vertex;
+	// 	Network
+	// 	SubPyramids
+	//	Neighbors
+	//	Ecosystem
+	//  AddNetwork
+	//
 protected:
 
 	static const int TRIO = 3;
@@ -27,12 +34,26 @@ protected:
 	}
 
 public:
-	int addAssist(IPyramid py)
+	IPyramid()
 	{
-		if (_assists.size() < pyramid_cout())
+		pParent = NULL;
+	}
+
+	IPyramid(IPyramid* parent)
+	{
+		pParent = parent;
+	}
+
+	int addVertex(IPyramid* py)
+	{
+		if (py->pParent != NULL)
 		{
-			_assists.push_back(py);
-			return 0;
+			return 2;	// Already has parent
+		}
+		else if (_vertex.size() < pyramid_cout())
+		{
+			_vertex.push_back(py);
+			return 0;					// Success
 		}
 		else
 		{
@@ -40,9 +61,15 @@ public:
 		}
 	}
 
-	IPyramid& getAssist(int i)
+	IPyramid& vertex(int i)
 	{
-		return _assists[i];
+		return _vertex[i];
+	}
+
+	template <class T>
+	T* vertex()
+	{
+		return NULL;
 	}
 
 	virtual ~IPyramid() {}
