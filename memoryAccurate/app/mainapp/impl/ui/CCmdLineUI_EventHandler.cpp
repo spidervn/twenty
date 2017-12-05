@@ -35,7 +35,7 @@ void CCmdLineUI::EventHandler::onEnter()
 
 void CCmdLineUI::EventHandler::onExeCmd(std::string)
 {
-	CCmdLineUI* pCmdUI =  vertex<CCmdLineUI>();	
+	CCmdLineUI* pCmdUI =  vertex<CCmdLineUI>();
 }
 
 void CCmdLineUI::EventHandler::onTyping()

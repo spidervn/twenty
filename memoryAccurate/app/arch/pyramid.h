@@ -10,12 +10,14 @@
 
 #include <stdlib.h>
 #include <vector>
+#include <map>
+#include <typeinfo>
+#include <type_traits>
 
 class IPyramid
 {
 private:
 	IPyramid* pMaster;
-	std::vector<IPyramid*> _vertex;
 	std::vector<IPyramid*> _vertex;
 	// 	Network
 	// 	SubPyramids
@@ -30,6 +32,7 @@ protected:
 	static const int PENTA = 5;
 	static const int HEPTA = 7;
 
+
 	virtual int pyramid_cout()
 	{
 		return TRIO;
@@ -38,8 +41,10 @@ protected:
 	void declarePopulation(IPyramid* p)
 	{
 		_vertex.push_back(p);
-		int type_code = typeid(*p).hash_code();
 
+		const std::type_info&
+		t1 = typeid(*p);
+		int type_code = t1.hash_code();
 		_populations[type_code] = p;
 	}
 
@@ -95,13 +100,17 @@ public:
 	T* vertex()
 	{
 		// Find by type
-		if (typeof(T) == typeof(*pMaster))
+		if (std::is_same<T,decltype(*pMaster)>::value)
 		{
-			return pMaster;
+			return (T*)pMaster;
 		}
 		else 
 		{
-			if (_populations.)
+			int typehash = typeid(T).hash_code();
+			if (_populations.count(typehash) > 0)
+			{
+				return (T*)_populations[typehash];
+			}
 		}
 		return NULL;
 	}
