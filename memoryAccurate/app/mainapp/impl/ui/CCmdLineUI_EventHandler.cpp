@@ -11,11 +11,9 @@
 
 using namespace std;
 
-void CCmdLineUI::EventHandler::onEnter()
+void CCmdLineUI::EventHandler::onEnter(std::string cmd)
 {
 	// Get CCmdLineUI here
-	std::string cmd;
-
 	CCmdLineUI* pCmdUI =  vertex<CCmdLineUI>();
 
 	if (cmd == "add")
@@ -41,10 +39,6 @@ void CCmdLineUI::EventHandler::onExeCmd(std::string)
 	CCmdLineUI* pCmdUI =  vertex<CCmdLineUI>();
 }
 
-void CCmdLineUI::EventHandler::onTyping()
+void CCmdLineUI::EventHandler::onTyping(std::string currentLine,std::string currentWord)
 {
-	string currentCmd;
-	string currentWord;
-
-	
 }

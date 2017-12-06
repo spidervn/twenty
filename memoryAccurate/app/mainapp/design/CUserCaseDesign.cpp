@@ -52,7 +52,7 @@ int CUserCaseDesign::cmdLineTyping()
 	int EVT_WAITKEY = 0;
 	int EVT_WORK = 1;
 
-	icmd->eventHandler()->onTyping();
+	icmd->eventHandler()->onTyping("","");
 	vhints = iparser.autoComplete("", "");
 
 	icmd->grammarWork()->showAutoComplete(vhints);	// User interation here (Do Modal)

@@ -18,29 +18,31 @@ public:
 	int initialize();						// Declare all needs here
 	int run();
 
+private:
+	void drawModel();
+	void designPyramid();
+	void testVertex();
+
 	class EventHandler;
 	class GrammarWork;
 	class Toolkit;
 	class UI;
-	IEventHandler* eventHandler() { return pEvent;}
-	IGrammarWork* grammarWork() { return pGrammar;}
-	UI* ui() { return pUI; }
-private:
+
 	IEventHandler* pEvent;
 	IGrammarWork* pGrammar;
 	UI* pUI;
 
-	void drawModel();
-	void designPyramid();
-	void testVertex();
+	IEventHandler* eventHandler() { return pEvent;}
+	IGrammarWork* grammarWork() { return pGrammar;}
+	UI* ui() { return pUI; }
 };
 
 class CCmdLineUI::EventHandler : public IEventHandler
 {
 public:
-	void onEnter();
+	void onEnter(std::string);
 	void onExeCmd(std::string);
-	void onTyping();
+	void onTyping(std::string currentLine,std::string currentWord);
 };
 
 class CCmdLineUI::GrammarWork : public IGrammarWork

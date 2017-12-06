@@ -142,7 +142,7 @@ int CCmdLineUI::run()
 			//printw("\r\n");
 			printw("\n");
 
-			pEvent->onEnter();
+			pEvent->onEnter(strCurrentCmd);
 
 			printw("# ");
 			strCurrentCmd = "";

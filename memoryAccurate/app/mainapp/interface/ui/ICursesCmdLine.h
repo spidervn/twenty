@@ -33,9 +33,9 @@ public:
 class ICursesCmdLine::IEventHandler : public IPyramidPenta
 {
 public:
-	virtual void onEnter() = 0;
+	virtual void onEnter(std::string) = 0;
 	virtual void onExeCmd(std::string) = 0;
-	virtual void onTyping() = 0;
+	virtual void onTyping(std::string currentLine,std::string currentWord) = 0;
 };
 
 class ICursesCmdLine::IGrammarWork : public IPyramidPenta
