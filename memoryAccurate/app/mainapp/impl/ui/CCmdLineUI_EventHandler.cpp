@@ -18,8 +18,6 @@ void CCmdLineUI::EventHandler::onEnter()
 
 	CCmdLineUI* pCmdUI =  vertex<CCmdLineUI>();
 
-	pCmdUI->testVertex();
-
 	if (cmd == "add")
 	{
 		printw("Add quiz\n");
