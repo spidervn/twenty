@@ -39,7 +39,7 @@ CCmdLineUI::CCmdLineUI() {
 	pGrammar = new GrammarWork();
 	pUI = new UI();
 
-
+	designPyramid();
 }
 
 CCmdLineUI::~CCmdLineUI() {
@@ -141,6 +141,9 @@ int CCmdLineUI::run()
 			int y, x;
 			//printw("\r\n");
 			printw("\n");
+
+			pEvent->onEnter();
+
 			printw("# ");
 			strCurrentCmd = "";
 			// mvwprintw(stdscr, y+1, 0, "# ");
@@ -295,6 +298,11 @@ void CCmdLineUI::drawModel()
 	}
 	printw(model.currentCommand.c_str());
 	printw("\n");
+}
+
+void CCmdLineUI::testVertex()
+{
+	printw("TestVertex\n");
 }
 
 void CCmdLineUI::Toolkit::print_in_middle(WINDOW *win, int starty, int startx, int width, char *string, chtype color)

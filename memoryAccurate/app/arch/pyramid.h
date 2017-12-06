@@ -84,10 +84,10 @@ public:
 		{
 			_vertex.push_back(py);
 
-			IPyramid* pEnum = pMaster;
-			while (pEnum->pMaster != NULL)
+			IPyramid* pEnum = this;
+			while (pEnum != NULL)
 			{
-				declarePopulation(pEnum->pMaster);
+				declarePopulation(this);
 				pEnum = pEnum->pMaster;
 			}
 			return 0;	// Success
@@ -173,7 +173,7 @@ protected:
 // Deprecated
 class IPyramidArchitecture
 {
-private:
+protected:
 	void tiePyramid(IPyramid* pHigher, IPyramid* pLower)
 	{
 		pHigher->addVertex(pLower);

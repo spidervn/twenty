@@ -10,7 +10,7 @@
 
 #include "mainapp/interface/ui/ICursesCmdLine.h"
 
-class CCmdLineUI: public ICursesCmdLine {
+class CCmdLineUI: public ICursesCmdLine, public IPyramidArchitecture {
 public:
 	CCmdLineUI();
 	virtual ~CCmdLineUI();
@@ -30,11 +30,9 @@ private:
 	IGrammarWork* pGrammar;
 	UI* pUI;
 
-	IPyramid* pUILayout;
-
-
 	void drawModel();
 	void designPyramid();
+	void testVertex();
 };
 
 class CCmdLineUI::EventHandler : public IEventHandler

@@ -13,7 +13,12 @@ using namespace std;
 
 void CCmdLineUI::EventHandler::onEnter()
 {
+	// Get CCmdLineUI here
 	std::string cmd;
+
+	CCmdLineUI* pCmdUI =  vertex<CCmdLineUI>();
+
+	pCmdUI->testVertex();
 
 	if (cmd == "add")
 	{
