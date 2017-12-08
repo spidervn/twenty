@@ -7,7 +7,8 @@
 #include "app/example/CPyramidExample.h"
 using namespace std;
 
-int main() {
+int main()
+{
 
 	ICursesCmdLine* icmd = new CCmdLineUI();
 

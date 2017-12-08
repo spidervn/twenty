@@ -8,6 +8,7 @@
 #include <mainapp/design/CArchitectureView.h>
 #include <arch/program_abstract.h>
 
+// Top level view
 CArchitectureView::CArchitectureView() {
 }
 
