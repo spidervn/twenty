@@ -15,6 +15,7 @@ public:
 
 	int viewCursesICmdLine();
 	int insideCursesCmdLine();
+
 };
 
 #endif /* APP_MAINAPP_DESIGN_CARCHITECTUREVIEW_H_ */
