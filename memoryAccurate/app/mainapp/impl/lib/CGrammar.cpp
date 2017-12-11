@@ -6,6 +6,9 @@
  */
 
 #include <mainapp/impl/lib/CGrammar.h>
+#include <boost/algorithm/string.hpp>
+
+using namespace std;
 
 CGrammar::CGrammar() {
 	// TODO Auto-generated constructor stub
@@ -20,18 +23,31 @@ void CGrammar::autoComplete(std::string currentCmd,
 								std::string currentWord,
 								std::vector<std::string>& vout)
 {
-	vout.clear();
-	if (currentCmd.size() == 0)
+	std::string arrRules[][] =
 	{
-		vout.push_back("add");
-		vout.push_back("doquiz");
+			{ "quiz", "do", "*"},
+			{ "quiz", "add", ""},
+			{ "about", "", ""},
+			{ "quit", "", "" }
+	};
+
+	vout.clear();
+	string cmdTrim = boost::trim(currentCmd);
+
+	if (cmdTrim.size() == 0)
+	{
+		vout.push_back("quiz");
 		vout.push_back("about");
+		vout.push_back("quit");
 	}
 	else
 	{
-		if (currentCmd.find("doquiz"))
+		// Split string
+		// Parsing first
+		if (cmdTrim.find("doquiz"))
 		{
 			currentWord = "";	// List of code here
+
 		}
 	}
 }

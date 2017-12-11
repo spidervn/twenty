@@ -1,0 +1,15 @@
+
+Autocomplete
+IGrammar
+IGrammarRule
+
+autoComplete(cursor, Data, IgrammarRule)
+{
+	rules = igrammarrule.matchrule(data);
+		
+	if (rules != null)
+	{
+		matches = igrammarrule.match_option(rules, data, cursor);
+		
+	}
+}

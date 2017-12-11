@@ -8,7 +8,8 @@ Status of this memo
    LotusMemory is an applicaton for practicing memory, encouraging people to remember-less but more accurate about their memory in life.
 
 1. Introduction
-
+	LotusMemory is arguably the greatest application for memory of all time.
+	Its features is rich considering other terminal based applications.
 
 2. Design 
 	This program uses ncurses library for User-interface development; which provides text-based UI in terminal.
