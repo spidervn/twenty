@@ -12,10 +12,7 @@
 
 class ICursesWinQuiz : public IPyramid  {
 public:
-	ICursesWinQuiz();
-	virtual ~ICursesWinQuiz();
-
-	virtual void doModal() {};
+	virtual void doModal() = 0;
 
 };
 

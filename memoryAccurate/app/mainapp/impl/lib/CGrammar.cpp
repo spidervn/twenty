@@ -23,6 +23,7 @@ void CGrammar::autoComplete(std::string currentCmd,
 								std::string currentWord,
 								std::vector<std::string>& vout)
 {
+	/*
 	std::string arrRules[][] =
 	{
 			{ "quiz", "do", "*"},
@@ -50,4 +51,5 @@ void CGrammar::autoComplete(std::string currentCmd,
 
 		}
 	}
+	*/
 }
