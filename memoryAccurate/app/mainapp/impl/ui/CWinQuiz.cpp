@@ -57,7 +57,7 @@ void CWinQuiz::doModal()
 	scale_form(my_form, &rows, &cols);
 
 	/* Create the Window to be associated with the form */
-	my_form_win = newwin(rows + 4, cols + 4, 4, 4);
+	my_form_win = newwin(rows + 4, cols + 4, 4, 4);	
 	keypad(my_form_win, TRUE);
 
 	/* Set main window and sub window */
@@ -65,7 +65,11 @@ void CWinQuiz::doModal()
 	set_form_sub(my_form, derwin(my_form_win, rows, cols, 2, 2));
 
 	/* Print a border around the main Window and print a title */
-	box(my_form_win, 0, 0);
+	
+	// box(my_form_win, 0, 0);	
+	// wborder(my_form_win, '|', '|', '-', '-', '+', '+', '+', '+');
+	// wborder(my_form_win, '|', '║', '-', '╧', '╗', '╚','╔','╝');
+	wborder(my_form_win, '|', ':', '-', '_', '+', '&','*','@');
 	Util::print_in_middle(my_form_win, 1, 0, cols + 4, "My Form", COLOR_PAIR(1));
 
 	post_form(my_form);
