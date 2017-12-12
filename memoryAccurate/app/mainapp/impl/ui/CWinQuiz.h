@@ -20,7 +20,8 @@ public:
 	class Util
 	{
 	public:
-		static void print_in_middle(WINDOW* win, int starty, int startx, int width, char* string, chtype color);
+		static void print_in_middle(WINDOW* win, int starty, int startx, int width, const char* string, chtype color);
+		static void fill(WINDOW* win, int starty, int startx, int width, int height, int color_pair);
 	};
 };
 

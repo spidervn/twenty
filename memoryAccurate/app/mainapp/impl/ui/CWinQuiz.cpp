@@ -36,7 +36,8 @@ void CWinQuiz::doModal()
 	keypad(stdscr, TRUE);
 
 	/* Initialize few color paris */
-	init_pair(1, COLOR_RED, COLOR_BLACK);
+	init_pair(1, COLOR_RED, COLOR_YELLOW);
+	init_pair(2, COLOR_WHITE, COLOR_BLUE);
 
 	/* Initialize the fields */
 	field[0] = new_field(1, 20, 6, 1, 0, 3);
@@ -67,13 +68,14 @@ void CWinQuiz::doModal()
 	/* Print a border around the main Window and print a title */
 	
 	// box(my_form_win, 0, 0);	
-	// wborder(my_form_win, '|', '|', '-', '-', '+', '+', '+', '+');
+	wborder(my_form_win, '|', '|', '-', '-', '+', '+', '+', '+');
 	// wborder(my_form_win, '|', '║', '-', '╧', '╗', '╚','╔','╝');
-	wborder(my_form_win, '|', ':', '-', '_', '+', '&','*','@');
+	// wborder(my_form_win, '|', ':', '-', '_', '+', '&','*','@');
 	Util::print_in_middle(my_form_win, 1, 0, cols + 4, "My Form", COLOR_PAIR(1));
 
 	post_form(my_form);
-	wrefresh(my_form_win);
+	// wrefresh(my_form_win);
+	Util::fill(my_form_win, 1, 1, 10, 10, 2);
 
 	mvprintw(LINES - 2, 0, "Use UP, DOWN arrow keys to switch between fields");
 	refresh();
@@ -121,7 +123,7 @@ void CWinQuiz::doModal()
 	endwin();
 }
 
-void CWinQuiz::Util::print_in_middle(WINDOW* win, int starty, int startx, int width, char*string, chtype color) {
+void CWinQuiz::Util::print_in_middle(WINDOW* win, int starty, int startx, int width, const char*string, chtype color) {
 	int length, x, y;
 	float temp;
 
@@ -151,4 +153,18 @@ void CWinQuiz::Util::print_in_middle(WINDOW* win, int starty, int startx, int wi
 	mvwprintw(win, y, x, "%s", string);
 	wattroff(win, color);
 	refresh();
+}
+
+void CWinQuiz::Util::fill(WINDOW* win, int starty, int startx, int width, int height, int color_pair) {
+	wattron(win, COLOR_PAIR(color_pair));
+
+	for (int i=startx;i<width;i++)
+	{
+		for (int j=starty;j<height;j++)
+		{
+			mvwprintw(win,j,i," ");
+		}
+	}
+	wrefresh(win);
+	wattroff(win, COLOR_PAIR(color_pair));
 }
