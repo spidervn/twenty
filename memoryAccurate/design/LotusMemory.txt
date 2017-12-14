@@ -9,11 +9,19 @@ Status of this memo
 
 1. Introduction
 	LotusMemory is arguably the greatest application for memory of all time.
-	Its features is rich considering other terminal based applications.
+	Its features is actually quite rich considering other terminal based applications.
+
+	Why Lotus?
+		In reality, human memory does not always works as well as we though. 
+		One of the most important moment, .
+		Under stressful circustance, does it works well ? It highly depends individual ?
 
 2. Design 
 	This program uses ncurses library for User-interface development; which provides text-based UI in terminal.
 
+	There is also the SQLite here. This provides the Application call interface that store all user data and provides 
+
+	
 3. Pyramid philosophy
 	Pyramid is a philosophy which state that and Object has not more than N public method (Constructors & destructors is not counted); and has not more than N public child sub Pyramid.
 
@@ -23,10 +31,13 @@ Status of this memo
 		A normal class definition
 		class X
 		{
-		public:
-
+			public:
 		}
+	For example:
+		A normal class definition:
+		class Y
 
+	The design philosophy is 
 4. Design
 	Interface design
 
@@ -34,3 +45,72 @@ Status of this memo
 	SQLite
 
 
+Example:
+	Now on to a high-altitude look at the Application architecture, you can think about an application from 04 major components, as shown in Figure 1.
+
+	These 04 major components are:
+		Ncurses 
+		Widgets
+		Databases
+		SystemI/O.
+
+	At the top is Ncurses library, which 
+----------
+Sample paragraph!
+----------
+In reality, the architecture is not as clean as what is shown in Figure 2. 
+	For example,
+		The mechanism by which system calls are handled (transitioning from the user space to the kernel space)
+			can differ by architecture.
+	Newer x86 central processing units (CPUs) 
+		that provide support for visualization instructions 
+		are more efficient in this process 
+			than older x86 processors 
+				that use the traditional int 80th method. (Subject = N + that + clause)
+	At the top is the user, or application space.
+	This is where the user applications are executed. (N = where + clause)
+	Below the user space is the kernel space.
+
+	There is also the GNU C Library (glibc).
+	This provides the system call interface 
+		that connects to the kernel 
+			and provides the mechanism to transition between the user-space application and the kernel.
+	This is important because 
+		the kernel and user application 
+			occupy different protected address spaces.
+	And while each user-space process 
+			occupies its own virtual address space, 
+		the kernel occupies a single address space.
+	-----
+	The Linux kernel can be 
+		further divided into three gross levels. (further + V; divid into )
+	At the top is the system call interface, which implements the basic functions such as read and write.
+	Below the system call interface is the kernel code,
+		which can be more accurately defined 
+				as then architecture-independent kernel code.
+	This code is common to all of the processor atchitecture-dependent code, 
+		which forms what is more commonly called BSP (Board support Package).
+	This code serves as 
+		the the processor and platform-specific code 
+		for the given architecture. (Rule=serve as sth for sth).
+	-----
+	Properties of the []
+	When discussing architecture of a large and complex system, 
+		you can view the system from many perspectives. 
+		(Rule= When discussing N, ...)	
+	One goal of an architectural decomposition is to provide a way to better understand the source, and that's what we'll do here. 
+	The linux kernel implements a number of important architectural attributes. At a high level, and at lower levels, the kernel is layered into a number of distinct subsystems. (..is layered into ....). Linux can also be considered monolithic because it lumps all of the basic services into the kernel.
+This differs from a microkernel architecture where the kernel provides basic services such as communication, I/O, and memory and process management, and more specific services are plugged into the microkernel layer. (Rule=S differ from Sth where ....). Each has each own advantages, but I'll steer claer of that debate.
+	Over time, the Linux kernel has become efficient in terms of both memory and CPU usage, as well as extremely stable. (in terms of sth). But the most interesting aspect of Linux, given its size and complexity, is its portability. Linux can be compiled to run on a huge number of processors and platforms with different architectural constraints and needs. One example is the ability for Linux to run on a process with a memory management unit (MMU), as well as those that provide no MMU. The uClinux port of the Linux kernel provides for non-MMU support.
+-----
+Major subsystems of the Linux kernel
+	Now let's look at some of the major components of the Linux kernel using the breakdown shown in Figure 3 as a guide.
+	One architectural perspective of the Linux kernel.
+System call interface
+	The SCI is actually an interesting function-call multiplexing and demultiplexing service. You can find the SCI implementation in ./linux/kernel, as well as architecture-dependent portions in ./linux/arch,
+-----
+Process management. What is a kernel ?
+	As shown in Figure 3, a kernel is really nothing more than a resource manager. (Rule=is nothing more than XXX). Whether the resource being managed is a process, memory, or hardware device, the kernel manages and arbitrates access to the resource between multiple competing users (both in the kernel and in user space). 
+
+	Process management is focused on the execution of processes (...is focused on...). In the kernel, these are called threads and represent an individual, virtualization of the processor (thread code, data, stack, and CPU registers). In user space, the term process is typically used, though the Linux implementation does not separate the two concepts (processes and threads). The kernel provides an application program interface (API) through the SCI to create a new process (fork, exec, or Portable Operating System Interface [POSIX] functions), stop a process (kill, exit), and communicate and synchronize between them (signal, or POSIX mechanisms).
+	Also in process management is the need to share the CPU between the active threads. (Rule=also in xxxx is). The kernel implements a novel scheduling algorithm that operates in constant time, regardless of the number of threads vying for the CPU. This is called the O(1) scheduler, denoting that the same amount of time is taken to schedule one thread as it is to schedule many. (Rule=regardless). The O(1) scheduler also supports multiple processors (called Symmetric Multiprocessing, or SMP). You can find the process management sources in ./linux/kernel and architecture-dependent sources in ./linux/arch).
