@@ -181,7 +181,6 @@ int CCmdLineUI::run()
 			char szMenuSelected[255];
 
 			// Turn off echo
-			noecho();
 			pUI->layout()->arrangePopup(y+1, x,screenCols, screenCols, 10, 40, menuy, menux);
 			Toolkit::destroyWindowMenu(mywin, my_menu);
 			mywin = Toolkit::createWindowMenu(menuy,menux,my_menu);
@@ -214,7 +213,6 @@ int CCmdLineUI::run()
 			}
 
 			// Turn on echo
-			echo();
 			move(y,x);
 			// clrtoeol();
 			mvprintw(y,x, szMenuSelected);

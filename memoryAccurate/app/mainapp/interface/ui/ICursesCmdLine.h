@@ -10,7 +10,7 @@
 
 #include <architecture.h>
 #include <arch/abstract.h>
-#include <mainapp/ncurses/ICursesUI.h>
+#include <mainapp/interface/ncurses/ICursesUI.h>
 #include <string>
 #include <vector>
 #include "ICmdLineEventHandler.h"

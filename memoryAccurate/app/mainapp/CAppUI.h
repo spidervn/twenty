@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <architecture.h>
 #include <arch/abstract.h>
-#include <mainapp/ncurses/ICursesApp.h>
+#include <mainapp/interface/ncurses/ICursesApp.h>
 
 class CAppUI: public ICursesApp, public IEventDispatching {
 public:

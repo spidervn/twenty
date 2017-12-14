@@ -114,3 +114,24 @@ Process management. What is a kernel ?
 
 	Process management is focused on the execution of processes (...is focused on...). In the kernel, these are called threads and represent an individual, virtualization of the processor (thread code, data, stack, and CPU registers). In user space, the term process is typically used, though the Linux implementation does not separate the two concepts (processes and threads). The kernel provides an application program interface (API) through the SCI to create a new process (fork, exec, or Portable Operating System Interface [POSIX] functions), stop a process (kill, exit), and communicate and synchronize between them (signal, or POSIX mechanisms).
 	Also in process management is the need to share the CPU between the active threads. (Rule=also in xxxx is). The kernel implements a novel scheduling algorithm that operates in constant time, regardless of the number of threads vying for the CPU. This is called the O(1) scheduler, denoting that the same amount of time is taken to schedule one thread as it is to schedule many. (Rule=regardless). The O(1) scheduler also supports multiple processors (called Symmetric Multiprocessing, or SMP). You can find the process management sources in ./linux/kernel and architecture-dependent sources in ./linux/arch).
+
+
+Memory management
+Another important resource that's managed by the kernel is memory. For efficiency, given the way that the hardware manages virtual memory, memory is managed in what are called pages (4KB in size for most architectures). (Rule=For efficiency). Linux includes the means to manage the available memory, as well as the hardware mechanisms for physical and virtual mappings. (Rule=the means).
+
+But memory management is much more than managing 4KB buffers. Linux provides abstractions over 4KB buffers, such as the slab allocator. This memory management scheme uses 4KB buffers as its base, but then allocates structures from within, keeping track of which pages are full, partially used, and empty (Rule=uses xxx as yyy). This allows the scheme to dynamically grow and shrink based on the needs of the greater system. (Rule=allows xxx to yyy)
+
+Supporting multiple users of memory, there are times when the available memory can be exhausted. (Supporting xxx, ...). For this reason, pages can be moved out of memory and onto the disk. This process is called swapping because the pages are swapped from memory onto the hard disk. You can find the memory management sources in ./linux/mm. (Rule=For this reason, ...)
+
+Virtual file system
+----------
+The virtual file system (VFS) is an interesting aspect of the Linux kernel because it provides a common interface abstraction for file systems. (interesting aspect). The VFS provides a switching layer between the SCI and the file systems supported by the kernel (See Figure 4).
+At the top of the VFS is a common API abstraction of functions such as open, close, read and write. At the bottom of the VFS are the file system abstractions that define how the upper-layer functions are implemented. These are plug-ins for the given file system (of which over 50 exist). You can find the file system sources in ./linux/fs.
+
+Below the file system layer is the buffer cache, which provides a common set of functions to the file system layer (independent of any particular file system). This caching layer optimizes access to the physical devices by keeping data around for a short time (or speculatively read ahead so that the data is available when needed). Below the buffer cache are the device drivers, which implement the interface for the particular physical device. 
+----------
+Network stack
+	The network stack, by design, follows a layered architecture modeled after the protocols themselves. Recall that the Internet Protocol (IP) is the core network layer protocol that sits below the transport protocol (most commonly the Transmission Control Protocol, or TCP). Above TCP is the sockets layer, which is invoked through the SCI. 
+	
+	The sockets layer is the standard API to the networking subsystem and provides a user interface to a variety of networking protocols. From raw frame access to IP protocol data units (PDUs) and up to TCP and the User Datagram Protocol (UDP), the sockets layer provides a standardized way to manage connections and move data between endpoints. You can find the networking sources in the kernel at ./linux/net.
+

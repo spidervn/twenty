@@ -50,6 +50,8 @@ void CWinQuiz::doModal()
 											/* Field is filled up */
 	set_field_back(field[1], A_UNDERLINE);
 	field_opts_off(field[1], O_AUTOSKIP);
+	set_field_pad(field[1], '@');
+	set_field_fore(field[1], COLOR_PAIR(2));
 
 	/* Create the form and post it */
 	my_form = new_form(field);
