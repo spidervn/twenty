@@ -15,6 +15,10 @@ public:
 	CWinQuiz();
 	virtual ~CWinQuiz();
 
+	void init_curses_mode() {}
+	int onEvent(int event, void* data) { return 1; }
+	void tear_down() {}
+
 	void doModal();
 
 	class Util

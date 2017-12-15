@@ -11,18 +11,7 @@
 #include "mainapp/interface/ui/ICursesCmdLine.h"
 
 class CCmdLineUI: public ICursesCmdLine, public IPyramidArchitecture {
-public:
-	CCmdLineUI();
-	virtual ~CCmdLineUI();
-
-	int initialize();						// Declare all needs here
-	int run();
-
 private:
-	void drawModel();
-	void designPyramid();
-	void testVertex();
-
 	class EventHandler;
 	class GrammarWork;
 	class Toolkit;
@@ -31,10 +20,20 @@ private:
 	IEventHandler* pEvent;
 	IGrammarWork* pGrammar;
 	UI* pUI;
+public:
+	CCmdLineUI();
+	virtual ~CCmdLineUI();
+
+	int initialize();						// Declare all needs here
+	int run();
 
 	IEventHandler* eventHandler() { return pEvent;}
 	IGrammarWork* grammarWork() { return pGrammar;}
 	UI* ui() { return pUI; }
+private:
+	void drawModel();
+	void designPyramid();
+	void testVertex();
 };
 
 class CCmdLineUI::EventHandler : public IEventHandler

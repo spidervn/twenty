@@ -26,6 +26,7 @@ CUserCaseDesign::~CUserCaseDesign() {
 
 int CUserCaseDesign::cmdLineExecute()
 {
+	/*
 	IApp pApp;
 	ICursesCmdLine* icmd = new CCmdLineUI();
 	ICursesWinQuiz* quiz;
@@ -38,11 +39,13 @@ int CUserCaseDesign::cmdLineExecute()
 	{
 		icmd->eventHandler()->onExeCmd("");
 	}
+	*/
 	return 0;
 }
 
 int CUserCaseDesign::cmdLineTyping()
 {
+	/*
 	CAppUI* appUI;
 	ICursesCmdLine* icmd = new CCmdLineUI();
 	ICommandParser iparser;
@@ -64,7 +67,7 @@ int CUserCaseDesign::cmdLineTyping()
 	icmd->grammarWork()->onCancel();					// User do not select onComplete
 
 	appUI->windowManager()->setActiveWindow(icmd);
-
+	*/
 	return 0;
 }
 
