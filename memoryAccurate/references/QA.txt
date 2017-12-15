@@ -414,3 +414,36 @@ Problem Tree[2,1] 4.
 	Single Threading
 	----------
 
+
+==========>
+ ICurses ----> IKeyboard  <==> IKeyboard ----> ICurses
+    Program = 
+        IThread(ICurses, IKeyboard, IMouse)
+    Interform?
+        // Time based
+        ICurses->Main       
+        {
+            evt1 = IKeyboard->getEvent();
+            evt2 = IMouse->getEvent();
+
+            if (evt1) {
+                app->enqueueEvent(evt1);
+                app->ui->getActive->enqueueEvent(evt1);
+            }
+            if (evt2) {
+                app->enqueueEvent(evt2);
+                app->ui->getActive->enqueueEvent(evt2);
+            }
+            
+            {
+                app->processLatestEvent();
+                app->ui->getActive->processLatestEvent();
+            }
+        }
+    StopWatch? [/*-*/]
+        IWinQuiz
+            ->onTimer()
+                ->UpdateWatch()
+    What happens if 
+        Is Executing an Event =>
+            Then executing another?
