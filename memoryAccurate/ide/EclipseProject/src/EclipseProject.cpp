@@ -7,6 +7,8 @@
 #include "app/example/CPyramidExample.h"
 #include "mainapp/impl/ui/CWinQuiz.h"
 
+#include "mainapp/impl/lib/CMemoryTest.h"
+
 using namespace std;
 
 int main()
@@ -19,9 +21,14 @@ int main()
 
 	delete icmd;*/
 
+	/*
 	ICursesWinQuiz* iwin = new CWinQuiz();
 	iwin->doModal();
 	delete iwin;
+	*/
+
+	IMemoryTest* pTest = new CMemoryTest();
+	delete pTest;
 
 	return 0;
 }

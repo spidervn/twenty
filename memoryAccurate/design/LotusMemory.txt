@@ -15,13 +15,16 @@ Status of this memo
 		In reality, human memory does not always works as well as we though. 
 		One of the most important moment, .
 		Under stressful circustance, does it works well ? It highly depends individual ?
+	
 
 2. Design 
 	This program uses ncurses library for User-interface development; which provides text-based UI in terminal.
 
 	There is also the SQLite here. This provides the Application call interface that store all user data and provides 
-
+	Its features is rich considering other terminal based applications.
+	Now on to a high-altitude look at the Lotus Memory Architecture. You can think about an application from two levels, as shown in this Figure:
 	
+
 3. Pyramid philosophy
 	Pyramid is a philosophy which state that and Object has not more than N public method (Constructors & destructors is not counted); and has not more than N public child sub Pyramid.
 
@@ -42,8 +45,8 @@ Status of this memo
 	Interface design
 
 5. Database
-	SQLite
-
+	SQLite.
+	SQLite.
 
 Example:
 	Now on to a high-altitude look at the Application architecture, you can think about an application from 04 major components, as shown in Figure 1.
@@ -134,4 +137,38 @@ Network stack
 	The network stack, by design, follows a layered architecture modeled after the protocols themselves. Recall that the Internet Protocol (IP) is the core network layer protocol that sits below the transport protocol (most commonly the Transmission Control Protocol, or TCP). Above TCP is the sockets layer, which is invoked through the SCI. 
 	
 	The sockets layer is the standard API to the networking subsystem and provides a user interface to a variety of networking protocols. From raw frame access to IP protocol data units (PDUs) and up to TCP and the User Datagram Protocol (UDP), the sockets layer provides a standardized way to manage connections and move data between endpoints. You can find the networking sources in the kernel at ./linux/net.
+---------
+Device drivers
+
+The vast majority of the source code in the Linux kernel exists in device drivers that make a particular hardware device usable (Rule=vast majority). The Linux source tree provides a drivers subdirectory that is further divided by the various devices that are supported, such as Bluetooth, I2C, serial, and so on. You can find the device driver sources in ./linux/drivers.
+-----------
+Architecture-dependent code
+
+While much of Linux is independent of the architecture on which it runs, there are elements that must consider the architecture for normal operation and for efficiency. The ./linux/arch subdirectory defines the architecture-dependent portion of the kernel source contained in a number of subdirectories that are specific to the architecture (collectively forming the BSP). For a typical desktop, the i386 directory is used. Each architecture subdirectory contains a number of subdirectories that focus on a particular aspect of the kernel, such as boot, kernel, memory management, and others. You can find the architecture-dependent code in ./linux/arch.
+----------
+Interesting features of the Linux kernel
+
+If the portability and efficiency of the Linux kernel weren't enough, it provides some other features that could not be classified in the previous decomposition. 
+Linux, being a production operating system and open source, is a great test bed for new protocols and advancements of those protocols. Linux supports a large number of networking protocols, including the typical TCP/IP, and also extension for high-speed networking (greater than 1 Gigabit Ethernet [GbE] and 10GbE). Linux also supports protocols such as the Stream Control Transmission Protocol (SCTP), which provides many advanced features above TCP (as replacement transport level protocol).
+
+Linux is also a dynamic kernel, supporting the addition and removal of software components on the fly. These are called dynamically loadable kernel modules, and they can be inserted at boot when they're needed (when a particular device is found found requiring the module) or at any time by the user.
+
+A recent advancement of Linux is its use as an operating system for other operating systems (called hypervisor). Recently, a modification to the kernel was made called the Kernel-based Virtual Machine (KVM), this modification enabled a new interface to user space that allows other operating systems to run above the KVM-enabled kernel. In addition to running another instance of Linux, Microsoft Windows can also be virtualized. The only constraint is that the underlying processor must support the new virtualization instructions. (Rule=In addition to xxxx,...) 
+----------
+Going futher
+
+This article just scratched the surface of the Linux kernel architecture and its features and capabilities. You can check out the documentation directory that's provided in every Linux distribution for detailed information about the contents of the kernel.
+
+
+----------
+=========
+Sample Paragraph 2
+Vocabulary: How to memorize vocabulary faster than ever
+
+
+Want to memorize vocabulary? Be prepared to be amazed.
+Using mnemonics, you can easily learn vocabulary at 400% your previous speed. The two-part process your about to read will blow your mind. (And even if you already know about mnemonics, I highly doubt that you've been introduced to the stressed syllable tactic)
+
+:exit
+
 

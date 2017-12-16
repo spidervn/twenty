@@ -16,10 +16,16 @@
 class ICursesApp: public IPyramidPenta {
 public:
 	virtual int initialize() = 0;
+
 	virtual void registerUI(ICursesUI* ui) = 0;
+	virtual void setActiveUI(ICursesUI*) = 0;
 	virtual ICursesUI* getActiveUI() = 0;
+
 	virtual int main() = 0;				// Main procedure -An IUnkown thing = Everything - the most complex Curses in the world here
 	virtual int onEvent(int) = 0;		// onEvent here?
+
+	virtual int enqueueEvent(int event, void*data = NULL) = 0;
+	virtual int processEvent(int event, void*data = NULL) = 0;	// send event & immediately process it
 
 	class IUI;
 	class IEvent;

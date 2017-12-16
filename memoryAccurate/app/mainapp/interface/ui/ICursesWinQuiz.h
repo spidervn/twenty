@@ -11,7 +11,7 @@
 #include "architecture.h"
 #include "mainapp/interface/ncurses/ICursesUI.h"
 
-class ICursesWinQuiz : public ICursesUI, public IPyramid  {
+class ICursesWinQuiz : public ICursesUI  {
 public:
 	virtual void doModal() = 0;
 };
