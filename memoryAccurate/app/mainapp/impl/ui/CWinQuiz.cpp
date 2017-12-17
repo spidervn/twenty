@@ -41,8 +41,14 @@ using namespace std;
 
 CWinQuiz::CWinQuiz() {
 	_sw_seconds = 0;
-	pWin = NULL;
-	pForm = NULL;
+	_pWin = NULL;
+	_pWinSb = NULL;
+	_pForm_ = NULL;
+
+	_win_height = 20;
+	_win_width_ = 70;
+	_toppos = 2;
+	_left = 2;
 
 	std::chrono::time_point<std::chrono::system_clock> tnow;
 	tnow = std::chrono::system_clock::now();
@@ -63,12 +69,16 @@ CWinQuiz::CWinQuiz() {
 	_memory.listmemory_.push_back("3.3. Give 60% stock of a company to her");
 
 	_modelt = KERNEL->memorytest_()->generateTest(_memory);	// Model for test
+
+	_answer.answer1 = "Answer1";
+	_answer.answer2 = "Answer2";
+	_answer.answer3 = "Answer3";
 }
 
 CWinQuiz::~CWinQuiz() {
 }
 
-void CWinQuiz::doModal()
+void CWinQuiz::doModal1()
 {
 	FIELD* field[5];
 	FORM* my_form;
@@ -120,7 +130,7 @@ void CWinQuiz::doModal()
 	scale_form(my_form, &rows, &cols);
 
 	/* Create the Window to be associated with the form */
-	my_form_win = newwin(rows + 4, cols + 4, 4, 4);	
+	my_form_win = newwin(rows + 4, cols + 4, 4, 4);
 	keypad(my_form_win, TRUE);
 
 	/* Set main window and sub window */
@@ -130,7 +140,7 @@ void CWinQuiz::doModal()
 
 	/* Print a border around the main Window and print a title */
 	
-	// box(my_form_win, 0, 0);	
+	// box(my_form_win, 0, 0);
 	wborder(my_form_win, '|', '|', '-', '-', '+', '+', '+', '+');
 	// wborder(my_form_win, '|', '║', '-', '╧', '╗', '╚','╔','╝');
 	// wborder(my_form_win, '|', ':', '-', '_', '+', '&','*','@');
@@ -189,6 +199,32 @@ void CWinQuiz::doModal()
 	endwin();
 }
 
+void CWinQuiz::doModal()
+{
+	int ch;
+
+	/* Initialize curses */
+	initscr();
+	start_color();
+	cbreak();
+	noecho();
+	keypad(stdscr, TRUE);
+
+	onInitialize();
+	while ((ch = wgetch(_pWin)) != KEY_F(1)) {
+		switch (ch) {
+			case KEY_MOUSE:
+				onMouse(ch);
+				break;
+			default:
+				onKeyboard(ch);
+				break;
+		}
+	}
+
+	onTearDown();
+}
+
 void CWinQuiz::Util::print_in_middle(WINDOW* win, int starty, int startx, int width, const char*string, chtype color) {
 	int length, x, y;
 	float temp;
@@ -238,34 +274,140 @@ void CWinQuiz::Util::fill(WINDOW* win, int starty, int startx, int width, int he
 
 void CWinQuiz::onInitialize()
 {
-	raw();		// Raw mode ncurses
+	int nrows, ncols;
+	/* Initialize the fields */
+	_fields[0] = new_field(1, 40, _toppos + 4, 1, 0, 0);
+	_fields[1] = new_field(1, 40, _toppos + 5, 1, 0, 0);
+	_fields[2] = new_field(1, 40, _toppos + 6, 1, 0, 0);
+	_fields[3] = NULL;
+
+	/* Set field options */
+	set_field_back(_fields[0], A_UNDERLINE);
+	field_opts_off(_fields[0], O_AUTOSKIP);	/* Don't go to next field when this */
+											/* Field is filled up */
+	set_field_back(_fields[1], A_UNDERLINE);
+	field_opts_off(_fields[1], O_AUTOSKIP);
+	set_field_fore(_fields[1], COLOR_PAIR(2));
+
+	set_field_back(_fields[2], A_UNDERLINE);
+	field_opts_off(_fields[2], O_AUTOSKIP);
+	set_field_fore(_fields[2], COLOR_PAIR(2));
+
+	set_field_back(_fields[3], A_UNDERLINE);
+	field_opts_off(_fields[3], O_AUTOSKIP);
+	set_field_fore(_fields[3], COLOR_PAIR(2));
+
+	set_field_userptr(_fields[0], (void*)&_answer.answer1);
+	set_field_userptr(_fields[1], (void*)&_answer.answer2);
+	set_field_userptr(_fields[2], (void*)&_answer.answer3);
+
+	set_field_buffer(_fields[0], 0, _answer.answer1.c_str());
+	set_field_buffer(_fields[1], 0, _answer.answer2.c_str());
+	set_field_buffer(_fields[2], 0, _answer.answer3.c_str());
+
+	/* Create the form and post it */
+	_pForm_ = new_form(_fields);
+
+	/* Create the window and sub window */
+	scale_form(_pForm_, &nrows, &ncols);
+
+	/* Create the Window to be associated with the form */
+	_pWin = newwin(nrows + 6, ncols + 2 , _toppos, _left);
+	keypad(_pWin, TRUE);
+
+	/* Set main window and sub window */
+	_pWinSb = derwin(_pWin, nrows, ncols, 6, 1);
+
+	set_form_win(_pForm_, _pWin);
+	set_form_sub(_pForm_, _pWinSb);
+
+	/* Print a border around the main Window and print a title */
+	wborder(_pWin, '|', '|', '-', '-', '+', '+', '+', '+');
+	Util::print_in_middle(_pWin, 1, 0, ncols + 4, "Doing quiz", COLOR_PAIR(1));
+	Util::print_in_middle(_pWin, 2, 0, 0, _memory.code.c_str(), COLOR_PAIR(1));
+	Util::print_in_middle(_pWin, 3, 0, 0, _memory.name.c_str(), COLOR_PAIR(1));
+	Util::print_in_middle(_pWin, 4, 0, 0, "My Form", COLOR_PAIR(1));
+
+	/* Print title */
+	post_form(_pForm_);
+	refresh();
 }
 
 void CWinQuiz::onTearDown()
 {
-	if (pForm)
+	if (_pForm_)
 	{
-		unpost_form(pForm);
-		free_form(pForm);
-		pForm = NULL;
+		unpost_form(_pForm_);
+		free_form(_pForm_);
+		_pForm_ = NULL;
+
+		free_field(_fields[0]);
+		free_field(_fields[1]);
+		free_field(_fields[2]);
+		free_field(_fields[3]);
 	}
 }
 
 void CWinQuiz::onTimer()
 {
-	int minute = 0;
-	int seconds = 0;
-	_sw_seconds++;
+	drawClock__();
+}
 
-	minute = _sw_seconds / 60;
-	seconds = _sw_seconds % 60;
-	// Draw the Clock
-	mvwhline(pWin, 0, 0, '_', 7);
-	mvwhline(pWin, 2, 0, '_', 7);
-	mvwvline(pWin, 0, 0, '|', 3);
-	mvwvline(pWin, 0, 7, '|', 3);
+void CWinQuiz::onKeyboard(int ch)
+{
+	switch (ch) {
+		case KEY_DOWN:
+			/* Go to next field */
+			form_driver(_pForm_, REQ_NEXT_FIELD);
+			/* Go to the end of the present buffer */
+			/* Leaves nicely at the last character */
+			form_driver(_pForm_, REQ_END_LINE);
+			break;
+		case KEY_UP:
+			/* Go to previous field */
+			form_driver(_pForm_, REQ_PREV_FIELD);
+			form_driver(_pForm_, REQ_END_LINE);
+			break;
+		case KEY_LEFT:
+			form_driver(_pForm_, REQ_PREV_CHAR);
+			break;
+		case KEY_RIGHT:
+			form_driver(_pForm_, REQ_NEXT_CHAR);
+			break;
+		case KEY_BACKSPACE:
+		case 8:
+			form_driver(_pForm_, REQ_DEL_PREV);
+			break;
+		default:
+			/* If this is a normal character, it gets */
+			/* printed */
+			form_driver(_pForm_, ch);
 
-	mvwprintw(pWin, 1, 1, "%0.2d:0.2d", minute, seconds);
+			for (int i=0; _fields[i]; i++)
+			{
+				if (field_status(_fields[i]) & O_ACTIVE)
+				{
+				}
+			}
+			// Get Active Fields here
+
+			break;
+	}
+
+	char szBuff[255];
+
+	int status0 = field_status(_fields[0]);
+	int status1 = field_status(_fields[1]);
+	int status2 = field_status(_fields[2]);
+
+
+	sprintf(szBuff, "Status=[%4.0X,%4.0X,%4.0X]; Buffers=[%s; %s; %s]",
+								status0, status1, status2,
+								field_buffer(_fields[0], 0),
+								field_buffer(_fields[0], 1),
+								field_buffer(_fields[0], 2));
+	mvprintw(LINES-2, 1, szBuff);
+	refresh();
 }
 
 void CWinQuiz::onMouse(int ch)
@@ -308,4 +450,21 @@ void CWinQuiz::checkActiveFields()
 	for (int i=0;i<4;i++)
 	{
 	}
+}
+
+void CWinQuiz::drawClock__()
+{
+	int minute = 0;
+	int seconds = 0;
+	_sw_seconds++;
+
+	minute = _sw_seconds / 60;
+	seconds = _sw_seconds % 60;
+	// Draw the Clock
+	mvwhline(_pWin, 0, 0, '_', 7);
+	mvwhline(_pWin, 2, 0, '_', 7);
+	mvwvline(_pWin, 0, 0, '|', 3);
+	mvwvline(_pWin, 0, 7, '|', 3);
+
+	mvwprintw(_pWin, 1, 1, "%2.0d:2.0d", minute, seconds);
 }

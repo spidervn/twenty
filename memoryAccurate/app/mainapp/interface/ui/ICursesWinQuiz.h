@@ -14,6 +14,7 @@
 class ICursesWinQuiz : public ICursesUI  {
 public:
 	virtual void doModal() = 0;
+	virtual ~ICursesWinQuiz() {};
 };
 
 #endif /* APP_MAINAPP_UI_ICURSESWINQUIZ_H_ */

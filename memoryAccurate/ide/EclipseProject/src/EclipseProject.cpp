@@ -21,14 +21,9 @@ int main()
 
 	delete icmd;*/
 
-	/*
 	ICursesWinQuiz* iwin = new CWinQuiz();
 	iwin->doModal();
 	delete iwin;
-	*/
-
-	IMemoryTest* pTest = new CMemoryTest();
-	delete pTest;
 
 	return 0;
 }

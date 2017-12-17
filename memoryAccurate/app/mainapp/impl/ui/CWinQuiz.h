@@ -27,6 +27,7 @@ public:
 	ICursesApp* app() { return NULL; }
 
 	void doModal();
+	void doModal1();
 
 	class Util
 	{
@@ -53,15 +54,19 @@ protected:
 	void onMouse(int ch);
 
 private:
-	FORM* pForm;
-	WINDOW* pWin;
+	void drawClock__();
+
+	FORM* _pForm_;
+	WINDOW* _pWin;
+	WINDOW* _pWinSb; 	// Win sub
+	FIELD* _fields[4];	// Fields
 
 	MemoryStick _memory;
 	QuizTestModel _modelt; 	// Test model
 	QuizAnswer _answer;
 
-	int _innerstate = 0;		
-	int _sw_seconds;	// Stopwach seconds	
+	int _innerstate = 1;	// 1. NotReady; 2. IsQuizing; 3. Finished Quiz; 4. Display
+	int _sw_seconds;		// Stopwach seconds
 
 	// Windows position
 	int _toppos;
