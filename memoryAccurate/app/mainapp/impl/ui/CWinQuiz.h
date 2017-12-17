@@ -62,6 +62,12 @@ private:
 
 	int _innerstate = 0;		
 	int _sw_seconds;	// Stopwach seconds	
+
+	// Windows position
+	int _toppos;
+	int _left;
+	int _win_width_;
+	int _win_height;
 };
 
 #endif /* APP_MAINAPP_IMPL_UI_CWINQUIZ_H_ */
