@@ -62,7 +62,7 @@ private:
 	FORM* _pForm_;
 	WINDOW* _pWin;
 	WINDOW* _pWinSb; 	// Win sub
-	FIELD* _fields[4];	// Fields
+	FIELD* _fields[7];	// Fields
 
 	MemoryStick _memory;
 	QuizTestModel _modelt; 	// Test model

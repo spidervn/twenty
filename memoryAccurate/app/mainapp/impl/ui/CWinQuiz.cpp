@@ -220,6 +220,9 @@ void CWinQuiz::doModal()
 	cbreak();
 	noecho();
 	keypad(stdscr, TRUE);
+	/* Initialize few color paris */
+	init_pair(1, COLOR_RED, COLOR_YELLOW);
+	init_pair(2, COLOR_WHITE, COLOR_BLUE);
 
 	onInitialize();
 	_innerstate = STATE_USER_CHOICE;	// Ready for user choice
@@ -292,7 +295,9 @@ void CWinQuiz::onInitialize()
 	_fields[0] = new_field(1, 40, _toppos + 4, 1, 0, 0);
 	_fields[1] = new_field(1, 40, _toppos + 5, 1, 0, 0);
 	_fields[2] = new_field(1, 40, _toppos + 6, 1, 0, 0);
-	_fields[3] = NULL;
+	_fields[3] = new_field(1, 20, _toppos + 7, 1, 0, 0);
+	_fields[4] = new_field(1, 20, _toppos + 8, 1, 0, 0);
+	_fields[5] = NULL;
 
 	/* Set field options */
 	set_field_back(_fields[0], A_UNDERLINE);
@@ -310,6 +315,12 @@ void CWinQuiz::onInitialize()
 	field_opts_off(_fields[3], O_AUTOSKIP);
 	set_field_fore(_fields[3], COLOR_PAIR(2));
 
+	field_opts_on(_fields[4], O_STATIC);	// Button
+	set_field_fore(_fields[4], COLOR_PAIR(2));
+	field_opts_on(_fields[5], O_STATIC);	// Button
+	set_field_fore(_fields[5], COLOR_PAIR(2));
+
+
 	set_field_userptr(_fields[0], (void*)&_answer.answer1);
 	set_field_userptr(_fields[1], (void*)&_answer.answer2);
 	set_field_userptr(_fields[2], (void*)&_answer.answer3);
@@ -317,6 +328,8 @@ void CWinQuiz::onInitialize()
 	set_field_buffer(_fields[0], 0, _answer.answer1.c_str());
 	set_field_buffer(_fields[1], 0, _answer.answer2.c_str());
 	set_field_buffer(_fields[2], 0, _answer.answer3.c_str());
+	set_field_buffer(_fields[3], 0, "OK");
+	set_field_buffer(_fields[4], 0, "Cancel");
 
 	/* Create the form and post it */
 	_pForm_ = new_form(_fields);
@@ -337,12 +350,14 @@ void CWinQuiz::onInitialize()
 	/* Print a border around the main Window and print a title */
 	wborder(_pWin, '|', '|', '-', '-', '+', '+', '+', '+');
 	Util::print_in_middle(_pWin, 1, 0, ncols + 4, "Doing quiz", COLOR_PAIR(1));
-	Util::print_in_middle(_pWin, 2, 0, 0, _memory.code.c_str(), COLOR_PAIR(1));
-	Util::print_in_middle(_pWin, 3, 0, 0, _memory.name.c_str(), COLOR_PAIR(1));
-	Util::print_in_middle(_pWin, 4, 0, 0, "My Form", COLOR_PAIR(1));
+	Util::print_in_middle(_pWin, 2, 8, 0, _memory.code.c_str(), COLOR_PAIR(1));
+	Util::print_in_middle(_pWin, 3, 8, 0, _memory.name.c_str(), COLOR_PAIR(1));
+	Util::print_in_middle(_pWin, 4, 8, 0, _memory.author.c_str(), COLOR_PAIR(1));
 
 	/* Print title */
 	post_form(_pForm_);
+
+	drawClock__();
 	refresh();
 }
 
@@ -373,6 +388,10 @@ void CWinQuiz::onTimer()
 		// Display Ready message		
 		drawReadyMessage_();
 	}
+	else if (_innerstate == STATE_LOADING_QUIZ)
+	{
+		drawLoading();
+	}
 }
 
 void CWinQuiz::onKeyboard(int ch)
@@ -384,7 +403,6 @@ void CWinQuiz::onKeyboard(int ch)
 	else if (_innerstate == STATE_LOADING_QUIZ)
 	{
 		
-
 	}
 	else if (_innerstate == STATE_USER_CHOICE)
 	{
@@ -429,9 +447,17 @@ void CWinQuiz::onKeyboard(int ch)
 		case 8:
 			form_driver(_pForm_, REQ_DEL_PREV);
 			break;
+		case 13:
 		case KEY_ENTER:
-		case 10:
-			
+			for (int i=0; _fields[i]; i++)
+			{
+				if (field_status(_fields[i]) & O_STATIC)
+				{
+					char szTmp[200];
+					sprintf(szTmp, "ON ENTER %d", i);
+					mvprintw(LINES-3, 1, szTmp);
+				}
+			}
 			break;
 		default:
 			/* If this is a normal character, it gets */
@@ -521,6 +547,18 @@ void CWinQuiz::drawClock__()
 	mvwhline(_pWin, 7, 0, '_', _win_width_);
 
 	mvwprintw(_pWin, 6, 2, "%2.0d:%2.0d", minute, seconds);
+}
+
+void CWinQuiz::drawLoading()
+{
+	if (count_Down_ >= 0)
+	{
+		// Draw the Ready message
+		mvwhline(_pWin, 5, 0, '_', _win_width_);
+		mvwhline(_pWin, 7, 0, '_', _win_width_);
+
+		mvwprintw(_pWin, 6, 2, "Loading Memory Unit... ");
+	}
 }
 
 void CWinQuiz::drawReadyMessage_()
