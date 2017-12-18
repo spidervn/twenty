@@ -39,6 +39,15 @@ using namespace std;
  +-------------------------------------------------------------+
 */
 
+#define STATE_INIT 1
+#define STATE_LOADING_QUIZ 2
+#define STATE_USER_CHOICE 3
+#define STATE_WAIT_FOR_START 4
+#define STATE_DOING_QUIZ 5
+#define STATE_CACULATE_QUIZ 6
+#define STATE_CANCEL_QUIZ 7
+#define STATE_DISPLAY_SCORE 8
+
 CWinQuiz::CWinQuiz() {
 	_sw_seconds = 0;
 	_pWin = NULL;
@@ -73,6 +82,8 @@ CWinQuiz::CWinQuiz() {
 	_answer.answer1 = "Answer1";
 	_answer.answer2 = "Answer2";
 	_answer.answer3 = "Answer3";
+
+	_innerstate = STATE_INIT;	// Start state machine
 }
 
 CWinQuiz::~CWinQuiz() {
@@ -211,6 +222,8 @@ void CWinQuiz::doModal()
 	keypad(stdscr, TRUE);
 
 	onInitialize();
+	_innerstate = STATE_USER_CHOICE;	// Ready for user choice
+
 	while ((ch = wgetch(_pWin)) != KEY_F(1)) {
 		switch (ch) {
 			case KEY_MOUSE:
@@ -350,11 +363,49 @@ void CWinQuiz::onTearDown()
 
 void CWinQuiz::onTimer()
 {
-	drawClock__();
+	if (_innerstate == STATE_DOING_QUIZ)
+	{
+		// Update Stopwatch
+		drawClock__();	
+	}
+	else if (_innerstate == STATE_WAIT_FOR_START)
+	{
+		// Display Ready message		
+		drawReadyMessage_();
+	}
 }
 
 void CWinQuiz::onKeyboard(int ch)
 {
+	if (_innerstate == STATE_INIT)
+	{
+		// Inner
+	}
+	else if (_innerstate == STATE_LOADING_QUIZ)
+	{
+		
+
+	}
+	else if (_innerstate == STATE_USER_CHOICE)
+	{
+		
+	}
+	else if (_innerstate == STATE_WAIT_FOR_START)
+	{
+	}
+	else if (_innerstate == STATE_DOING_QUIZ)
+	{
+	}
+	else if (_innerstate == STATE_CANCEL_QUIZ)
+	{
+	}
+	else if (_innerstate == STATE_CACULATE_QUIZ)
+	{
+	}
+	else if (_innerstate == STATE_DISPLAY_SCORE)
+	{	
+	}
+
 	switch (ch) {
 		case KEY_DOWN:
 			/* Go to next field */
@@ -378,6 +429,10 @@ void CWinQuiz::onKeyboard(int ch)
 		case 8:
 			form_driver(_pForm_, REQ_DEL_PREV);
 			break;
+		case KEY_ENTER:
+		case 10:
+			
+			break;
 		default:
 			/* If this is a normal character, it gets */
 			/* printed */
@@ -389,8 +444,6 @@ void CWinQuiz::onKeyboard(int ch)
 				{
 				}
 			}
-			// Get Active Fields here
-
 			break;
 	}
 
@@ -460,11 +513,29 @@ void CWinQuiz::drawClock__()
 
 	minute = _sw_seconds / 60;
 	seconds = _sw_seconds % 60;
-	// Draw the Clock
-	mvwhline(_pWin, 0, 0, '_', 7);
-	mvwhline(_pWin, 2, 0, '_', 7);
-	mvwvline(_pWin, 0, 0, '|', 3);
-	mvwvline(_pWin, 0, 7, '|', 3);
 
-	mvwprintw(_pWin, 1, 1, "%2.0d:2.0d", minute, seconds);
+	if (minute > 99)
+		minute = 99;
+	// Draw the Clock
+	mvwhline(_pWin, 5, 0, '_', _win_width_);
+	mvwhline(_pWin, 7, 0, '_', _win_width_);
+
+	mvwprintw(_pWin, 6, 2, "%2.0d:%2.0d", minute, seconds);
+}
+
+void CWinQuiz::drawReadyMessage_()
+{
+	int count_Down_;
+	
+	_sw_seconds --;
+	count_Down_ = _sw_seconds / 2;
+
+	if (count_Down_ >= 0)
+	{
+		// Draw the Ready message
+		mvwhline(_pWin, 5, 0, '_', _win_width_);
+		mvwhline(_pWin, 7, 0, '_', _win_width_);
+
+		mvwprintw(_pWin, 6, 2, "Ready... %2.0d", count_Down_);
+	}
 }

@@ -29,6 +29,7 @@ public:
 	void doModal();
 	void doModal1();
 
+
 	class Util
 	{
 	public:
@@ -36,6 +37,7 @@ public:
 		static void fill(WINDOW* win, int starty, int startx, int width, int height, int color_pair);
 	};
 protected:
+
 	// Supported functions
 	void checkActiveFields();
 
@@ -55,6 +57,7 @@ protected:
 
 private:
 	void drawClock__();
+	void drawReadyMessage_();
 
 	FORM* _pForm_;
 	WINDOW* _pWin;
@@ -66,7 +69,8 @@ private:
 	QuizAnswer _answer;
 
 	int _innerstate = 1;	// 1. NotReady; 2. IsQuizing; 3. Finished Quiz; 4. Display
-	int _sw_seconds;		// Stopwach seconds
+	int _sw_seconds;		// Stopwach seconds for
+							//	=> 
 
 	// Windows position
 	int _toppos;
