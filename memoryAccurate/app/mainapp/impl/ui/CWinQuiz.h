@@ -11,8 +11,11 @@
 #include "mainapp/interface/ui/ICursesWinQuiz.h"
 #include "mainapp/interface/model/quiz_model.h"
 #include <form.h>
+#include <vector>
+#include <queue>
 
 #define WQZ_FLAG_IS_QUIZING 0x00000001
+#define 
 
 class CWinQuiz: public ICursesWinQuiz {
 public:
@@ -22,13 +25,13 @@ public:
 	// Inherit virtual functions
 	void init_curses_mode() {}
 	int onEvent(int event, void* data) { return 1; }
-	int enqueueEvent(int event, void*data = NULL) { return 1; }
+	int enqueueEvent(int event, void*data = NULL);
+	int processNextMessage();	// 0; Success; 1-Failed; 2-No message on queue
 	void tear_down() {}
 	ICursesApp* app() { return NULL; }
 
 	void doModal();
 	void doModal1();
-
 
 	class Util
 	{
@@ -45,6 +48,7 @@ protected:
 	void onInitialize();	// Init windows
 	void onTearDown();		// Break ncurses
 
+	void onLoadMemoryUnit(std::string);
 	void onStartQuiz();
 	void onCancel1Quiz();
 	void onCompleteTheQuiz();
@@ -58,6 +62,9 @@ protected:
 private:
 	void drawClock__();
 	void drawReadyMessage_();
+
+	int _nextState_(int msg, void* data);
+	int _getNextState(int currentState, int msg, void* data);
 
 	FORM* _pForm_;
 	WINDOW* _pWin;
@@ -77,6 +84,8 @@ private:
 	int _left;
 	int _win_width_;
 	int _win_height;
+
+	std::queue<int> _q_messages;
 };
 
 #endif /* APP_MAINAPP_IMPL_UI_CWINQUIZ_H_ */

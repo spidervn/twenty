@@ -47,6 +47,18 @@ using namespace std;
 #define STATE_CACULATE_QUIZ 6
 #define STATE_CANCEL_QUIZ 7
 #define STATE_DISPLAY_SCORE 8
+#define STATE_DISPLAY_ERROR 9
+#define STATE_QUIT 10
+
+#define MSG_LOADED_MEMQUIZ 1
+#define MSG_LOAD_FAILED_MEMQUIZ 2
+#define MSG_ERROR 3		// General Error => Orthogonal region ? 
+#define MSG_START_QUIZ 4	// Start; Cancel; Quit
+#define MSG_CLOSE_FORM 5
+#define MSG_CANCEL_QUIZ 6	// Cancel an ongoing quiz
+#define MSG_FINISH_QUIZ 7  	
+#define MSG_TIMEOUT_QUIZ 8	// Time-up
+#define MSG_DEFAULT 9		// Default Step
 
 CWinQuiz::CWinQuiz() {
 	_sw_seconds = 0;
@@ -376,6 +388,39 @@ void CWinQuiz::onTearDown()
 	}
 }
 
+void CWinQuiz::onLoadMemoryUnit(std::string scode)
+{
+	drawLoading();
+
+	std::chrono::time_point<std::chrono::system_clock> tnow;
+	tnow = std::chrono::system_clock::now();
+
+	_memory.code = "Twenty";
+	_memory.name = "Twenty quiz code";
+	_memory.created_date = 0;
+	_memory.author = "ducvd";
+
+	_memory.listmemory_.push_back("1. World-class engineer");
+	_memory.listmemory_.push_back("1.2. Solving 1000 stackexchange computer science's problems");
+	_memory.listmemory_.push_back("1.3. Solving 1000 stackexchange mathematics's problems");
+	_memory.listmemory_.push_back("2. True stamina 99");
+	_memory.listmemory_.push_back("2.1. Easily run 3km in 20 minutes");
+	_memory.listmemory_.push_back("2.2. Easily enjoy two ugly woman at the same time");
+	_memory.listmemory_.push_back("3. Keep Ph-back");
+	_memory.listmemory_.push_back("3.1. Find the right method to treat Ph's father for fully recover from disaster.");
+	_memory.listmemory_.push_back("3.3. Give 60% stock of a company to her");
+
+	_modelt = KERNEL->memorytest_()->generateTest(_memory);	// Model for test
+
+	_answer.answer1 = "Answer1";
+	_answer.answer2 = "Answer2";
+	_answer.answer3 = "Answer3";
+
+	_innerstate = STATE_USER_CHOICE;
+
+	enqueueMesage(MSG_LOADED_MEMQUIZ, (void*)&_memory);
+}
+
 void CWinQuiz::onTimer()
 {
 	if (_innerstate == STATE_DOING_QUIZ)
@@ -396,34 +441,6 @@ void CWinQuiz::onTimer()
 
 void CWinQuiz::onKeyboard(int ch)
 {
-	if (_innerstate == STATE_INIT)
-	{
-		// Inner
-	}
-	else if (_innerstate == STATE_LOADING_QUIZ)
-	{
-		
-	}
-	else if (_innerstate == STATE_USER_CHOICE)
-	{
-		
-	}
-	else if (_innerstate == STATE_WAIT_FOR_START)
-	{
-	}
-	else if (_innerstate == STATE_DOING_QUIZ)
-	{
-	}
-	else if (_innerstate == STATE_CANCEL_QUIZ)
-	{
-	}
-	else if (_innerstate == STATE_CACULATE_QUIZ)
-	{
-	}
-	else if (_innerstate == STATE_DISPLAY_SCORE)
-	{	
-	}
-
 	switch (ch) {
 		case KEY_DOWN:
 			/* Go to next field */
@@ -463,13 +480,6 @@ void CWinQuiz::onKeyboard(int ch)
 			/* If this is a normal character, it gets */
 			/* printed */
 			form_driver(_pForm_, ch);
-
-			for (int i=0; _fields[i]; i++)
-			{
-				if (field_status(_fields[i]) & O_ACTIVE)
-				{
-				}
-			}
 			break;
 	}
 
@@ -478,7 +488,6 @@ void CWinQuiz::onKeyboard(int ch)
 	int status0 = field_status(_fields[0]);
 	int status1 = field_status(_fields[1]);
 	int status2 = field_status(_fields[2]);
-
 
 	sprintf(szBuff, "Status=[%4.0X,%4.0X,%4.0X]; Buffers=[%s; %s; %s]",
 								status0, status1, status2,
@@ -576,4 +585,113 @@ void CWinQuiz::drawReadyMessage_()
 
 		mvwprintw(_pWin, 6, 2, "Ready... %2.0d", count_Down_);
 	}
+}
+
+int CWinQuiz::enqueueEvent(int event, void*data = NULL)
+{
+	// Don't care about multithreading
+	_q_messages.push(event);
+	return 0;
+}
+
+int CWinQuiz::processNextMessage()	// 0; Success; 1-Failed; 2-No message on queue
+{
+
+	if (_q_messages.size() > 0)
+	{
+		int msg = _q_messages.pop();
+
+	}
+	return 0;
+}
+
+int CWinQuiz::_nextState_(int msg, void* data)
+{
+	int nwState = _getNextState(_innerstate, msg, data);
+	this->onEvent();
+}
+
+int CWinQuiz::_getNextState(int currentState, int msg, void* data)
+{
+	int finalState_ = currentState;
+	if (_innerstate == STATE_INIT && msg == MSG_DEFAULT)
+	{
+		finalState_ = STATE_LOADING_QUIZ;
+	}
+	else if (_innerstate == STATE_LOADING_QUIZ)
+	{
+		if (msg == MSG_LOADED_MEMQUIZ)
+		{
+			finalState_ = STATE_USER_CHOICE;
+		}
+		else if (msg == MSG_LOAD_FAILED_MEMQUIZ)
+		{
+			finalState_ = STATE_DISPLAY_ERROR;
+		}
+	}
+	else if (_innerstate == STATE_USER_CHOICE)
+	{
+		if (msg == MSG_START_QUIZ)
+		{
+			finalState_ = STATE_WAIT_FOR_START;
+		}
+		else if (msg == MSG_CLOSE_FORM)
+		{
+			finalState_ = STATE_QUIT;
+		}
+	}
+	else if (_innerstate == STATE_WAIT_FOR_START)
+	{
+		if (msg == MSG_DEFAULT)
+		{
+			finalState_ = STATE_DOING_QUIZ;
+		}
+	}
+	else if (_innerstate == STATE_DOING_QUIZ)
+	{
+		if (msg == MSG_DEFAULT)
+		{
+
+		}
+		else if (msg == MSG_CANCEL_QUIZ)
+		{
+			finalState_ = STATE_USER_CHOICE;
+		}
+		else if (msg == MSG_CLOSE_FORM)
+		{
+			finalState_ = STATE_QUIT;
+		}
+		else if (msg == MSG_TIMEOUT_QUIZ)
+		{
+			finalState_ = STATE_DISPLAY_SCORE;
+		}
+		else if (msg == MSG_FINISH_QUIZ)
+		{
+			finalState_ = STATE_CACULATE_QUIZ;
+		}
+	}
+	else if (_innerstate == STATE_CANCEL_QUIZ)
+	{
+
+	}
+	else if (_innerstate == STATE_CACULATE_QUIZ)
+	{
+		if (msg == MSG_DEFAULT)
+		{
+			finalState_ = STATE_DISPLAY_SCORE;
+		}
+	}
+	else if (_innerstate == STATE_DISPLAY_SCORE)
+	{	
+		if (msg == MSG_START_QUIZ)
+		{
+			finalState_ = STATE_
+		}
+		else if (msg == MSG_CLOSE_FORM)
+		{
+			finalState_ = STATE_QUIT;
+		}
+	}
+
+	return finalState_;
 }
