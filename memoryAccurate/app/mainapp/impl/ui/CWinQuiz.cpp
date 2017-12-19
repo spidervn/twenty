@@ -707,20 +707,30 @@ int CWinQuiz::currentState_()
 
 int CWinQuiz::next(int msg, void* data = NULL)		// Send event then process immediately
 {
-	return 0;
+	int nwState = getNextState_(_innerstate, msg, data);
+
+	if (nwState != _innerstate)
+	{
+		onLeaveState_(_innerstate);
+		onTransition_(_innerstate, nwState, data);
+		_innerstate = nwState;
+		onEnterState_(nwState, data);
+	}
+
+	return nwState;
 }
 
 int CWinQuiz::onTransition_(int fromState, int toState, void* data=NULL)
 {
-
+	return 0;
 }
 
 int CWinQuiz::onEnterState_(int state, void* data)
 {
-
+	return 0;
 }
 
 int CWinQuiz::onLeaveState_(int state)
 {
-
+	return 0;
 }
