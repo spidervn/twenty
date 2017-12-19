@@ -52,7 +52,7 @@ using namespace std;
 
 #define MSG_LOADED_MEMQUIZ 1
 #define MSG_LOAD_FAILED_MEMQUIZ 2
-#define MSG_ERROR 3		// General Error => Orthogonal region ? 
+#define MSG_ERROR 3			// General Error => Orthogonal region ? 
 #define MSG_START_QUIZ 4	// Start; Cancel; Quit
 #define MSG_CLOSE_FORM 5
 #define MSG_CANCEL_QUIZ 6	// Cancel an ongoing quiz
@@ -587,14 +587,14 @@ void CWinQuiz::drawReadyMessage_()
 	}
 }
 
-int CWinQuiz::enqueueEvent(int event, void*data = NULL)
+int CWinQuiz::queueEvent_(int event, void*data = NULL)
 {
 	// Don't care about multithreading
 	_q_messages.push(event);
 	return 0;
 }
 
-int CWinQuiz::processNextMessage()	// 0; Success; 1-Failed; 2-No message on queue
+int CWinQuiz::processNextQueue_()	// 0; Success; 1-Failed; 2-No message on queue
 {
 
 	if (_q_messages.size() > 0)
@@ -607,11 +607,14 @@ int CWinQuiz::processNextMessage()	// 0; Success; 1-Failed; 2-No message on queu
 
 int CWinQuiz::_nextState_(int msg, void* data)
 {
-	int nwState = _getNextState(_innerstate, msg, data);
-	this->onEvent();
+	int nwState = getNextState_(_innerstate, msg, data);
+
+	//TODO: Do not allow call _nextState here - cause infinite loop
+	onEvent();		// Do not allow call _nextState here - cause infinite loop
+	_innerstate = nwState;	// State change
 }
 
-int CWinQuiz::_getNextState(int currentState, int msg, void* data)
+int CWinQuiz::getNextState_(int currentState, int msg, void* data)
 {
 	int finalState_ = currentState;
 	if (_innerstate == STATE_INIT && msg == MSG_DEFAULT)
@@ -685,7 +688,7 @@ int CWinQuiz::_getNextState(int currentState, int msg, void* data)
 	{	
 		if (msg == MSG_START_QUIZ)
 		{
-			finalState_ = STATE_
+			finalState_ = STATE_WAIT_FOR_START;
 		}
 		else if (msg == MSG_CLOSE_FORM)
 		{
@@ -694,4 +697,30 @@ int CWinQuiz::_getNextState(int currentState, int msg, void* data)
 	}
 
 	return finalState_;
+}
+
+// Inherited state machine
+int CWinQuiz::currentState_()
+{
+	return _innerstate;
+}
+
+int CWinQuiz::next(int msg, void* data = NULL)		// Send event then process immediately
+{
+	return 0;
+}
+
+int CWinQuiz::onTransition_(int fromState, int toState, void* data=NULL)
+{
+
+}
+
+int CWinQuiz::onEnterState_(int state, void* data)
+{
+
+}
+
+int CWinQuiz::onLeaveState_(int state)
+{
+
 }

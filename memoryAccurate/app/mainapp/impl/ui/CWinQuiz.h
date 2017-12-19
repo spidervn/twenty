@@ -10,6 +10,7 @@
 
 #include "mainapp/interface/ui/ICursesWinQuiz.h"
 #include "mainapp/interface/model/quiz_model.h"
+#include "mainapp/interface/core/IStateMachine.h"
 #include <form.h>
 #include <vector>
 #include <queue>
@@ -17,21 +18,29 @@
 #define WQZ_FLAG_IS_QUIZING 0x00000001
 #define 
 
-class CWinQuiz: public ICursesWinQuiz {
+class CWinQuiz: public ICursesWinQuiz, public IStateMachine {
 public:
 	CWinQuiz();
 	virtual ~CWinQuiz();
 
 	// Inherit virtual functions
 	void init_curses_mode() {}
-	int onEvent(int event, void* data) { return 1; }
-	int enqueueEvent(int event, void*data = NULL);
-	int processNextMessage();	// 0; Success; 1-Failed; 2-No message on queue
 	void tear_down() {}
 	ICursesApp* app() { return NULL; }
 
 	void doModal();
 	void doModal1();
+
+	// Inherited state machine
+	int queueEvent_(int msg, void* data=NULL);	// Send to me - Not process
+	int processNextQueue_();	// 0; Success; 1-Failed; 2-No message on queue
+	int currentState_();
+	int getNextState_(int currentState, int msg, void* data = NULL);	// Calculate next state (calculate only, not change anything inside machine)
+	int next(int msg, void* data = NULL);		// Send event then process
+
+	int onTransition_(int fromState, int toState, void* data=NULL);
+	int onEnterState_(int state, void* data);
+	int onLeaveState_(int state);
 
 	class Util
 	{
