@@ -50,6 +50,41 @@ public:
 	};
 protected:
 
+	/*
+		States and Events:
+		--------------------
+		init
+			--(msg_show)--> (onLoadQuiz_)loading_quiz 
+		loading_quiz
+			--(loaded_memquiz){ initDoingQuiz( [ init_curses, draw_quizform ]) } --> user choice
+			--(load_failed_memquiz) { [ uninit_curses, drawErrorForm ] } --> display_error
+		user_choice
+			--(click_start_quiz_)--{ onWaitStart([ drawWaitstart ]) } ---> wait_start
+			--(click_close_quiz_) { onCloseQuiz[ uninit_curses ] }---> quit
+		wait_start
+			--(timer ([ drawWaitStart ]) )--> wait_start
+			--(timeup_wait_start{[ erase_wait_start_ ]})--> doing_quiz
+		doing_quiz
+			--(timer{ drawStopwatch } )---> doing_quiz
+			--(timeup_ { stopStopwatch, calc_score_ } )--> display_score
+			--(click_cancel_{[ draw_quizform, erase_stop_watch_ ]})--> user_choice
+			--(click_complete_quiz)---> confirm_finish_quiz
+		confirm_finish_quiz
+			--(click_Y { stopStopwatch, calc_score_ })--> display_score
+			--(click_N { } )--> doing_quiz
+		display_error
+			--(click_close_quiz_ { uninit_curses } ) --> quit
+		display_score
+			--(click_restart)--> wait_start
+			--(click_close_quiz_)--> quit
+		quit
+			--(show_form)--> loading_quiz
+		<<any_state>>
+			--(keyboard{ onKeyboard[] })--><<any_state>>
+		<<any_state>>
+			--(mouse{ onMouse[] })--><<any_state>>
+	 */
+
 	// Supported functions
 	void checkActiveFields();
 
@@ -68,6 +103,23 @@ protected:
 	void onKeyboard(int ch);
 	void onMouse(int ch);
 
+	// Supported functions for events & transtions
+	int onLoadQuiz_();		// Loading quiz
+	int init_curses();		// Init curses mode
+	int uninit_curses();	
+	int initDoingQuiz();
+	int draw_quizform();
+	int drawErrorForm();
+
+	int drawWaitstart();
+	int erase_wait_start_();
+
+	int drawStopwatch();
+	int stopStopwatch();
+
+	// Events
+	int onWaitStart();
+	int onCloseQuiz();
 private:
 	void drawClock__();
 	void drawReadyMessage_();

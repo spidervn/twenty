@@ -62,45 +62,40 @@ using namespace std;
 #define MSG_DEFAULT 9		// Default Step
 
 /*
+	States and Events:
+	--------------------
 	init
-		--(msg_show)--> loading_quiz
+		--(msg_show)--> (onLoadQuiz_)loading_quiz 
 	loading_quiz
-		--(loaded_memquiz)-->
-			user choice
-		--(load_failed_memquiz)
-			--> display_error		
+		--(loaded_memquiz){ initDoingQuiz( [ init_curses, draw_quizform ]) } --> user choice
+		--(load_failed_memquiz) { [ uninit_curses, drawErrorForm ] } --> display_error
 	user_choice
-		--(start)---> wait_start
-		--(close)---> quit
+		--(click_start_quiz_)--{ onWaitStart([ drawWaitstart ]) } ---> wait_start
+		--(click_close_quiz_) { onCloseQuiz[ uninit_curses ] }---> quit
 	wait_start
-		--(timer)--> wait_start
-		--(timerup)--> doing_quiz
+		--(timer ([ drawWaitStart ]) )--> wait_start
+		--(timeup_wait_start{[ erase_wait_start_ ]})--> doing_quiz
 	doing_quiz
-		--(timer)---> doing-quiz
-		--(timeup)--> calculate_quiz
-		--(cancel)--> user_choice
-		--(finish)--->calculate_quiz
+		--(timer{ drawStopwatch } )---> doing_quiz
+		--(timeup_ { stopStopwatch, calc_score_ } )--> display_score
+		--(click_cancel_{[ draw_quizform, erase_stop_watch_ ]})--> user_choice
+		--(click_complete_quiz)---> confirm_finish_quiz
+	confirm_finish_quiz
+		--(click_Y { stopStopwatch, calc_score_ })--> display_score
+		--(click_N { } )--> doing_quiz
 	display_error
-		--(OK)--> quit
-	calculate_quiz
-		--(default)--> 
-			display_score
+		--(click_close_quiz_ { uninit_curses } ) --> quit
 	display_score
-		--(CLOSE)--> quit
-		--(Again)--> wait_start
+		--(click_restart)--> wait_start
+		--(click_close_quiz_)--> quit
 	quit
 		--(show_form)--> loading_quiz
+	<<any_state>>
+		--(keyboard{ onKeyboard[] })--><<any_state>>
+	<<any_state>>
+		--(mouse{ onMouse[] })--><<any_state>>
  */
 
-/*
-	Events:
-		init
-			---(msg_show_form(code))
-				---> loading_quiz(onEnter{
-						load_quiz(code);
-					})
-				---> loading_quiz()
- */
 CWinQuiz::CWinQuiz() {
 	_sw_seconds = 0;
 	_pWin = NULL;
