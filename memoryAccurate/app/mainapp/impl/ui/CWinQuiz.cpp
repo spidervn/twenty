@@ -40,6 +40,7 @@ using namespace std;
 */
 
 #define STATE_INIT 1
+#define STATE_SHOW_FORM 2
 #define STATE_LOADING_QUIZ 2
 #define STATE_USER_CHOICE 3
 #define STATE_WAIT_FOR_START 4
@@ -60,6 +61,46 @@ using namespace std;
 #define MSG_TIMEOUT_QUIZ 8	// Time-up
 #define MSG_DEFAULT 9		// Default Step
 
+/*
+	init
+		--(msg_show)--> loading_quiz
+	loading_quiz
+		--(loaded_memquiz)-->
+			user choice
+		--(load_failed_memquiz)
+			--> display_error		
+	user_choice
+		--(start)---> wait_start
+		--(close)---> quit
+	wait_start
+		--(timer)--> wait_start
+		--(timerup)--> doing_quiz
+	doing_quiz
+		--(timer)---> doing-quiz
+		--(timeup)--> calculate_quiz
+		--(cancel)--> user_choice
+		--(finish)--->calculate_quiz
+	display_error
+		--(OK)--> quit
+	calculate_quiz
+		--(default)--> 
+			display_score
+	display_score
+		--(CLOSE)--> quit
+		--(Again)--> wait_start
+	quit
+		--(show_form)--> loading_quiz
+ */
+
+/*
+	Events:
+		init
+			---(msg_show_form(code))
+				---> loading_quiz(onEnter{
+						load_quiz(code);
+					})
+				---> loading_quiz()
+ */
 CWinQuiz::CWinQuiz() {
 	_sw_seconds = 0;
 	_pWin = NULL;
@@ -591,16 +632,17 @@ int CWinQuiz::queueEvent_(int event, void*data = NULL)
 {
 	// Don't care about multithreading
 	_q_messages.push(event);
+	_q_data.push(data);
 	return 0;
 }
 
 int CWinQuiz::processNextQueue_()	// 0; Success; 1-Failed; 2-No message on queue
 {
-
 	if (_q_messages.size() > 0)
 	{
 		int msg = _q_messages.pop();
-
+		void* dat =  _q_data.pop();
+		next(msg, dat);
 	}
 	return 0;
 }
@@ -722,6 +764,72 @@ int CWinQuiz::next(int msg, void* data = NULL)		// Send event then process immed
 
 int CWinQuiz::onTransition_(int fromState, int toState, void* data=NULL)
 {
+	/*
+		init
+		loading_quiz
+			--(loaded_memquiz)-->
+				user choice
+			--(load_failed_memquiz)
+				--> display_error		
+		user_choice
+			--(start)---> wait_start
+			--(close)---> quit
+		wait_start
+			--(timer)--> wait_start
+			--(timerup)--> doing_quiz
+		doing_quiz
+			--(timer)---> doing-quiz
+			--(timeup)--> calculate_quiz
+			--(cancel)--> user_choice
+			--(finish)--->calculate_quiz
+		display_error
+			--(OK)--> quit
+		calculate_quiz
+			--(default)--> 
+				display_score
+		display_score
+			--(CLOSE)--> quit
+			--(Again)--> wait_start
+		quit
+			--(show_form)--> loading_quiz
+	 */	
+	/*
+		Transitions:
+			init -> loading_quiz
+			loading_quiz -> 
+
+			#define STATE_INIT 1
+			#define STATE_LOADING_QUIZ 2
+			#define STATE_USER_CHOICE 3
+			#define STATE_WAIT_FOR_START 4
+			#define STATE_DOING_QUIZ 5
+			#define STATE_CACULATE_QUIZ 6
+			#define STATE_CANCEL_QUIZ 7
+			#define STATE_DISPLAY_SCORE 8
+			#define STATE_DISPLAY_ERROR 9
+			#define STATE_QUIT 10
+	 */
+
+	int FUNCID_ON_INITIALIZE = 1;
+	int FUNCID_ON_LOAD_QUIZ = 2;
+
+
+	int _maps[][] =
+	{
+		{ STATE_LOADING_QUIZ, STATE_USER_CHOICE,
+				MSG_LOADED_MEMQUIZ, FUNCID_ON_INITIALIZE },
+		{ STATE_LOADING_QUIZ, STATE_USER_CHOICE,
+				MSG_LOADED_MEMQUIZ, FUNCID_ON_INITIALIZE },				
+	};
+
+	for (int i = 0; i < 10; ++i)
+	{
+		if (_maps[i][0] == fromState && _maps[i][1] == toState)
+		{
+			// _maps[i][2] = ;			
+		}
+	}
+
 	return 0;
 }
 

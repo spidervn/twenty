@@ -95,6 +95,7 @@ private:
 	int _win_height;
 
 	std::queue<int> _q_messages;
+	std::queue<void*> _q_data;
 };
 
 #endif /* APP_MAINAPP_IMPL_UI_CWINQUIZ_H_ */
