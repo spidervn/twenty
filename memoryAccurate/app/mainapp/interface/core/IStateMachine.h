@@ -25,7 +25,7 @@ public:
 
 	// Events
 	virtual int onTransition_(int fromState, int toState, void* data=NULL) = 0;
-	virtual int onEnterState_(int state, void* data) = 0;
+	virtual int onEnterState_(int theoldstate, void* data) = 0;
 	virtual int onLeaveState_(int state) = 0;
 };
 

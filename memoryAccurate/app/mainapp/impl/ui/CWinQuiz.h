@@ -16,7 +16,6 @@
 #include <queue>
 
 #define WQZ_FLAG_IS_QUIZING 0x00000001
-#define 
 
 class CWinQuiz: public ICursesWinQuiz, public IStateMachine {
 public:
@@ -104,18 +103,24 @@ protected:
 	void onMouse(int ch);
 
 	// Supported functions for events & transtions
-	int onLoadQuiz_();		// Loading quiz
-	int init_curses();		// Init curses mode
-	int uninit_curses();	
-	int initDoingQuiz();
-	int draw_quizform();
-	int drawErrorForm();
+	int onLoadQuiz_(void* data = NULL);		// Loading quiz
+	int init_curses(void* data = NULL);		// Init curses mode
+	int uninit_curses(void* data = NULL);	
+	int initDoingQuiz(void* data = NULL);
+	int draw_quizform(void* data = NULL);
+	int drawErrorForm(void* data = NULL);
+	int calc_score_(void* data = NULL);
 
-	int drawWaitstart();
-	int erase_wait_start_();
+	int drawWaitstart(void* data = NULL);
+	int erase_wait_start_(void* data = NULL);
 
-	int drawStopwatch();
-	int stopStopwatch();
+	int drawStopwatch(void* data = NULL);
+	int stopStopwatch(void* data = NULL);
+	int erase_stop_watch_(void* data = NULL);
+
+	int finishDoQuiz_(void* data=NULL);
+	int showConfirm(void* data = NULL);
+	int onClickCancel(void* data = NULL);
 
 	// Events
 	int onWaitStart();
@@ -131,6 +136,9 @@ private:
 	WINDOW* _pWin;
 	WINDOW* _pWinSb; 	// Win sub
 	FIELD* _fields[7];	// Fields
+
+	FORM* _pFromError;
+	FIELD* _fields_error[2]; 	// Fields
 
 	MemoryStick _memory;
 	QuizTestModel _modelt; 	// Test model

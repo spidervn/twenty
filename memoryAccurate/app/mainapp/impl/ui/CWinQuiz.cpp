@@ -60,6 +60,34 @@ using namespace std;
 #define MSG_FINISH_QUIZ 7  	
 #define MSG_TIMEOUT_QUIZ 8	// Time-up
 #define MSG_DEFAULT 9		// Default Step
+#define MSG_CLICK_START_QUIZ 10
+#define MSG_CLICK_CLOSE_QUIZ 11
+#define MSG_CLICK_COMPLETE_QUIZ 12
+#define MSG_CLICK_CONFIRM_Y 13
+#define MSG_CLICK_CONFIRM_N 14
+#define MSG_CLICK_CANCEL 	15
+#define MSG_CLICK_RESTART 	16
+
+#define MSG_TIMER 17
+#define MSG_TIMEUP 18
+
+typedef int (*TransitionHandler)(void*);
+
+typedef struct StructTransitionRow
+{
+	int from_State_;
+	int toState;
+	int message;
+	TransitionHandler handler;
+
+	struct StructTransitionRow(int from, int to, int msg, TransitionHandler f)
+	{
+		from_State_ = from;
+		toState = to;
+		message = msg;
+		handler = f;
+	}
+} TransitionRow;
 
 /*
 	States and Events:
@@ -760,80 +788,226 @@ int CWinQuiz::next(int msg, void* data = NULL)		// Send event then process immed
 int CWinQuiz::onTransition_(int fromState, int toState, void* data=NULL)
 {
 	/*
+		States and Events:
+		--------------------
 		init
+			--(msg_show)--> (onLoadQuiz_)loading_quiz 
 		loading_quiz
-			--(loaded_memquiz)-->
-				user choice
-			--(load_failed_memquiz)
-				--> display_error		
+			--(loaded_memquiz){ initDoingQuiz( [ init_curses, draw_quizform ]) } --> user choice
+			--(load_failed_memquiz) { [ uninit_curses, drawErrorForm ] } --> display_error
 		user_choice
-			--(start)---> wait_start
-			--(close)---> quit
+			--(click_start_quiz_)--{ onWaitStart([ drawWaitstart ]) } ---> wait_start
+			--(click_close_quiz_) { onCloseQuiz[ uninit_curses ] }---> quit
 		wait_start
-			--(timer)--> wait_start
-			--(timerup)--> doing_quiz
+			--(timer ([ drawWaitStart ]) )--> wait_start
+			--(timeup_wait_start{[ erase_wait_start_ ]})--> doing_quiz
 		doing_quiz
-			--(timer)---> doing-quiz
-			--(timeup)--> calculate_quiz
-			--(cancel)--> user_choice
-			--(finish)--->calculate_quiz
+			--(timer{ drawStopwatch } )---> doing_quiz
+			--(timeup_ { finishDoQuiz_[stopStopwatch, calc_score_] } )--> display_score
+			--(click_cancel_{ onClickCancel [ draw_quizform, erase_stop_watch_ ]})--> user_choice
+			--(click_complete_quiz)---> confirm_finish_quiz
+		confirm_finish_quiz
+			--(click_Y { stopStopwatch, calc_score_ })--> display_score
+			--(click_N { } )--> doing_quiz
 		display_error
-			--(OK)--> quit
-		calculate_quiz
-			--(default)--> 
-				display_score
+			--(click_close_quiz_ { uninit_curses } ) --> quit
 		display_score
-			--(CLOSE)--> quit
-			--(Again)--> wait_start
+			--(click_restart)--> wait_start
+			--(click_close_quiz_)--> quit
 		quit
 			--(show_form)--> loading_quiz
-	 */	
-	/*
-		Transitions:
-			init -> loading_quiz
-			loading_quiz -> 
-
-			#define STATE_INIT 1
-			#define STATE_LOADING_QUIZ 2
-			#define STATE_USER_CHOICE 3
-			#define STATE_WAIT_FOR_START 4
-			#define STATE_DOING_QUIZ 5
-			#define STATE_CACULATE_QUIZ 6
-			#define STATE_CANCEL_QUIZ 7
-			#define STATE_DISPLAY_SCORE 8
-			#define STATE_DISPLAY_ERROR 9
-			#define STATE_QUIT 10
+		<<any_state>>
+			--(keyboard{ onKeyboard[] })--><<any_state>>
+		<<any_state>>
+			--(mouse{ onMouse[] })--><<any_state>>
 	 */
-
 	int FUNCID_ON_INITIALIZE = 1;
 	int FUNCID_ON_LOAD_QUIZ = 2;
 
-
-	int _maps[][] =
+	TransitionRow transitions[] = 
 	{
-		{ STATE_LOADING_QUIZ, STATE_USER_CHOICE,
-				MSG_LOADED_MEMQUIZ, FUNCID_ON_INITIALIZE },
-		{ STATE_LOADING_QUIZ, STATE_USER_CHOICE,
-				MSG_LOADED_MEMQUIZ, FUNCID_ON_INITIALIZE },				
+		TransitionRow(STATE_LOADING_QUIZ, 		STATE_USER_CHOICE, 		MSG_LOADED_MEMQUIZ, &			CWinQuiz::initDoingQuiz),
+		TransitionRow(STATE_LOADING_QUIZ, 		STATE_DISPLAY_ERROR, 	MSG_LOAD_FAILED_MEMQUIZ, 		&CWinQuiz::drawErrorForm),
+		TransitionRow(STATE_USER_CHOICE, 		STATE_WAIT_FOR_START,	MSG_CLICK_START_QUIZ, 			&CWinQuiz::onWaitStart),
+		TransitionRow(STATE_USER_CHOICE, 		STATE_QUIT,				MSG_CLICK_CLOSE_QUIZ, 			&CWinQuiz::onCloseQuiz),
+		TransitionRow(STATE_WAIT_FOR_START,		STATE_WAIT_FOR_START,			MSG_TIMER,						&CWinQuiz::drawWaitstart),
+		TransitionRow(STATE_WAIT_FOR_START,		STATE_WAIT_FOR_START,			MSG_TIMEUP,						&CWinQuiz::erase_wait_start_),
+		TransitionRow(STATE_DOING_QUIZ,			STATE_DOING_QUIZ,				MSG_TIMER,						&CWinQuiz::erase_wait_start_),
+		TransitionRow(STATE_DOING_QUIZ,			STATE_DISPLAY_SCORE,			MSG_TIMEUP,						&CWinQuiz::finishDoQuiz_),
+		TransitionRow(STATE_DOING_QUIZ,			STATE_USER_CHOICE,				MSG_CLICK_CANCEL,				&CWinQuiz::onClickCancel),
+		TransitionRow(STATE_DOING_QUIZ,			STATE_CONFIRM_FINISH_QUIZ,		MSG_CLICK_COMPLETE_QUIZ,		&CWinQuiz::showConfirm),	// New
+
+		TransitionRow(STATE_CONFIRM_FINISH_QUIZ,		STATE_DISPLAY_SCORE,		MSG_CLICK_CONFIRM_Y,		&CWinQuiz::finishDoQuiz_),
+		TransitionRow(STATE_CONFIRM_FINISH_QUIZ,		STATE_DOING_QUIZ,			MSG_CLICK_CONFIRM_N,		&CWinQuiz::resumeDoQuiz_),	// New
+		TransitionRow(STATE_DISPLAY_ERROR,				STATE_QUIT,					MSG_CLICK_CLOSE_QUIZ,		&CWinQuiz::uninit_curses),
+		TransitionRow(STATE_DISPLAY_SCORE, 				STATE_WAIT_FOR_START,		MSG_CLICK_RESTART, 			&CWinQuiz::onRestartQuiz)	// New
+		// TransitionRow(STATE_DISPLAY_SCORE, 				STATE_QUIT,					MSG_CLICK_CLOSE_QUIZ, 		&CWinQuiz::onRestartQuiz),		
 	};
 
-	for (int i = 0; i < 10; ++i)
+	int n = sizeof(transitions)/sizeof(TransitionRow);
+	for (int i = 0; i < n; ++i)
 	{
-		if (_maps[i][0] == fromState && _maps[i][1] == toState)
+		if (transitions[i].from_State_ == fromState && transitions[i].toState == toState)
 		{
-			// _maps[i][2] = ;			
+			return (this->*transitions[i].handler)(data);
 		}
 	}
 
 	return 0;
 }
 
-int CWinQuiz::onEnterState_(int state, void* data)
+int CWinQuiz::onEnterState_(int theoldstate, void* data)
 {
+	/*
+		States and Events:
+		--------------------
+		init
+			--(msg_show)--> (onLoadQuiz_)loading_quiz 
+		loading_quiz
+			--(loaded_memquiz){ initDoingQuiz( [ init_curses, draw_quizform ]) } --> user choice
+			--(load_failed_memquiz) { [ uninit_curses, drawErrorForm ] } --> display_error
+		user_choice
+			--(click_start_quiz_)--{ onWaitStart([ drawWaitstart ]) } ---> wait_start
+			--(click_close_quiz_) { onCloseQuiz[ uninit_curses ] }---> quit
+		wait_start
+			--(timer ([ drawWaitStart ]) )--> wait_start
+			--(timeup_wait_start{[ erase_wait_start_ ]})--> doing_quiz
+		doing_quiz
+			--(timer{ drawStopwatch } )---> doing_quiz
+			--(timeup_ { finishDoQuiz_[stopStopwatch, calc_score_] } )--> display_score
+			--(click_cancel_{ onClickCancel [ draw_quizform, erase_stop_watch_ ]})--> user_choice
+			--(click_complete_quiz)---> confirm_finish_quiz
+		confirm_finish_quiz
+			--(click_Y { stopStopwatch, calc_score_ })--> display_score
+			--(click_N { } )--> doing_quiz
+		display_error
+			--(click_close_quiz_ { uninit_curses } ) --> quit
+		display_score
+			--(click_restart)--> wait_start
+			--(click_close_quiz_)--> quit
+		quit
+			--(show_form)--> loading_quiz
+		<<any_state>>
+			--(keyboard{ onKeyboard[] })--><<any_state>>
+		<<any_state>>
+			--(mouse{ onMouse[] })--><<any_state>>
+	 */
+
+	if (currentState_() == STATE_LOADING_QUIZ && theoldstate == STATE_INIT)
+	{
+		onLoadQuiz_(data);
+	}
+
 	return 0;
 }
 
 int CWinQuiz::onLeaveState_(int state)
+{
+	return 0;
+}
+
+int CWinQuiz::onLoadQuiz_(void* data = NULL)		// Loading quiz
+{
+	init_curses(data);
+
+	std::chrono::time_point<std::chrono::system_clock> tnow;
+	tnow = std::chrono::system_clock::now();
+
+	_memory.code = "Twenty";
+	_memory.name = "Twenty quiz code";
+	_memory.created_date = 0;
+	_memory.author = "ducvd";
+
+	_memory.listmemory_.push_back("1. World-class engineer");
+	_memory.listmemory_.push_back("1.2. Solving 1000 stackexchange computer science's problems");
+	_memory.listmemory_.push_back("1.3. Solving 1000 stackexchange mathematics's problems");
+	_memory.listmemory_.push_back("2. True stamina 99");
+	_memory.listmemory_.push_back("2.1. Easily run 3km in 20 minutes");
+	_memory.listmemory_.push_back("2.2. Easily enjoy two ugly woman at the same time");
+	_memory.listmemory_.push_back("3. Keep Ph-back");
+	_memory.listmemory_.push_back("3.1. Find the right method to treat Ph's father for fully recover from disaster.");
+	_memory.listmemory_.push_back("3.3. Give 60% stock of a company to her");
+
+	_modelt = KERNEL->memorytest_()->generateTest(_memory);	// Model for test
+
+	_answer.answer1 = "Answer1";
+	_answer.answer2 = "Answer2";
+	_answer.answer3 = "Answer3";
+	return 0;
+}
+int CWinQuiz::init_curses(void* data = NULL)		// Init curses mode
+{
+	return 0;
+}
+
+int CWinQuiz::uninit_curses(void* data = NULL)
+{
+	return 0;
+}
+
+int CWinQuiz::initDoingQuiz(void* data = NULL)
+{
+	std::chrono::time_point<std::chrono::system_clock> tnow;
+	tnow = std::chrono::system_clock::now();
+
+	_memory.code = "Twenty";
+	_memory.name = "Twenty quiz code";
+	_memory.created_date = 0;
+	_memory.author = "ducvd";
+
+	_memory.listmemory_.push_back("1. World-class engineer");
+	_memory.listmemory_.push_back("1.2. Solving 1000 stackexchange computer science's problems");
+	_memory.listmemory_.push_back("1.3. Solving 1000 stackexchange mathematics's problems");
+	_memory.listmemory_.push_back("2. True stamina 99");
+	_memory.listmemory_.push_back("2.1. Easily run 3km in 20 minutes");
+	_memory.listmemory_.push_back("2.2. Easily enjoy two ugly woman at the same time");
+	_memory.listmemory_.push_back("3. Keep Ph-back");
+	_memory.listmemory_.push_back("3.1. Find the right method to treat Ph's father for fully recover from disaster.");
+	_memory.listmemory_.push_back("3.3. Give 60% stock of a company to her");
+
+	_modelt = KERNEL->memorytest_()->generateTest(_memory);	// Model for test
+
+	_answer.answer1 = "Answer1";
+	_answer.answer2 = "Answer2";
+	_answer.answer3 = "Answer3";
+	return 0;
+}
+
+int CWinQuiz::draw_quizform(void* data)
+{
+	
+	return 0;
+}
+
+int CWinQuiz::drawErrorForm(void* data)
+{
+	string* pstr_ = (string*)data;
+
+	
+	return 0;
+}
+
+int CWinQuiz::drawWaitstart(void* data = NULL)
+{
+	return 0;
+}
+
+int CWinQuiz::erase_wait_start_(void* data = NULL)
+{
+	return 0;
+}
+
+int CWinQuiz::drawStopwatch(void* data = NULL)
+{
+	return 0;
+}
+
+int CWinQuiz::stopStopwatch(void* data = NULL)
+{
+	return 0;
+}
+
+int CWinQuiz::finishDoQuiz_(void* data = NULL)
 {
 	return 0;
 }
