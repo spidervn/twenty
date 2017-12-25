@@ -89,6 +89,22 @@ typedef struct StructTransitionRow
 	}
 } TransitionRow;
 
+typedef int (CWinQuiz::*EventFunction)(void*);
+typedef struct STRUCTTransitionRow
+{
+	int from_State_;
+	int toState;
+	int message;
+	EventFunction handler;
+
+	STRUCTTransitionRow(int from, int to, int msg, EventFunction evt)
+	{
+		from_State_ = from;
+		toState = to;
+		message = msg;
+		handler = evt;
+	}
+} TransitionRow;
 /*
 	States and Events:
 	--------------------
@@ -785,7 +801,7 @@ int CWinQuiz::next(int msg, void* data = NULL)		// Send event then process immed
 	return nwState;
 }
 
-int CWinQuiz::onTransition_(int fromState, int toState, void* data=NULL)
+int CWinQuiz::onTransition_(int from_State_, int toState, void* data=NULL)
 {
 	/*
 		States and Events:
@@ -847,7 +863,7 @@ int CWinQuiz::onTransition_(int fromState, int toState, void* data=NULL)
 	int n = sizeof(transitions)/sizeof(TransitionRow);
 	for (int i = 0; i < n; ++i)
 	{
-		if (transitions[i].from_State_ == fromState && transitions[i].toState == toState)
+		if (transitions[i].from_State_ == from_State_ && transitions[i].toState == toState)
 		{
 			return (this->*transitions[i].handler)(data);
 		}
@@ -906,10 +922,10 @@ int CWinQuiz::onLeaveState_(int state)
 	return 0;
 }
 
+
 int CWinQuiz::onLoadQuiz_(void* data = NULL)		// Loading quiz
 {
-	init_curses(data);
-
+	string* pcode = (string*)data;
 	std::chrono::time_point<std::chrono::system_clock> tnow;
 	tnow = std::chrono::system_clock::now();
 
@@ -935,6 +951,7 @@ int CWinQuiz::onLoadQuiz_(void* data = NULL)		// Loading quiz
 	_answer.answer3 = "Answer3";
 	return 0;
 }
+
 int CWinQuiz::init_curses(void* data = NULL)		// Init curses mode
 {
 	return 0;
@@ -982,8 +999,6 @@ int CWinQuiz::draw_quizform(void* data)
 int CWinQuiz::drawErrorForm(void* data)
 {
 	string* pstr_ = (string*)data;
-
-	
 	return 0;
 }
 
@@ -1008,6 +1023,11 @@ int CWinQuiz::stopStopwatch(void* data = NULL)
 }
 
 int CWinQuiz::finishDoQuiz_(void* data = NULL)
+{
+	return 0;
+}
+
+int CWinQuiz::calc_score_(void* data = NULL)
 {
 	return 0;
 }

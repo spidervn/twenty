@@ -15,6 +15,8 @@ class IGrammar
 {
 public:
 	virtual void autoComplete(std::string currentCmd, std::string currentWord, std::vector<std::string>& vout) = 0;
+
+	virtual int answerMatch(std::string str1, std::string str2) = 0;
 };
 
 

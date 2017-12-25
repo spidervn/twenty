@@ -7,6 +7,7 @@
 
 #include <mainapp/impl/lib/CGrammar.h>
 #include <boost/algorithm/string.hpp>
+#include <algorithm>
 
 using namespace std;
 
@@ -53,3 +54,49 @@ void CGrammar::autoComplete(std::string currentCmd,
 	}
 	*/
 }
+
+
+int CGrammar::answerMatch(std::string str1, std::string str2)
+{
+	int n1, n2;
+	int m[100][100];	// TODO: declare dynamic allocation
+
+	n1 = str1.size();
+	n2 = str2.size();
+
+	for (int i = 0; i < n1; ++i)
+	{
+		for (int j = 0; j < n2; ++j)
+		{
+			if (i==0 || j==0)
+			{
+				m[i][j] = max(i,j);
+			}
+			else 
+			{
+				int v1, v2, v3;
+				int vdiff = (str1[i] == str2[j]) ? 0 : 1;
+
+				v1 = m[i-1][j] + 1 ;
+				v2 = m[i][j-1] + 1;
+				v3 = m[i-1][j-1] + vdiff;
+
+				m[i][j] = min(v1,min(v2,v3));
+			}
+		}
+	}
+
+	if (n1 == 0)
+	{
+		return n1;
+	}
+	else if (n2 == 0)
+	{
+		return n2;
+	}
+	else
+	{
+		return m[n1-1][n2-1];
+	}	
+}
+

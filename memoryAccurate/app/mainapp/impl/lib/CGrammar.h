@@ -16,6 +16,8 @@ public:
 	virtual ~CGrammar();
 
 	void autoComplete(std::string currentCmd, std::string currentWord, std::vector<std::string>& vout);
+
+	int answerMatch(std::string str1, std::string str2);
 };
 
 #endif /* APP_MAINAPP_IMPL_LIB_CGRAMMAR_H_ */

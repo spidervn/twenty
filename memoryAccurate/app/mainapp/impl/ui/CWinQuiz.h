@@ -99,6 +99,7 @@ protected:
 	void onTimer();			// Timer to
 	void onClose();			//
 
+private:
 	void onKeyboard(int ch);
 	void onMouse(int ch);
 
@@ -109,19 +110,26 @@ protected:
 	int initDoingQuiz(void* data = NULL);
 	int draw_quizform(void* data = NULL);
 	int drawErrorForm(void* data = NULL);
+<<<<<<< Updated upstream
 	int calc_score_(void* data = NULL);
+=======
+>>>>>>> Stashed changes
 
 	int drawWaitstart(void* data = NULL);
 	int erase_wait_start_(void* data = NULL);
 
 	int drawStopwatch(void* data = NULL);
 	int stopStopwatch(void* data = NULL);
+<<<<<<< Updated upstream
 	int erase_stop_watch_(void* data = NULL);
 
 	int finishDoQuiz_(void* data=NULL);
 	int showConfirm(void* data = NULL);
 	int onClickCancel(void* data = NULL);
+=======
+>>>>>>> Stashed changes
 
+	int calc_score_(void* data = NULL);
 	// Events
 	int onWaitStart();
 	int onCloseQuiz();
