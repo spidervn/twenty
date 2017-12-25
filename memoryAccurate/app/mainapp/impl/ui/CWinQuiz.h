@@ -110,24 +110,18 @@ private:
 	int initDoingQuiz(void* data = NULL);
 	int draw_quizform(void* data = NULL);
 	int drawErrorForm(void* data = NULL);
-<<<<<<< Updated upstream
 	int calc_score_(void* data = NULL);
-=======
->>>>>>> Stashed changes
 
 	int drawWaitstart(void* data = NULL);
 	int erase_wait_start_(void* data = NULL);
 
 	int drawStopwatch(void* data = NULL);
 	int stopStopwatch(void* data = NULL);
-<<<<<<< Updated upstream
 	int erase_stop_watch_(void* data = NULL);
 
 	int finishDoQuiz_(void* data=NULL);
 	int showConfirm(void* data = NULL);
 	int onClickCancel(void* data = NULL);
-=======
->>>>>>> Stashed changes
 
 	int calc_score_(void* data = NULL);
 	// Events
@@ -140,13 +134,15 @@ private:
 	int _nextState_(int msg, void* data);
 	int _getNextState(int currentState, int msg, void* data);
 
-	FORM* _pForm_;
+	FORM* _pForm_;		// Doing quiz form ----------
 	WINDOW* _pWin;
 	WINDOW* _pWinSb; 	// Win sub
 	FIELD* _fields[7];	// Fields
 
-	FORM* _pFromError;
+	FORM* _pFromError;			// Error form ----------
 	FIELD* _fields_error[2]; 	// Fields
+
+	FORM* _pFormError;
 
 	MemoryStick _memory;
 	QuizTestModel _modelt; 	// Test model

@@ -992,13 +992,17 @@ int CWinQuiz::initDoingQuiz(void* data = NULL)
 
 int CWinQuiz::draw_quizform(void* data)
 {
-	
+
 	return 0;
 }
 
 int CWinQuiz::drawErrorForm(void* data)
 {
 	string* pstr_ = (string*)data;
+	(*pstr).c_str();
+
+	
+
 	return 0;
 }
 
