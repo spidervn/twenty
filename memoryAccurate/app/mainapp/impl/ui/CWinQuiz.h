@@ -41,6 +41,9 @@ public:
 	int onEnterState_(int state, void* data);
 	int onLeaveState_(int state);
 
+	int onEvent(int event, void* data);					// Inherit ICursesUI
+	int enqueueEvent(int event, void*data = NULL);
+
 	class Util
 	{
 	public:
@@ -123,12 +126,14 @@ private:
 	int showConfirm(void* data = NULL);
 	int onClickCancel(void* data = NULL);
 
-	int calc_score_(void* data = NULL);
+	int resumeDoQuiz_(void* data=NULL);
+	int onRestartQuiz(void* data=NULL);
 	// Events
-	int onWaitStart();
-	int onCloseQuiz();
+	int onWaitStart(void* data=NULL);
+	int onCloseQuiz(void* data=NULL);
 private:
 	void drawClock__();
+	void drawLoading();
 	void drawReadyMessage_();
 
 	int _nextState_(int msg, void* data);

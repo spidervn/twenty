@@ -50,6 +50,7 @@ using namespace std;
 #define STATE_DISPLAY_SCORE 8
 #define STATE_DISPLAY_ERROR 9
 #define STATE_QUIT 10
+#define STATE_CONFIRM_FINISH_QUIZ 11
 
 #define MSG_LOADED_MEMQUIZ 1
 #define MSG_LOAD_FAILED_MEMQUIZ 2
@@ -71,23 +72,23 @@ using namespace std;
 #define MSG_TIMER 17
 #define MSG_TIMEUP 18
 
-typedef int (*TransitionHandler)(void*);
-
-typedef struct StructTransitionRow
-{
-	int from_State_;
-	int toState;
-	int message;
-	TransitionHandler handler;
-
-	struct StructTransitionRow(int from, int to, int msg, TransitionHandler f)
-	{
-		from_State_ = from;
-		toState = to;
-		message = msg;
-		handler = f;
-	}
-} TransitionRow;
+//typedef int (*TransitionHandler)(void*);
+//
+//typedef struct StructTransitionRow
+//{
+//	int from_State_;
+//	int toState;
+//	int message;
+//	TransitionHandler handler;
+//
+//	struct StructTransitionRow(int from, int to, int msg, TransitionHandler f)
+//	{
+//		from_State_ = from;
+//		toState = to;
+//		message = msg;
+//		handler = f;
+//	}
+//} TransitionRow;
 
 typedef int (CWinQuiz::*EventFunction)(void*);
 typedef struct STRUCTTransitionRow
@@ -470,7 +471,7 @@ void CWinQuiz::onTearDown()
 
 void CWinQuiz::onLoadMemoryUnit(std::string scode)
 {
-	drawLoading();
+	// drawLoading();
 
 	std::chrono::time_point<std::chrono::system_clock> tnow;
 	tnow = std::chrono::system_clock::now();
@@ -498,7 +499,8 @@ void CWinQuiz::onLoadMemoryUnit(std::string scode)
 
 	_innerstate = STATE_USER_CHOICE;
 
-	enqueueMesage(MSG_LOADED_MEMQUIZ, (void*)&_memory);
+	// TODO
+	// enqueueMesage(MSG_LOADED_MEMQUIZ, (void*)&_memory);
 }
 
 void CWinQuiz::onTimer()
@@ -515,7 +517,7 @@ void CWinQuiz::onTimer()
 	}
 	else if (_innerstate == STATE_LOADING_QUIZ)
 	{
-		drawLoading();
+		// drawLoading();
 	}
 }
 
@@ -640,7 +642,7 @@ void CWinQuiz::drawClock__()
 
 void CWinQuiz::drawLoading()
 {
-	if (count_Down_ >= 0)
+	if (_sw_seconds >= 0)
 	{
 		// Draw the Ready message
 		mvwhline(_pWin, 5, 0, '_', _win_width_);
@@ -667,7 +669,7 @@ void CWinQuiz::drawReadyMessage_()
 	}
 }
 
-int CWinQuiz::queueEvent_(int event, void*data = NULL)
+int CWinQuiz::queueEvent_(int event, void*data)
 {
 	// Don't care about multithreading
 	_q_messages.push(event);
@@ -679,9 +681,13 @@ int CWinQuiz::processNextQueue_()	// 0; Success; 1-Failed; 2-No message on queue
 {
 	if (_q_messages.size() > 0)
 	{
-		int msg = _q_messages.pop();
-		void* dat =  _q_data.pop();
-		next(msg, dat);
+		int msg = _q_messages.front();
+		void* data = _q_data.front();
+
+		_q_messages.pop();
+		_q_data.pop();
+
+		next(msg, data);
 	}
 	return 0;
 }
@@ -691,7 +697,7 @@ int CWinQuiz::_nextState_(int msg, void* data)
 	int nwState = getNextState_(_innerstate, msg, data);
 
 	//TODO: Do not allow call _nextState here - cause infinite loop
-	onEvent();		// Do not allow call _nextState here - cause infinite loop
+	// onEvent();		// Do not allow call _nextState here - cause infinite loop
 	_innerstate = nwState;	// State change
 }
 
@@ -786,7 +792,7 @@ int CWinQuiz::currentState_()
 	return _innerstate;
 }
 
-int CWinQuiz::next(int msg, void* data = NULL)		// Send event then process immediately
+int CWinQuiz::next(int msg, void* data)		// Send event then process immediately
 {
 	int nwState = getNextState_(_innerstate, msg, data);
 
@@ -801,7 +807,7 @@ int CWinQuiz::next(int msg, void* data = NULL)		// Send event then process immed
 	return nwState;
 }
 
-int CWinQuiz::onTransition_(int from_State_, int toState, void* data=NULL)
+int CWinQuiz::onTransition_(int from_State_, int toState, void* data)
 {
 	/*
 		States and Events:
@@ -923,7 +929,7 @@ int CWinQuiz::onLeaveState_(int state)
 }
 
 
-int CWinQuiz::onLoadQuiz_(void* data = NULL)		// Loading quiz
+int CWinQuiz::onLoadQuiz_(void* data)		// Loading quiz
 {
 	string* pcode = (string*)data;
 	std::chrono::time_point<std::chrono::system_clock> tnow;
@@ -952,17 +958,17 @@ int CWinQuiz::onLoadQuiz_(void* data = NULL)		// Loading quiz
 	return 0;
 }
 
-int CWinQuiz::init_curses(void* data = NULL)		// Init curses mode
+int CWinQuiz::init_curses(void* data)		// Init curses mode
 {
 	return 0;
 }
 
-int CWinQuiz::uninit_curses(void* data = NULL)
+int CWinQuiz::uninit_curses(void* data)
 {
 	return 0;
 }
 
-int CWinQuiz::initDoingQuiz(void* data = NULL)
+int CWinQuiz::initDoingQuiz(void* data)
 {
 	std::chrono::time_point<std::chrono::system_clock> tnow;
 	tnow = std::chrono::system_clock::now();
@@ -999,39 +1005,75 @@ int CWinQuiz::draw_quizform(void* data)
 int CWinQuiz::drawErrorForm(void* data)
 {
 	string* pstr_ = (string*)data;
-	(*pstr).c_str();
-
-	
-
 	return 0;
 }
 
-int CWinQuiz::drawWaitstart(void* data = NULL)
+int CWinQuiz::drawWaitstart(void* data)
 {
 	return 0;
 }
 
-int CWinQuiz::erase_wait_start_(void* data = NULL)
+int CWinQuiz::erase_wait_start_(void* data)
 {
 	return 0;
 }
 
-int CWinQuiz::drawStopwatch(void* data = NULL)
+int CWinQuiz::drawStopwatch(void* data)
 {
 	return 0;
 }
 
-int CWinQuiz::stopStopwatch(void* data = NULL)
+int CWinQuiz::stopStopwatch(void* data)
 {
 	return 0;
 }
 
-int CWinQuiz::finishDoQuiz_(void* data = NULL)
+int CWinQuiz::finishDoQuiz_(void* data)
 {
 	return 0;
 }
 
-int CWinQuiz::calc_score_(void* data = NULL)
+int CWinQuiz::calc_score_(void* data)
+{
+	return 0;
+}
+
+int CWinQuiz::resumeDoQuiz_(void* data)
+{
+	return 0;
+}
+
+int CWinQuiz::onRestartQuiz(void* data)
+{
+	return 0;
+}
+
+int CWinQuiz::onWaitStart(void* data)
+{
+	return 0;
+}
+
+int CWinQuiz::onCloseQuiz(void* data)
+{
+	return 0;
+}
+
+int CWinQuiz::showConfirm(void* data)
+{
+	return 0;
+}
+
+int CWinQuiz::onClickCancel(void* data)
+{
+	return 0;
+}
+
+int CWinQuiz::onEvent(int event, void* data)
+{
+	return 0;
+}
+
+int CWinQuiz::enqueueEvent(int event, void* data)
 {
 	return 0;
 }
