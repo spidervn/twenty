@@ -8,7 +8,8 @@
 #ifndef APP_MAINAPP_IMPL_CORE_CKERNEL_H_
 #define APP_MAINAPP_IMPL_CORE_CKERNEL_H_
 
-#include <mainapp/interface/core/IKernel.h>
+#include "mainapp/interface/core/IKernel.h"
+#include "mainapp/interface/ncurses/ICursesApp.h"
 #define KERNEL CKernel::Instance()
 
 class CKernel: public IKernel {
@@ -18,12 +19,14 @@ private:
 
 	IGrammar* _pgrammar__;
 	IMemoryTest* _pmtest;
+	ICursesApp* _pApp;
 public:
 	static IKernel* Instance();
 	virtual ~CKernel();
 
 	IGrammar* grammar();
 	IMemoryTest* memorytest_();
+	ICursesApp* curses_app_();
 };
 
 #endif /* APP_MAINAPP_IMPL_CORE_CKERNEL_H_ */

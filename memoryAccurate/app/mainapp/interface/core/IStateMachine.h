@@ -21,7 +21,7 @@ public:
 	virtual int currentState_() = 0;
 
 	virtual int getNextState_(int currentState, int msg, void* data = NULL) = 0;	// Calculate next state (calculate only, not change anything inside machine)
-	virtual int next(int msg, void* data = NULL) = 0;		// Send event then process immediately
+	virtual int step(int msg, void* data = NULL) = 0;		// Send event then process immediately
 
 	// Events
 	virtual int onTransition_(int fromState, int toState, void* data=NULL) = 0;

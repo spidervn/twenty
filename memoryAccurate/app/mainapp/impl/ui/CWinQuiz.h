@@ -144,10 +144,12 @@ private:
 	WINDOW* _pWinSb; 	// Win sub
 	FIELD* _fields[7];	// Fields
 
-	FORM* _pFromError;			// Error form ----------
 	FIELD* _fields_error[2]; 	// Fields
-
 	FORM* _pFormError;
+
+	FORM* _pFormConfirm;
+	FIELD* _fieldconfirm[3];
+	FORM* _pActive_Form;	// is Active form
 
 	MemoryStick _memory;
 	QuizTestModel _modelt; 	// Test model
@@ -155,8 +157,7 @@ private:
 
 	int _innerstate = 1;	// 1. NotReady; 2. IsQuizing; 3. Finished Quiz; 4. Display
 	int _sw_seconds;		// Stopwach seconds for
-							//	=> 
-
+							//	=>
 	// Windows position
 	int _toppos;
 	int _left;

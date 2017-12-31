@@ -146,6 +146,7 @@ CWinQuiz::CWinQuiz() {
 	_pWin = NULL;
 	_pWinSb = NULL;
 	_pForm_ = NULL;
+	_pFormError = NULL;
 
 	_win_height = 20;
 	_win_width_ = 70;
@@ -319,6 +320,7 @@ void CWinQuiz::doModal()
 
 	onInitialize();
 	_innerstate = STATE_USER_CHOICE;	// Ready for user choice
+	_pActive_Form = _pForm_;			// Active form
 
 	while ((ch = wgetch(_pWin)) != KEY_F(1)) {
 		switch (ch) {
@@ -1060,6 +1062,16 @@ int CWinQuiz::onCloseQuiz(void* data)
 
 int CWinQuiz::showConfirm(void* data)
 {
+	// Draw a form here
+	if (_pActive_Form != _pFormConfirm)
+	{
+		unpost_form(_pActive_Form);
+		post_form(_pFormConfirm);
+
+		_pActive_Form = _pFormConfirm;
+		refresh();
+	}
+
 	return 0;
 }
 
@@ -1075,5 +1087,7 @@ int CWinQuiz::onEvent(int event, void* data)
 
 int CWinQuiz::enqueueEvent(int event, void* data)
 {
+	_q_data.push(data);
+	_q_messages.push(event);
 	return 0;
 }
