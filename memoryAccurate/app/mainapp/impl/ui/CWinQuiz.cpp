@@ -811,6 +811,7 @@ int CWinQuiz::next(int msg, void* data)		// Send event then process immediately
 
 int CWinQuiz::onTransition_(int from_State_, int toState, void* data)
 {
+<<<<<<< Updated upstream
 	/*
 		States and Events:
 		--------------------
@@ -876,7 +877,12 @@ int CWinQuiz::onTransition_(int from_State_, int toState, void* data)
 			return (this->*transitions[i].handler)(data);
 		}
 	}
-
+=======
+	int maps[][] {
+		{},
+		{}
+	};
+>>>>>>> Stashed changes
 	return 0;
 }
 
