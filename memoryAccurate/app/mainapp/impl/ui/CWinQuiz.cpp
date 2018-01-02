@@ -90,22 +90,22 @@ using namespace std;
 //	}
 //} TransitionRow;
 
-typedef int (CWinQuiz::*EventFunction)(void*);
-typedef struct STRUCTTransitionRow
-{
-	int from_State_;
-	int toState;
-	int message;
-	EventFunction handler;
+// typedef int (CWinQuiz::*EventFunction)(void*);
+// typedef struct STRUCTTransitionRow
+// {
+// 	int from_State_;
+// 	int toState;
+// 	int message;
+// 	EventFunction handler;
 
-	STRUCTTransitionRow(int from, int to, int msg, EventFunction evt)
-	{
-		from_State_ = from;
-		toState = to;
-		message = msg;
-		handler = evt;
-	}
-} TransitionRow;
+// 	STRUCTTransitionRow(int from, int to, int msg, EventFunction evt)
+// 	{
+// 		from_State_ = from;
+// 		toState = to;
+// 		message = msg;
+// 		handler = evt;
+// 	}
+// } TransitionRow;
 /*
 	States and Events:
 	--------------------
@@ -141,12 +141,32 @@ typedef struct STRUCTTransitionRow
 		--(mouse{ onMouse[] })--><<any_state>>
  */
 
+TransitionRow CWinQuiz::_rows[] = {
+		TransitionRow(STATE_LOADING_QUIZ, 		STATE_USER_CHOICE, 		MSG_LOADED_MEMQUIZ, &			CWinQuiz::initDoingQuiz),
+		TransitionRow(STATE_LOADING_QUIZ, 		STATE_DISPLAY_ERROR, 	MSG_LOAD_FAILED_MEMQUIZ, 		&CWinQuiz::drawErrorForm),
+		TransitionRow(STATE_USER_CHOICE, 		STATE_WAIT_FOR_START,	MSG_CLICK_START_QUIZ, 			&CWinQuiz::onWaitStart),
+		TransitionRow(STATE_USER_CHOICE, 		STATE_QUIT,				MSG_CLICK_CLOSE_QUIZ, 			&CWinQuiz::onCloseQuiz),
+		TransitionRow(STATE_WAIT_FOR_START,		STATE_WAIT_FOR_START,			MSG_TIMER,						&CWinQuiz::drawWaitstart),
+		TransitionRow(STATE_WAIT_FOR_START,		STATE_WAIT_FOR_START,			MSG_TIMEUP,						&CWinQuiz::erase_wait_start_),
+		TransitionRow(STATE_DOING_QUIZ,			STATE_DOING_QUIZ,				MSG_TIMER,						&CWinQuiz::erase_wait_start_),
+		TransitionRow(STATE_DOING_QUIZ,			STATE_DISPLAY_SCORE,			MSG_TIMEUP,						&CWinQuiz::finishDoQuiz_),
+		TransitionRow(STATE_DOING_QUIZ,			STATE_USER_CHOICE,				MSG_CLICK_CANCEL,				&CWinQuiz::onClickCancel),
+		TransitionRow(STATE_DOING_QUIZ,			STATE_CONFIRM_FINISH_QUIZ,		MSG_CLICK_COMPLETE_QUIZ,		&CWinQuiz::showConfirm),	// New
+
+		TransitionRow(STATE_CONFIRM_FINISH_QUIZ,		STATE_DISPLAY_SCORE,		MSG_CLICK_CONFIRM_Y,		&CWinQuiz::finishDoQuiz_),
+		TransitionRow(STATE_CONFIRM_FINISH_QUIZ,		STATE_DOING_QUIZ,			MSG_CLICK_CONFIRM_N,		&CWinQuiz::resumeDoQuiz_),	// New
+		TransitionRow(STATE_DISPLAY_ERROR,				STATE_QUIT,					MSG_CLICK_CLOSE_QUIZ,		&CWinQuiz::uninit_curses),
+		TransitionRow(STATE_DISPLAY_SCORE, 				STATE_WAIT_FOR_START,		MSG_CLICK_RESTART, 			&CWinQuiz::onRestartQuiz)	// New
+		// TransitionRow(STATE_DISPLAY_SCORE, 				STATE_QUIT,					MSG_CLICK_CLOSE_QUIZ, 		&CWinQuiz::onRestartQuiz),	
+};
+
 CWinQuiz::CWinQuiz() {
 	_sw_seconds = 0;
 	_pWin = NULL;
 	_pWinSb = NULL;
 	_pForm_ = NULL;
 	_pFormError = NULL;
+	_pFormConfirm = NULL;
 
 	_win_height = 20;
 	_win_width_ = 70;
@@ -689,7 +709,7 @@ int CWinQuiz::processNextQueue_()	// 0; Success; 1-Failed; 2-No message on queue
 		_q_messages.pop();
 		_q_data.pop();
 
-		next(msg, data);
+		step(msg, data);
 	}
 	return 0;
 }
@@ -701,6 +721,8 @@ int CWinQuiz::_nextState_(int msg, void* data)
 	//TODO: Do not allow call _nextState here - cause infinite loop
 	// onEvent();		// Do not allow call _nextState here - cause infinite loop
 	_innerstate = nwState;	// State change
+
+	return 0;
 }
 
 int CWinQuiz::getNextState_(int currentState, int msg, void* data)
@@ -794,7 +816,7 @@ int CWinQuiz::currentState_()
 	return _innerstate;
 }
 
-int CWinQuiz::next(int msg, void* data)		// Send event then process immediately
+int CWinQuiz::step(int msg, void* data)		// Send event then process immediately
 {
 	int nwState = getNextState_(_innerstate, msg, data);
 

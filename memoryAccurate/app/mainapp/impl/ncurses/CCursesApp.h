@@ -9,8 +9,9 @@
 #define APP_MAINAPP_IMPL_NCURSES_CCURSESAPP_H_
 
 #include "mainapp/interface/ncurses/ICursesApp.h"
-#include "mainapp/interface/core/istatemachine.h"
+#include "mainapp/interface/core/IStateMachine.h"
 #include <vector>
+#include <queue>
 
 class CCursesApp: public ICursesApp, public IStateMachine {
 public:
@@ -42,11 +43,13 @@ public:
 	int onEnterState_(int theoldstate, void* data);
 	int onLeaveState_(int state);
 
+	IUI* ui() { return NULL; }
+	IEvent* event() { return NULL; }
 protected:
 	std::vector<ICursesUI*> _v_ui;
 	ICursesUI* _pActive_UI;
-	std::vector<int> _q_messages;
-	std::vector<void*> _q_data;
+	std::queue<int> _q_messages;
+	std::queue<void*> _q_data;
 
 private:
 	int _state_;

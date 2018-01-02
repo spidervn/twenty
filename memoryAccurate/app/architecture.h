@@ -90,7 +90,7 @@ public:
 
 	virtual int initialize()
 	{
-		for (int i = 0; i< _components.size(); ++i) {
+		for (unsigned int i = 0; i< _components.size(); ++i) {
 			_components[i].initialize();
 		}
 

@@ -16,6 +16,23 @@
 #include <queue>
 
 #define WQZ_FLAG_IS_QUIZING 0x00000001
+class CWinQuiz;
+typedef int (CWinQuiz::*EventFunction)(void*);
+typedef struct STRUCTTransitionRow
+{
+	int from_State_;
+	int toState;
+	int message;
+	EventFunction handler;
+
+	STRUCTTransitionRow(int from, int to, int msg, EventFunction evt)
+	{
+		from_State_ = from;
+		toState = to;
+		message = msg;
+		handler = evt;
+	}
+} TransitionRow;
 
 class CWinQuiz: public ICursesWinQuiz, public IStateMachine {
 public:
@@ -35,7 +52,7 @@ public:
 	int processNextQueue_();	// 0; Success; 1-Failed; 2-No message on queue
 	int currentState_();
 	int getNextState_(int currentState, int msg, void* data = NULL);	// Calculate next state (calculate only, not change anything inside machine)
-	int next(int msg, void* data = NULL);		// Send event then process
+	int step(int msg, void* data = NULL);		// Send event then process
 
 	int onTransition_(int fromState, int toState, void* data=NULL);
 	int onEnterState_(int state, void* data);
@@ -51,7 +68,6 @@ public:
 		static void fill(WINDOW* win, int starty, int startx, int width, int height, int color_pair);
 	};
 protected:
-
 	/*
 		States and Events:
 		--------------------
@@ -86,6 +102,8 @@ protected:
 		<<any_state>>
 			--(mouse{ onMouse[] })--><<any_state>>
 	 */
+
+	static TransitionRow _rows[];
 
 	// Supported functions
 	void checkActiveFields();
@@ -133,7 +151,6 @@ private:
 	int onCloseQuiz(void* data=NULL);
 
 private:
-	void drawLoading();
 	void drawClock__();
 	void drawLoading();
 	void drawReadyMessage_();

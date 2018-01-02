@@ -15,7 +15,7 @@ public:
 	CMemoryTest();
 	virtual ~CMemoryTest();
 
-	QuizTestModel generateTest(MemoryStick) { return QuizTestModel(); }
+	QuizTestModel generateTest(MemoryStick);
 };
 
 #endif /* APP_MAINAPP_IMPL_LIB_CMEMORYTEST_H_ */

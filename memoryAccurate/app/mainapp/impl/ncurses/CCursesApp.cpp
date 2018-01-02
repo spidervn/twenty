@@ -6,6 +6,12 @@
  */
 
 #include <mainapp/impl/ncurses/CCursesApp.h>
+#include <form.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctime>
+#include <chrono>
+#include <iostream>
 
 #define STATE_INIT 0
 
@@ -54,21 +60,21 @@ int CCursesApp::onEvent(int)			// onEvent here?
 	return 0;
 }
 
-int CCursesApp::enqueueEvent(int event, void*data = NULL)
+int CCursesApp::enqueueEvent(int event, void*data)
 {
 	return 0;
 }
 
-int CCursesApp::processEvent(int event, void*data = NULL)	// send event & immediately process it
+int CCursesApp::processEvent(int event, void*data)	// send event & immediately process it
 {
 	return 0;
 }
 
 // State Machine inheritance
-int CCursesApp::queueEvent_(int msg, void* data=NULL)	// Send to me - Not process
+int CCursesApp::queueEvent_(int msg, void* data)	// Send to me - Not process
 {
-	_q_messages.push_back(msg);
-	_q_data.push_back(data);
+	_q_messages.push(msg);
+	_q_data.push(data);
 	return 0;
 }
 
@@ -93,18 +99,18 @@ int CCursesApp::currentState_()
 	return 0;
 }
 
-int CCursesApp::getNextState_(int currentState, int msg, void* data = NULL)	// Calculate next state (calculate only, not change anything inside machine)
+int CCursesApp::getNextState_(int currentState, int msg, void* data)	// Calculate next state (calculate only, not change anything inside machine)
 {
 	return 0;
 }
 
-int CCursesApp::step(int msg, void* data = NULL)		// Send event then process immediately
+int CCursesApp::step(int msg, void* data)		// Send event then process immediately
 {
 	return 0;
 }
 
 // Events
-int CCursesApp::onTransition_(int fromState, int toState, void* data=NULL)
+int CCursesApp::onTransition_(int fromState, int toState, void* data)
 {
 	return 0;
 }
