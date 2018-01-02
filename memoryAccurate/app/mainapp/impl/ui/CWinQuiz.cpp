@@ -161,15 +161,15 @@ CWinQuiz::CWinQuiz() {
 	_memory.created_date = 0;
 	_memory.author = "ducvd";
 
-	_memory.listmemory_.push_back("1. World-class engineer");
-	_memory.listmemory_.push_back("1.2. Solving 1000 stackexchange computer science's problems");
-	_memory.listmemory_.push_back("1.3. Solving 1000 stackexchange mathematics's problems");
-	_memory.listmemory_.push_back("2. True stamina 99");
-	_memory.listmemory_.push_back("2.1. Easily run 3km in 20 minutes");
-	_memory.listmemory_.push_back("2.2. Easily enjoy two ugly woman at the same time");
-	_memory.listmemory_.push_back("3. Keep Ph-back");
-	_memory.listmemory_.push_back("3.1. Find the right method to treat Ph's father for fully recover from disaster.");
-	_memory.listmemory_.push_back("3.3. Give 60% stock of a company to her");
+	_memory.listmemory_.push_back("1. When high rollers are the biggest drivers of Macau’s casino revenue, it’s much harder for analysts to predict betting results.");
+	_memory.listmemory_.push_back("1.2. Analysts attributed the unexpected slower growth to bad luck for casinos as gamblers took home greater-than-expected winnings");
+	_memory.listmemory_.push_back("1.3. Many of those winning gamblers were high rollers");
+	_memory.listmemory_.push_back("2. This volatility can be driven by the luck factor or even by the timing of VIP trips, especially on the part of some of the biggest VIP players");
+	_memory.listmemory_.push_back("2.1. High rollers drove revenue at a faster pace than casual gamblers for most of last year.");
+	_memory.listmemory_.push_back("2.2. As they continued their return to Macau after a Beijing crackdown on corruption kept them away from the tables, actual monthly gaming revenue deviated from analysts’ estimates.");
+	_memory.listmemory_.push_back("3. In nine separate months, actual casino receipts growth showed more than a three percentage point difference from analyst estimates.");
+	_memory.listmemory_.push_back("3.1. Analysts also had a harder time forecasting during peak seasons, especially when VIPs delayed their trips.");
+	_memory.listmemory_.push_back("3.3. Despite the the weaker-than-expected performance in December, analysts are still optimistic about the gaming market in 2018.");
 
 	_modelt = KERNEL->memorytest_()->generateTest(_memory);	// Model for test
 
