@@ -21,7 +21,9 @@ int main()
 
 	delete icmd;*/
 
+	ICursesApp* pApp_;
 	ICursesWinQuiz* iwin = new CWinQuiz();
+
 	iwin->doModal();
 	delete iwin;
 
