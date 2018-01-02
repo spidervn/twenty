@@ -131,7 +131,9 @@ private:
 	// Events
 	int onWaitStart(void* data=NULL);
 	int onCloseQuiz(void* data=NULL);
+
 private:
+	void drawLoading();
 	void drawClock__();
 	void drawLoading();
 	void drawReadyMessage_();
@@ -144,8 +146,11 @@ private:
 	WINDOW* _pWinSb; 	// Win sub
 	FIELD* _fields[7];	// Fields
 
+	FORM* _pFormError;			// Error form ----------
 	FIELD* _fields_error[2]; 	// Fields
-	FORM* _pFormError;
+
+	FORM* _pFormActive_;		// Storing Active form & fields
+	FIELD* _pFieldActive;
 
 	FORM* _pFormConfirm;
 	FIELD* _fieldconfirm[3];

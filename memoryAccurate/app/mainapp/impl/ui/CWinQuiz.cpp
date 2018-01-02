@@ -811,7 +811,6 @@ int CWinQuiz::next(int msg, void* data)		// Send event then process immediately
 
 int CWinQuiz::onTransition_(int from_State_, int toState, void* data)
 {
-<<<<<<< Updated upstream
 	/*
 		States and Events:
 		--------------------
@@ -877,12 +876,7 @@ int CWinQuiz::onTransition_(int from_State_, int toState, void* data)
 			return (this->*transitions[i].handler)(data);
 		}
 	}
-=======
-	int maps[][] {
-		{},
-		{}
-	};
->>>>>>> Stashed changes
+
 	return 0;
 }
 
@@ -1013,60 +1007,119 @@ int CWinQuiz::draw_quizform(void* data)
 int CWinQuiz::drawErrorForm(void* data)
 {
 	string* pstr_ = (string*)data;
+
+	// Unpost old form, then post new form
+	if (_pFormActive_ != NULL)
+	{
+		unpost_form(_pFormActive_);
+		_pFormActive_ = NULL;
+	}
+
+	_pFormActive_ = _pFormError;
+	set_form_win(_pFormActive_, _pWin);
+	set_form_sub(_pFormActive_, _pWinSb);
+	post_form(_pFormActive_);
+
 	return 0;
 }
 
 int CWinQuiz::drawWaitstart(void* data)
 {
+	int minute = 0;
+	int seconds = 0;
+
+	minute = _sw_seconds / 60;
+	seconds = _sw_seconds % 60;
+
+	if (minute > 99) {
+		minute = 99;
+	}
+	// Draw the Clock
+	mvwhline(_pWin, 5, 0, '_', _win_width_);
+	mvwhline(_pWin, 7, 0, '_', _win_width_);
+
+	mvwprintw(_pWin, 6, 2, "%2.0d:%2.0d", minute, seconds);
+
 	return 0;
 }
 
 int CWinQuiz::erase_wait_start_(void* data)
 {
+
+	mvwhline(_pWin, 5, 0, ' ', _win_width_);
+	mvwhline(_pWin, 7, 0, ' ', _win_width_);
+	mvwprintw(_pWin, 6, 2, "    ");
 	return 0;
 }
 
 int CWinQuiz::drawStopwatch(void* data)
 {
+	int minute = 0;
+	int seconds = 0;
+
+	minute = _sw_seconds / 60;
+	seconds = _sw_seconds % 60;
+
+	if (minute > 99) {
+		minute = 99;
+	}
+	// Draw the Clock
+	mvwhline(_pWin, 5, 0, '_', _win_width_);
+	mvwhline(_pWin, 7, 0, '_', _win_width_);
+
+	mvwprintw(_pWin, 6, 2, "%2.0d:%2.0d", minute, seconds);
 	return 0;
 }
 
 int CWinQuiz::stopStopwatch(void* data)
 {
+	mvwhline(_pWin, 5, 0, ' ', _win_width_);
+	mvwhline(_pWin, 7, 0, ' ', _win_width_);
+	mvwprintw(_pWin, 6, 2, "    ");
 	return 0;
 }
 
 int CWinQuiz::finishDoQuiz_(void* data)
 {
+	calc_score_(data);
+
+	int score1 = 5;
+	int score2 = 7;
+	int score3 = 7;
+	
 	return 0;
 }
+
 
 int CWinQuiz::calc_score_(void* data)
 {
 	return 0;
 }
 
+
 int CWinQuiz::resumeDoQuiz_(void* data)
 {
 	return 0;
 }
+
 
 int CWinQuiz::onRestartQuiz(void* data)
 {
 	return 0;
 }
 
+
 int CWinQuiz::onWaitStart(void* data)
 {
 	return 0;
 }
 
-int CWinQuiz::onCloseQuiz(void* data)
+int CWinQuiz::showConfirm(void* data)
 {
 	return 0;
 }
 
-int CWinQuiz::showConfirm(void* data)
+int CWinQuiz::onCloseQuiz(void* data)
 {
 	// Draw a form here
 	if (_pActive_Form != _pFormConfirm)
