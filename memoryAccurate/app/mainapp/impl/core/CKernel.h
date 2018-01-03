@@ -20,6 +20,7 @@ private:
 	IGrammar* _pgrammar__;
 	IMemoryTest* _pmtest;
 	ICursesApp* _pApp;
+	IDatabase* _pDatabase_;
 public:
 	static IKernel* Instance();
 	virtual ~CKernel();
@@ -27,6 +28,7 @@ public:
 	IGrammar* grammar();
 	IMemoryTest* memorytest_();
 	ICursesApp* curses_app_();
+	IDatabase* db() { return _pDatabase_; }
 };
 
 #endif /* APP_MAINAPP_IMPL_CORE_CKERNEL_H_ */

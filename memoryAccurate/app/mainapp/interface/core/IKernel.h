@@ -10,6 +10,7 @@
 
 #include "mainapp/interface/lib/IMemoryTest.h"
 #include "mainapp/interface/lib/IGrammar.h"
+#include "mainapp/interface/db/IDB.h"
 
 class IKernel
 {
@@ -18,6 +19,7 @@ public:
 
 	virtual IGrammar* grammar() = 0;
 	virtual IMemoryTest* memorytest_() = 0;
+	virtual IDatabase* db() = 0;
 };
 
 

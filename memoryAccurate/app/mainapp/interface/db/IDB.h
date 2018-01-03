@@ -17,13 +17,13 @@
 class IDatabase
 {
 public:
-	int getQuiz(std::string code, QuizModel& out) = 0;
+	virtual int getMemStick(std::string code, MemoryStick& out) = 0;
 
-	int saveQuiz(QuizModel quiz) = 0;
+	virtual int save_Stick_(MemoryStick quiz) = 0;
 
-	int deleteQuiz(QuizModel quiz) = 0;
+	virtual int deleteStick(MemoryStick quiz) = 0;
 
-	int queryQuiz(std::string codeText, std::vector<QuizModel>& out) = 0;
+	virtual int queryStick_(std::string codeText, std::vector<MemoryStick>& out) = 0;
 };
 
 

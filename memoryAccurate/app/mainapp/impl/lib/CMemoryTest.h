@@ -16,6 +16,8 @@ public:
 	virtual ~CMemoryTest();
 
 	QuizTestModel generateTest(MemoryStick);
+private:
+	int knuth_shuffle(int permutation[], int n);
 };
 
 #endif /* APP_MAINAPP_IMPL_LIB_CMEMORYTEST_H_ */
