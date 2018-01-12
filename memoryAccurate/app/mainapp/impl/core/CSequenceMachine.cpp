@@ -11,9 +11,15 @@
 #define STATE_END__ 2
 #define STATE_PROCESS 3
 
-CSequenceMachine::CSequenceMachine() {
-	q_event.clear();
+CSequenceMachine::CSequenceMachine(IStateMachine* a_sequences[]) {
+	state = STATE_INIT_;
+
 	_v_sequence.clear();
+	int n = sizeof(a_sequences)/sizeof(IStateMachine*);
+	for (int i=0;i<n;++i)
+	{
+		_v_sequence.push_back(a_sequences[i]);
+	}
 }
 
 CSequenceMachine::~CSequenceMachine() {
@@ -32,12 +38,11 @@ int CSequenceMachine::processNextQueue_()
 	// Do not process more than 5 a time
 	while (q_event.size() > 0 && num_processed < 5) 
 	{
-		int msg = _q_messages.front();
-		void* data = _q_data.front();
+		int msg = q_event.front();
+		void* data = qdata.front();
 
-		_q_messages.pop();
-		_q_data.pop();
-
+		q_event.pop();
+		qdata.pop();
 		step(msg, data);
 	}
 	
@@ -58,7 +63,7 @@ int CSequenceMachine::getNextState_(int currentState, int msg, void* data) 	// C
 	}
 	else
 	{
-		nextStt - STATE_END__;
+		nextStt = STATE_END__;
 	}
 
 	return nextStt;
@@ -88,7 +93,7 @@ int CSequenceMachine::step(int msg, void* data) 		// Send event then process imm
 // Events
 int CSequenceMachine::onTransition_(int fromState, int toState, void* data)
 {
-
+	return 0;
 }
 
 int CSequenceMachine::onEnterState_(int theoldstate, void* data) 
@@ -97,7 +102,7 @@ int CSequenceMachine::onEnterState_(int theoldstate, void* data)
 	{
 		for (int i=0;i<_v_sequence.size();++i)
 		{
-			_v_sequence[i].step(0, data);
+			_v_sequence[i]->step(0, data);
 		}
 	}
 	

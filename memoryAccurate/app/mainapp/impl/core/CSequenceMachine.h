@@ -14,7 +14,7 @@
 
 class CSequenceMachine: public IStateMachine {
 public:
-	CSequenceMachine();
+	CSequenceMachine(IStateMachine* a_sequences[]);
 	virtual ~CSequenceMachine();
 
 	int queueEvent_(int msg, void* data=NULL) ;	// Send to me - Not process
@@ -33,6 +33,8 @@ private:
 	std::queue<int> q_event;
 	std::queue<void*> qdata;
 	std::vector<IStateMachine*> _v_sequence;
+
+	int state;
 };
 
 #endif /* APP_MAINAPP_IMPL_CORE_CSEQUENCEMACHINE_H_ */
