@@ -10,6 +10,52 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
+#include <map>
+
+template <class T>
+typedef struct STRUCTStateMachineTransitRow
+{
+	int from_State_;	
+	int toState;
+	int 
+} StateMachineTransit_Row;
+
+typedef struct STRUCT_StateMachineEntryEvent
+{
+	int state;
+	void* test();
+} SM_EntryEvent;
+
+typedef struct STRUCT_StateMachineCircuit
+{
+	int vertex[];
+	std::vector<int> _vertex;
+
+	StateMachineCircuit& defineVertex_(int v[])
+	{
+		int n = sizeof(v)/sizeof(int);
+
+		_vertex.clear();		
+		for (int i = 0; i < n; ++i)
+		{
+			_vertex.push_back(v[i]);
+		}
+
+		return this;
+	}
+
+	StateMachineCircuit& defineEntry(int v[])
+	{		
+		return this;
+	}
+
+	StateMachineCircuit& transitions()
+	{
+
+	}
+
+} StateMachineCircuit;
 
 class IStateMachine
 {

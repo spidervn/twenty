@@ -475,6 +475,22 @@ void CWinQuiz::onTearDown()
 		free_field(_fields[2]);
 		free_field(_fields[3]);
 	}
+
+	if (_pFormError)
+	{
+		unpost_form(_pFormError);
+		free_form(_pFormError);
+
+		_pFormError = NULL;
+		free_field(_fields_error[0]);
+	}
+
+	if (_pFormConfirm)
+	{
+		unpost_form(_pFormConfirm);
+		free_field(_fieldconfirm[0]);
+		free_field(_fieldconfirm[1]);
+	}
 }
 
 void CWinQuiz::onLoadMemoryUnit(std::string scode)
