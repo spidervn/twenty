@@ -16,6 +16,7 @@ public:
 	virtual ~CMemoryTest();
 
 	QuizTestModel generateTest(MemoryStick);
+	int match_score(const char* szQuestion_, const char* szAnswer);
 private:
 	int knuth_shuffle(int permutation[], int n);
 };

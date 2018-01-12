@@ -57,3 +57,8 @@ int CMemoryTest::knuth_shuffle(int permutation[], int n)
 	}
 	return 0;
 }
+
+int CMemoryTest::match_score(const char* szQuestion_, const char* szAnswer)
+{
+	return 0;
+}

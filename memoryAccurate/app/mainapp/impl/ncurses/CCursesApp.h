@@ -13,26 +13,13 @@
 #include <vector>
 #include <queue>
 
-template<class T>
-typedef struct STRUCTTransitionRowApp
-{
-	int from_State_;
-	int toState;
-	int message;
-	EventFunction handler;
-
-	STRUCTTransitionRow(int from, int to, int msg, EventFunction evt)
-	{
-		from_State_ = from;
-		toState = to;
-		message = msg;
-		handler = evt;
-	}
-} TransitionRowApp;
-
 class CCursesApp: public ICursesApp, public IStateMachine {
 private:
+	static int _v_transits[][4];	// Transition definition
+	static int _v_entries_[][2];	// Entry event
+	static int _v_exit[][2];		// Exit event
 
+	int call_function(int fnc_id, void* data);
 public:
 	CCursesApp();
 	~CCursesApp();

@@ -17,6 +17,8 @@ class IMemoryTest
 public:
 	virtual QuizTestModel generateTest(MemoryStick) = 0;
 	virtual ~IMemoryTest() {}
+
+	virtual int match_score(const char* szQuestion_, const char* szAnswer) = 0;
 };
 
 #endif /* APP_MAINAPP_INTERFACE_LIB_IMEMORYTEST_H_ */

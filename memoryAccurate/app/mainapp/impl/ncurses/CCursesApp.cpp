@@ -13,7 +13,28 @@
 #include <chrono>
 #include <iostream>
 
-#define STATE_INIT 0
+#define STATE_INIT_ 		0
+#define STATE_FINISH_		1
+#define STATE_EVENT_WAITING 2
+#define STATE_EVENT_WAITING 3
+#define STATE_EVENT_WAITING 4
+#define STATE_EVENT_WAITING 5
+#define STATE_EVENT_WAITING 6
+
+/*
+	event_waiting ---(key):/keyprocess()---> 		form_process(/entry: process_key) 
+	event_waiting ---(mouse):/mouseprocess()---> 	form_process(/entry: process_mouse) 
+	event_waiting ---(QUIT)---> 					preshutdown
+	form_process  ---(output==QUIT)---> 			preshutdown
+	form_process  ---(output==NULL)---> 			event_waiting
+*/
+
+int CCursesApp::_v_transits[][4] =	// Transition definition
+{
+};
+int _v_entries_[][2];	// Entry event
+int _v_exit[][2];		// Exit event
+
 
 CCursesApp::CCursesApp()
 {
