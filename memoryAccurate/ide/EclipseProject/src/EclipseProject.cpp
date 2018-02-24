@@ -13,7 +13,6 @@ using namespace std;
 
 int main()
 {
-
 	/*ICursesCmdLine* icmd = new CCmdLineUI();
 
 	icmd->initialize();
@@ -21,22 +20,11 @@ int main()
 
 	delete icmd;*/
 
-	//ICursesApp* pApp_;
-	//ICursesWinQuiz* iwin = new CWinQuiz();
+	ICursesApp* pApp_;
+	ICursesWinQuiz* iwin = new CWinQuiz();
 
-	//iwin->doModal();
-	//delete iwin;
-
-	int a[][2] = {
-			{1, 2},
-			{3, 4},
-			{5, 6},
-			{7, 8},
-			{9, 10}
-	};
-
-	int n = sizeof(a)/sizeof(a[0]);
-	printf("Size of a = %d\r\n", n);
+	iwin->doModal();
+	delete iwin;
 
 	return 0;
 }

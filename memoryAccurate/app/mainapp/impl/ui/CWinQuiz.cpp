@@ -168,8 +168,8 @@ CWinQuiz::CWinQuiz() {
 	_pFormError = NULL;
 	_pFormConfirm = NULL;
 
-	_win_height = 20;
-	_win_width_ = 70;
+	_win_height = 25;
+	_win_width_ = 80;
 	_toppos = 2;
 	_left = 2;
 

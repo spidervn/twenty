@@ -32,9 +32,6 @@
 int CCursesApp::_v_transits[][4] =	// Transition definition
 {
 };
-int _v_entries_[][2];	// Entry event
-int _v_exit[][2];		// Exit event
-
 
 CCursesApp::CCursesApp()
 {

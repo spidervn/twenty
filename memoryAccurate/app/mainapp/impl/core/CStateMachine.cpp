@@ -15,14 +15,14 @@ CStateMachine::CStateMachine(int initial_State) {
 CStateMachine::~CStateMachine() {
 }
 
-int CSequenceMachine::queueEvent_(int msg, void* data=NULL) 	// Send to me - Not process
+int CStateMachine::queueEvent_(int msg, void* data) 	// Send to me - Not process
 {
 	q_event.push(msg);
 	qdata.push(data);
 	return 0;
 }
 
-int CSequenceMachine::processNextQueue_()
+int CStateMachine::processNextQueue_()
 {
 	int num_processed = 0;
 	// Do not process more than 5 a time
@@ -39,12 +39,12 @@ int CSequenceMachine::processNextQueue_()
 	return 0;
 }
 
-int CSequenceMachine::currentState_()
+int CStateMachine::currentState_()
 {
 	return state;
 }
 
-int CSequenceMachine::step(int msg, void* data) 		// Send event then process immediately
+int CStateMachine::step(int msg, void* data) 		// Send event then process immediately
 {
 	int nextStt = getNextState_(state, msg, data);
 	int old_Stt = state;

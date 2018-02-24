@@ -11,7 +11,7 @@
 #define STATE_END__ 2
 #define STATE_PROCESS 3
 
-CParallelMachine::CParallelMachine(IStateMachine* a_parallel_[])
+CParallelMachine::CParallelMachine(IStateMachine* a_parallel_[]) : CStateMachine(0)
 {
 	int n = sizeof(a_parallel_)/sizeof(IStateMachine*);
 	_v_parallel.clear();
@@ -26,7 +26,7 @@ CParallelMachine::~CParallelMachine()
 {
 }
 
-int CParallelMachine::getNextState_(int currentState, int msg, void* data = NULL)	// Calculate next state (calculate only, not change anything inside machine)
+int CParallelMachine::getNextState_(int currentState, int msg, void* data)	// Calculate next state (calculate only, not change anything inside machine)
 {
 	if (currentState == STATE_INIT_)
 	{
@@ -39,7 +39,7 @@ int CParallelMachine::getNextState_(int currentState, int msg, void* data = NULL
 }
 
 // Events
-int CParallelMachine::onTransition_(int fromState, int toState, void* data=NULL)
+int CParallelMachine::onTransition_(int fromState, int toState, void* data)
 {
 	return 0;
 }

@@ -11,7 +11,8 @@
 #define STATE_END__ 2
 #define STATE_PROCESS 3
 
-CSequenceMachine::CSequenceMachine(IStateMachine* a_sequences[]) {
+CSequenceMachine::CSequenceMachine(IStateMachine* a_sequences[])
+{
 	state = STATE_INIT_;
 
 	_v_sequence.clear();
@@ -25,7 +26,7 @@ CSequenceMachine::CSequenceMachine(IStateMachine* a_sequences[]) {
 CSequenceMachine::~CSequenceMachine() {
 }
 
-int CSequenceMachine::queueEvent_(int msg, void* data=NULL) 	// Send to me - Not process
+int CSequenceMachine::queueEvent_(int msg, void* data) 	// Send to me - Not process
 {
 	q_event.push(msg);
 	qdata.push(data);

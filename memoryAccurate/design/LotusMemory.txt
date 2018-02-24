@@ -17,6 +17,10 @@ Status of this memo
 		Under stressful circustance, does it works well ? It highly depends individual ?
 	
 
+	LotusMemory is an excellent computer program for people who want to improve their memory ability. It contains practice which is designed to allow user "focusing" to a few "gold" information rather than pay attention to tons of unnecessary information. Lotus memory is simple and easy to use, free and available for everyone.
+
+	Lotus Memory's database management support storing/searching/adding/editing memory sticks. Alongside with Storing memory sticks, it contains 
+
 2. Design 
 	This program uses ncurses library for User-interface development; which provides text-based UI in terminal.
 
@@ -171,4 +175,19 @@ Using mnemonics, you can easily learn vocabulary at 400% your previous speed. Th
 
 :exit
 
+Paragraph 03
 
+[New-word]
+1. likewise (adv)
+	= In the same way; also 
+	
+	<=> The programmer of study will apply from five years of age, likewise the attainment targets.
+
+	The faces from the photographs become likewise etched into your mind.
+	Futhermore, our kids likewise seem to be bonding a little too closely with the TV set.
+	He has developed these attributes with age and maybe some of our younger backs will do likewise.
+	That list is as impressive as Australlia's record on the global sporting stage, but why can't our companies do likewise?
+
+2.  
+
+	
