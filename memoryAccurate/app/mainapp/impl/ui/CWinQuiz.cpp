@@ -404,6 +404,8 @@ void CWinQuiz::onInitialize()
 	set_field_back(_fields[0], A_UNDERLINE);
 	field_opts_off(_fields[0], O_AUTOSKIP);	/* Don't go to next field when this */
 											/* Field is filled up */
+	field_opts_off(_fields[0], O_ACTIVE);	/* Static field as label */
+
 	set_field_back(_fields[1], A_UNDERLINE);
 	field_opts_off(_fields[1], O_AUTOSKIP);
 	set_field_fore(_fields[1], COLOR_PAIR(2));
@@ -528,6 +530,7 @@ void CWinQuiz::onTimer()
 
 void CWinQuiz::onKeyboard(int ch)
 {
+	std::string sActive = "Active Fields: ";
 	switch (ch) {
 		case KEY_DOWN:
 			/* Go to next field */
@@ -551,15 +554,19 @@ void CWinQuiz::onKeyboard(int ch)
 		case 8:
 			form_driver(_pForm_, REQ_DEL_PREV);
 			break;
+		case 'h':
+		case 'H':
 		case 13:
 		case KEY_ENTER:
 			for (int i=0; _fields[i]; i++)
 			{
-				if (field_status(_fields[i]) & O_STATIC)
+				// if (field_status(_fields[i]) & O_STATIC)
+				if (field_opts(_fields[i]) & O_ACTIVE)
 				{
-					char szTmp[200];
-					sprintf(szTmp, "ON ENTER %d", i);
-					mvprintw(LINES-3, 1, szTmp);
+					char szTmp[20];
+					sprintf(szTmp, "%d", i);
+					sActive = sActive + szTmp + "; ";
+					// mvprintw(LINES-3, 1, szTmp);
 				}
 			}
 			break;
@@ -582,6 +589,7 @@ void CWinQuiz::onKeyboard(int ch)
 								field_buffer(_fields[0], 1),
 								field_buffer(_fields[0], 2));
 	mvprintw(LINES-2, 1, szBuff);
+	mvprintw(LINES-3, 1, sActive.c_str());
 	refresh();
 }
 
