@@ -17,6 +17,7 @@ public:
 	virtual ~CStringEngine();
 
 	int levenshteinDistance(std::string s1, std::string s2);
+	int paragraphMatching(std::string para1, std::string para2);
 };
 
 #endif /* APP_MAINAPP_IMPL_LIB_CSTRINGENGINE_H_ */
