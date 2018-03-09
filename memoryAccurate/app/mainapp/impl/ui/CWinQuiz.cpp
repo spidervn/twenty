@@ -414,14 +414,18 @@ void CWinQuiz::onInitialize()
 	field_opts_off(_fields[2], O_AUTOSKIP);
 	set_field_fore(_fields[2], COLOR_PAIR(2));
 
-	set_field_back(_fields[3], A_UNDERLINE);
+	// set_field_back(_fields[3], A_UNDERLINE);
+	field_opts_on(_fields[4], O_STATIC);
 	field_opts_off(_fields[3], O_AUTOSKIP);
+	field_opts_off(_fields[3], O_EDIT);
 	set_field_fore(_fields[3], COLOR_PAIR(2));
 
 	field_opts_on(_fields[4], O_STATIC);	// Button
+	field_opts_off(_fields[4], O_EDIT);
 	set_field_fore(_fields[4], COLOR_PAIR(2));
-	field_opts_on(_fields[5], O_STATIC);	// Button
-	set_field_fore(_fields[5], COLOR_PAIR(2));
+
+	// field_opts_on(_fields[5], O_STATIC);	// Button
+	// set_field_fore(_fields[5], COLOR_PAIR(2));
 
 
 	set_field_userptr(_fields[0], (void*)&_answer.answer1);
@@ -556,6 +560,8 @@ void CWinQuiz::onKeyboard(int ch)
 			break;
 		case 'h':
 		case 'H':
+		case 'a':
+		case 'A':
 		case 13:
 		case KEY_ENTER:
 			for (int i=0; _fields[i]; i++)
@@ -590,6 +596,7 @@ void CWinQuiz::onKeyboard(int ch)
 								field_buffer(_fields[0], 2));
 	mvprintw(LINES-2, 1, szBuff);
 	mvprintw(LINES-3, 1, sActive.c_str());
+
 	refresh();
 }
 
