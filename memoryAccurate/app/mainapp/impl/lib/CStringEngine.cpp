@@ -103,3 +103,79 @@ int CStringEngine::paragraphMatching(std::string para1, std::string para2)
 
 	return 0;
 }
+
+int CStringEngine::damerau_Levenshtein(std::string s1, std::string s2)
+{
+	int n1 = s1.size();
+	int n2 = s2.size();
+	int** d_val; // = new int[n1*n2];
+	int ret = 0;
+
+	if (n1==0 || n2==0)
+	{
+		ret = max(n1,n2);
+	}
+	else
+	{
+		// Memory allocation
+		d_val = new int*[n1];
+		for (int i = 0; i < n1; ++i)
+		{
+			d_val[i] = new int[n2];
+		}
+
+		for (int i=0; i< n1; ++i)
+		{
+			d_val[i][0] = i;
+		}
+
+		for (int j=0; j<n2;j++)
+		{
+			d_val[0][j] = j;
+		}
+
+		for (int i = 1; i < n1; ++i)
+		{
+			for (int j = 1; j < n2; ++j)
+			{
+				if (i>1 && j>1 && s1[i]==s2[j-1] && s1[i-1]==s2[j])
+				{
+					int vdiff = s1[i]==s2[j] ? 0 : 1;
+					int d1 = d_val[i-1][j] + 1;
+					int d2 = d_val[i][j-1] + 1;
+					int d3 = d_val[i-1][j-1] + vdiff;
+					int d4 = d_val[i-2][j-2] + 1;
+
+					d_val[i][j] = min(d1, min(d2,min(d3,d4)));
+				}
+				else
+				{
+					int vdiff = s1[i]==s2[j] ? 0 : 1;
+					int d1 = d_val[i-1][j] + 1;
+					int d2 = d_val[i][j-1] + 1;
+					int d3 = d_val[i-1][j-1] + vdiff;
+
+					d_val[i][j] = min(d1,min(d2,d3));
+				}
+			}
+		}
+
+		ret = d_val[n1-1][n2-1];
+		// Free memory
+		for (int i = 0; i < n1; ++i)
+		{
+			delete [] d_val[i];
+		}		
+		delete[] d_val;
+	}
+
+	return ret;
+}
+
+// int lcs_length(char* A, char* B)
+// {
+// 	if (*A == '\0' || *B == '\0') return 0;
+// 	else if (*A == *B) return 1 + lcs_length(A+1, B+1);
+// 	else return max(lcs_length(A+1, B), lcs_length(A, B+1));
+// }
+
