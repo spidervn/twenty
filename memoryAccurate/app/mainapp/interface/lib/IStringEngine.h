@@ -17,6 +17,7 @@ public:
 	
 	virtual int levenshteinDistance(std::string s1, std::string s2) = 0;
 	virtual int damerau_Levenshtein(std::string s1, std::string s2) = 0;
+	virtual int demonstrate_DamerauLevenstein(std::string s1, std::string s2) = 0;
 	virtual int paragraphMatching(std::string para1, std::string para2) = 0;
 };
 

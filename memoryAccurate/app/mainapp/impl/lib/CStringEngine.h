@@ -18,6 +18,7 @@ public:
 
 	int levenshteinDistance(std::string s1, std::string s2);
 	int damerau_Levenshtein(std::string s1, std::string s2);
+	int demonstrate_DamerauLevenstein(std::string s1, std::string s2);
 	int paragraphMatching(std::string para1, std::string para2);
 };
 
