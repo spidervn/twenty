@@ -16,6 +16,11 @@ CStringEngine::CStringEngine() {
 CStringEngine::~CStringEngine() {
 }
 
+int CStringEngine::needleman_Wunsch_(std::string s1, std::string s2)
+{
+	return 0;
+}
+
 int CStringEngine::levenshteinDistance(std::string str1, std::string str2)
 {
 	int m[100][100];	// TODO: declare dynamic allocation
@@ -186,6 +191,17 @@ int CStringEngine::demonstrate_DamerauLevenstein(std::string s1, std::string s2)
 	int OP_NONE = 4;
 	int OP_TRANSPOS = 5;
 
+	int x_op_ray[5] = { 1,			// Nothing
+							1,		// After OP_INSERT, s1.index + 1
+							0, 		// After OP_DELETE, s1.index unchanged
+							1, 		// After OP_SUBSTITUTION, s2.index + 1
+							0, 		// After OP_NONE, se
+
+	};	// increase of string s1 after an operation.
+	int aop[100];			// Storing operations
+	int nop = 0;			// The top of stack
+
+	// String substitution
 	if (n1==0 || n2==0)
 	{
 		printf("Simple cases\r\n");
@@ -278,15 +294,22 @@ int CStringEngine::demonstrate_DamerauLevenstein(std::string s1, std::string s2)
 			}
 		}
 
-
+		/*
 		int p1 = n1-1;
 		int p2 = n2-1;
+		int aop[100];
+		int nop;
 		// Traceback
 
 		while (p1 >=0 && p2>=0)
 		{
 			switch (arTrace[p1][p2]) {
 				case OP_INSERT:
+
+						p1 -= x_op_ray[arTrace[p1][p2]];
+						p2 -= y_op_ray[arTrace[p1][p2]];
+						aop[nop++] = 1;
+						aop[nop++];
 					break;
 				case OP_DELETE:
 					break;
@@ -299,6 +322,7 @@ int CStringEngine::demonstrate_DamerauLevenstein(std::string s1, std::string s2)
 					break;
 			}
 		}
+		*/
 
 		ret = d_val[n1-1][n2-1];
 		// Free memory

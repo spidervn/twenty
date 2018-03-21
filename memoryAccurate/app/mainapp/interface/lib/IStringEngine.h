@@ -15,6 +15,7 @@ class IStringEngine
 public:
 	virtual ~IStringEngine() {}
 	
+	virtual int needleman_Wunsch_(std::string s1, std::string s2) = 0;
 	virtual int levenshteinDistance(std::string s1, std::string s2) = 0;
 	virtual int damerau_Levenshtein(std::string s1, std::string s2) = 0;
 	virtual int demonstrate_DamerauLevenstein(std::string s1, std::string s2) = 0;
