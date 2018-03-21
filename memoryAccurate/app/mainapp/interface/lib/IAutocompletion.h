@@ -13,12 +13,30 @@
 
 struct CommandLineLayout
 {
-
 };
 
 struct CommandSwitcher
 {
+	std::string code;
+	std::string name;
+	std::vector<std::string> alias;
 
+	bool mandatory;
+	bool unique;
+	bool needContent;
+	
+	std::vector<string> availableContents;
+	void* validation;
+
+	CommandSwitcher()
+	{
+		mandatory = false;	// Is optional
+		unique = true;		// Appear only one
+		needContent = true;	
+
+		availableContents.clear();
+		validation = NULL;
+	}	
 };
 
 struct CommandLineDefinition
@@ -51,14 +69,29 @@ struct CommandLineDefinition
 				 Switcher A là OS
 	 */
 	CommandLineDefinition()
-	{
-	}
+	{}
 
 	std::string cmdName;
-	std::vector<std::string> v_Switcher_;
+	// std::vector<std::string> v_Switcher_;
+	int position[3];	// Position[0] = BEGIN
+						// Position[1] = { List of Available switcher }
+						// Position[2] = {}
+
+	std::vector<CommandSwitcher> v_Switcher_;
 };
 
+class ICommandSwitcher
+{
+public: 
+	virtual ~ICommandSwitcher() {}
+};
 
-
-
+class ICommandLine_Definition
+{
+public:
+	virtual ~ICommandLine_Definition() {}
+	virtual std::vector<std::string> suggest_Contents_(std::string switcherVal) = 0;
+	virtual void suggest_Contents_() = 0;
+	
+};
 #endif /* APP_MAINAPP_INTERFACE_LIB_IAUTOCOMPLETION_H_ */
