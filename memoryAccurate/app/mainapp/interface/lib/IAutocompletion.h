@@ -11,21 +11,16 @@
 #include <string>
 #include <vector>
 
-struct CommandLineLayout
-{
-};
-
 struct CommandSwitcher
 {
 	std::string code;
 	std::string name;
-	std::vector<std::string> alias;
 
 	bool mandatory;
 	bool unique;
 	bool needContent;
 	
-	std::vector<string> availableContents;
+	std::vector<std::string> availableContents;
 	void* validation;
 
 	CommandSwitcher()
@@ -37,6 +32,21 @@ struct CommandSwitcher
 		availableContents.clear();
 		validation = NULL;
 	}	
+};
+
+#define CMDLINE_ELEMENT_TYPE_CONST 		1
+#define CMDLINE_ELEMENT_TYPE_SWITCHER 	2
+#define CMDLINE_ELEMENT_TYPE_VALUE 		3
+struct CommandLineElement
+{
+	int type;
+	std::string value; 						// Type == const or value
+	std::vector<std::string> _vSwitchers;	// Type==Swicher
+};
+
+struct CommandLineLayout
+{
+	std::vector<CommandLineElement> v_Order;	// Element's order
 };
 
 struct CommandLineDefinition
@@ -77,7 +87,8 @@ struct CommandLineDefinition
 						// Position[1] = { List of Available switcher }
 						// Position[2] = {}
 
-	std::vector<CommandSwitcher> v_Switcher_;
+	std::vector<CommandSwitcher> v_Switcher_;			// All available layout
+	std::vector<CommandLineLayout> vLayout;				// All available layout
 };
 
 class ICommandSwitcher
@@ -86,10 +97,10 @@ public:
 	virtual ~ICommandSwitcher() {}
 };
 
-class ICommandLine_Definition
+class IAutocompletion
 {
 public:
-	virtual ~ICommandLine_Definition() {}
+	virtual ~IAutocompletion() {}
 	virtual std::vector<std::string> suggest_Contents_(std::string switcherVal) = 0;
 	virtual void suggest_Contents_() = 0;
 	

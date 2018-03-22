@@ -343,20 +343,20 @@ int CStringEngine::demonstrate_DamerauLevenstein(std::string s1, std::string s2)
 // 	else return max(lcs_length(A+1, B), lcs_length(A, B+1));
 // }
 
-int CStringEngine::LCS_Test1(char* P, char* T)
-{
-	bool b_Res = FALSE;	
-
-	while (*T != '\0')
-	{
-		if (*P == *T++ && *++P == '\0')
-		{
-			b_Res = TRUE;
-			break;
-		}
-	}
-
-	//b_Res is the final result
-	return 0;
-}
+//int CStringEngine::LCS_Test1(char* P, char* T)
+//{
+//	bool b_Res = FALSE;
+//
+//	while (*T != '\0')
+//	{
+//		if (*P == *T++ && *++P == '\0')
+//		{
+//			b_Res = TRUE;
+//			break;
+//		}
+//	}
+//
+//	//b_Res is the final result
+//	return 0;
+//}
 
