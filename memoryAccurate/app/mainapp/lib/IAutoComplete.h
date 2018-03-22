@@ -13,11 +13,9 @@
 
 class IAutoComplete {
 public:
-	IAutoComplete();
-	virtual ~IAutoComplete();
+	virtual ~IAutoComplete() {}
 
-	std::vector<std::string> autoComplete(std::string currentCmd, std::string currentWord)
-	{ return std::vector<std::string>(); }
+	virtual int autoComplete(std::string currentCmd, std::string currentWord, std::vector<std::string>& vOutput) = 0;
 };
 
 #endif /* APP_MAINAPP_LIB_IAUTOCOMPLETE_H_ */

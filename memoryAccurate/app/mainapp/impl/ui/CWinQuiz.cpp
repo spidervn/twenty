@@ -323,6 +323,7 @@ void CWinQuiz::doModal()
 	/* Initialize few color paris */
 	init_pair(1, COLOR_RED, COLOR_YELLOW);
 	init_pair(2, COLOR_WHITE, COLOR_BLUE);
+	init_pair(3, COLOR_WHITE, COLOR_CYAN);
 
 	onInitialize();
 	_innerstate = STATE_USER_CHOICE;	// Ready for user choice
@@ -397,7 +398,7 @@ void CWinQuiz::onInitialize()
 	_fields[1] = new_field(1, 40, _toppos + 5, 1, 0, 0);
 	_fields[2] = new_field(1, 40, _toppos + 6, 1, 0, 0);
 	_fields[3] = new_field(1, 20, _toppos + 7, 1, 0, 0);
-	_fields[4] = new_field(1, 20, _toppos + 8, 1, 0, 0);
+	_fields[4] = new_field(1, 20, _toppos + 7, 21, 0, 0);
 	_fields[5] = NULL;
 
 	/* Set field options */
@@ -415,9 +416,11 @@ void CWinQuiz::onInitialize()
 	set_field_fore(_fields[2], COLOR_PAIR(2));
 
 	// set_field_back(_fields[3], A_UNDERLINE);
-	field_opts_on(_fields[4], O_STATIC);
-	field_opts_off(_fields[3], O_AUTOSKIP);
+
+	field_opts_on(_fields[3], O_STATIC);	// Button
 	field_opts_off(_fields[3], O_EDIT);
+	field_opts_off(_fields[3], O_AUTOSKIP);
+	set_field_just(_fields[3], JUSTIFY_CENTER);
 	set_field_fore(_fields[3], COLOR_PAIR(2));
 
 	field_opts_on(_fields[4], O_STATIC);	// Button
@@ -426,7 +429,13 @@ void CWinQuiz::onInitialize()
 
 	// field_opts_on(_fields[5], O_STATIC);	// Button
 	// set_field_fore(_fields[5], COLOR_PAIR(2));
+	//set_field_just(_fields[4], JUSTIFY_CENTER);
+	//et_field_back(_fields[4], COLOR_PAIR(3));
 
+	// field_opts_on(_fields[5], O_STATIC);	// Button
+	// field_opts_off(_fields[5], O_EDIT);
+	// set_field_fore(_fields[5], COLOR_PAIR(3));
+	// set_field_back(_fields[5], COLOR_PAIR(2));
 
 	set_field_userptr(_fields[0], (void*)&_answer.answer1);
 	set_field_userptr(_fields[1], (void*)&_answer.answer2);
@@ -535,6 +544,7 @@ void CWinQuiz::onTimer()
 void CWinQuiz::onKeyboard(int ch)
 {
 	std::string sActive = "Active Fields: ";
+
 	switch (ch) {
 		case KEY_DOWN:
 			/* Go to next field */
@@ -562,6 +572,8 @@ void CWinQuiz::onKeyboard(int ch)
 		case 'H':
 		case 'a':
 		case 'A':
+		case 'd':
+		case 'D':
 		case 13:
 		case KEY_ENTER:
 			for (int i=0; _fields[i]; i++)
@@ -584,6 +596,7 @@ void CWinQuiz::onKeyboard(int ch)
 	}
 
 	char szBuff[255];
+	char szBuff1[255];
 
 	int status0 = field_status(_fields[0]);
 	int status1 = field_status(_fields[1]);

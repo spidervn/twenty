@@ -32,8 +32,8 @@ int CTestString::runTest()
 	int diff1 = p_Eng->levenshteinDistance(str1, str2);
 	int diff2 = p_Eng->levenshteinDistance(str3, str4);
 
-	printf("Diff(%s,%s)=%d\r\n", str1.c_str(), str2.c_str());
-	printf("Diff(%s,%s)=%d\r\n", str3.c_str(), str4.c_str());
+	printf("Diff(%s,%s)=%d\r\n", str1.c_str(), str2.c_str(), diff1);
+	printf("Diff(%s,%s)=%d\r\n", str3.c_str(), str4.c_str(), diff2);
 
 	delete p_Eng;
 	return 0;

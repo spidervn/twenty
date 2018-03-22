@@ -104,5 +104,7 @@ public:
 	virtual std::vector<std::string> suggest_Contents_(std::string switcherVal) = 0;
 	virtual void suggest_Contents_() = 0;
 	
+	virtual int suggest_Contents_(std::string sCurrentCmd, int n_CursorPos, std::vector<std::string>& vOutput) = 0;
+	virtual int isMatch(CommandLineDefinition cmd_Def, std::string sCmdLine) = 0;
 };
 #endif /* APP_MAINAPP_INTERFACE_LIB_IAUTOCOMPLETION_H_ */

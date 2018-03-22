@@ -7,9 +7,3 @@
 
 #include <mainapp/lib/IAutoComplete.h>
 
-IAutoComplete::IAutoComplete() {
-}
-
-IAutoComplete::~IAutoComplete() {
-}
-

@@ -23,10 +23,83 @@ CAutocompletion::~CAutocompletion() {
 vector<string> CAutocompletion::suggest_Contents_(string switcherVal)
 {
 	// From an existing command definition.
-
+	return std::vector<string>();
 }
 
 void CAutocompletion::suggest_Contents_()
 {
+}
 
+int CAutocompletion::suggest_Contents_(std::string sCurrentCmd, int n_CursorPos, std::vector<std::string>& vOutput)
+{
+	CommandLineDefinition cmd_Def;
+
+	/*
+	 * 	If sCurrentCmd is potentialCorrentGrammar
+	 *		=> 
+	 *		=> Detect that what is at the currentPosition 
+	 *			=> suggest for this position?
+	 * 	Else
+	 *		=> No suggest found.
+	 */
+
+	// Declare commandLine's definition here
+	// cmd_Def.cmdName = "test";
+	// cmd_Def.v_Switcher_.push_back("");
+
+	for (int layout = 0; layout < count; ++layout)
+	{
+		// Scan every layout; check whether a sCurrentCmd fits a layout.
+		// Scan every layout;
+	}
+
+	return 0;
+}
+
+int CAutocompletion::isMatch(CommandLineDefinition cmd_Def, std::string sCmdLine)
+{
+	int n_Ret = 0;
+
+	/*
+		Split sCmdLine into multiple parts (quoted string detected)
+			cmd "tesst" abc 'xyz'
+			=> [cmd, tesst, abc, xyz]
+
+		Use state machine:
+			i) ACCEPT --(ch)-->
+			ii) ACCEPT --(space)--> FINISH_A_ACCEPT
+			iii) FINISH_A_ACCEPT --(space)--> FINISH_A_ACCEPT
+			iv) FINISH_AN_ACCEPT --(ch) --> ACCEPT
+			iv) FINISH_AN_ACCEPT --(quote) -->
+	 */
+
+	int STT_ACCEPT = 0;
+	int STT_FINISH_ACCEPT = 1;
+	int STT_START_A_QUOTE = 2;
+	int STT_END_A_QUOTE = 3;
+	int STT_END_A_QUOTE = 4;
+
+	// State
+	string currentToken;
+	vector<string> currentState;
+	bool isValid = false;
+	char cCurrentQuote;
+
+	int state = STT_ACCEPT;
+
+	for (int i=0;i<sCmdLine.size();i++)
+	{
+		char ch = sCmdLine[i];
+
+		// Next state
+
+		// Quoted string
+		if (ch == '\'' || ch == '"')
+		{
+			state = STT_START_A_QUOTE;
+			cCurrentQuote = ch;
+		}
+	}
+
+	return n_Ret;
 }

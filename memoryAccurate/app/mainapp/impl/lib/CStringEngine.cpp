@@ -63,7 +63,7 @@ int CStringEngine::levenshteinDistance(std::string str1, std::string str2)
 
 					v1 = i > 0 ? m[i-1][j] + 1 : 1;
 					v2 = j > 0 ? m[i][j-1] + 1 : 1;
-					v3 = (i>0 && j>0) ? m[i-1][j-1] + vdiff : vdiff;
+					v3 = m[i-1][j-1] + vdiff;
 
 					m[i][j] = min(v1,min(v2,v3));
 				}
@@ -299,6 +299,8 @@ int CStringEngine::demonstrate_DamerauLevenstein(std::string s1, std::string s2)
 		int p2 = n2-1;
 		int aop[100];
 		int nop;
+		int stack = 0;
+		int stackOp[100];
 		// Traceback
 
 		while (p1 >=0 && p2>=0)
