@@ -47,12 +47,6 @@ int CAutocompletion::suggest_Contents_(std::string sCurrentCmd, int n_CursorPos,
 	// cmd_Def.cmdName = "test";
 	// cmd_Def.v_Switcher_.push_back("");
 
-	for (int layout = 0; layout < count; ++layout)
-	{
-		// Scan every layout; check whether a sCurrentCmd fits a layout.
-		// Scan every layout;
-	}
-
 	return 0;
 }
 
@@ -65,7 +59,7 @@ int CAutocompletion::isMatch(CommandLineDefinition cmd_Def, std::string sCmdLine
 			cmd "tesst" abc 'xyz'
 			=> [cmd, tesst, abc, xyz]
 
-		Use state machine:
+		Use a state machine for :
 			i) ACCEPT --(ch)-->
 			ii) ACCEPT --(space)--> FINISH_A_ACCEPT
 			iii) FINISH_A_ACCEPT --(space)--> FINISH_A_ACCEPT
@@ -77,7 +71,8 @@ int CAutocompletion::isMatch(CommandLineDefinition cmd_Def, std::string sCmdLine
 	int STT_FINISH_ACCEPT = 1;
 	int STT_START_A_QUOTE = 2;
 	int STT_END_A_QUOTE = 3;
-	int STT_END_A_QUOTE = 4;
+
+	int STT_INVALID_MUST_SEPERATE_WITH_SPACE = 4;
 
 	// State
 	string currentToken;
@@ -96,10 +91,109 @@ int CAutocompletion::isMatch(CommandLineDefinition cmd_Def, std::string sCmdLine
 		// Quoted string
 		if (ch == '\'' || ch == '"')
 		{
-			state = STT_START_A_QUOTE;
-			cCurrentQuote = ch;
+			if (state == STT_ACCEPT)
+			{
+				state = STT_START_A_QUOTE;
+				currentToken = "";
+				cCurrentQuote = ch;
+			}
+			else if (state == STT_FINISH_ACCEPT)
+			{
+				state = STT_INVALID_MUST_SEPERATE_WITH_SPACE;
+			}
+			else if (state == STT_START_A_QUOTE)
+			{
+				if (ch == cCurrentQuote)
+				{
+					cCurrentQuote = ch;
+					state = STT_END_A_QUOTE;
+				}
+				else
+				{
+					currentToken += ch;
+					// state remains unchanged
+				}
+			}
+			else if (state == STT_END_A_QUOTE)
+			{
+				state = STT_INVALID_MUST_SEPERATE_WITH_SPACE;
+			}
+			else
+			{
+				// Nothing to do here
+			}
+		}
+		// Space
+		else if (ch == ' ' || ch == '\t')
+		{
+			if (state == STT_ACCEPT)
+			{
+				state = STT_FINISH_ACCEPT;
+				currentState.push_back(currentToken);
+
+				currentToken = "";
+			}
+			else if (state == STT_FINISH_ACCEPT)
+			{
+				state = STT_FINISH_ACCEPT;
+			}
+			else if (state == STT_START_A_QUOTE)
+			{
+				currentToken += ch;
+			}
+			else if (state == STT_END_A_QUOTE)
+			{
+				// Do nothing
+			}
+			else
+			{
+				// Nothing
+			}
+		}
+		// Normal character
+		else
+		{
+			if (state == STT_ACCEPT)
+			{
+				currentToken += ch;
+			}
+			else if (state == STT_FINISH_ACCEPT)
+			{
+				state = STT_ACCEPT;
+				currentToken = ch;
+			}
+			else if (state == STT_START_A_QUOTE)
+			{
+				currentToken += ch;
+			}
+			else if (state == STT_END_A_QUOTE)
+			{
+				state = STT_ACCEPT;
+				currentToken = ch;
+			}
+			else
+			{
+				// Do nothing
+			}
 		}
 	}
 
+	printf("Parsing command=%s\r\n", sCmdLine.c_str());
+
+	printf("\tResult=");
+	printf("\tFinal state=%d\r\n", state);
+
+	for (int i=0;i<currentState.size();i++)
+	{
+		printf("\t\t%s\r\n", currentState[i].c_str());
+	}
+
 	return n_Ret;
+}
+
+int CAutocompletion::splitParams(std::string cmdLine, std::vector<std::string>& vOutput)
+{
+
+
+	return 0;
 }
