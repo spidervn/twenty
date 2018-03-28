@@ -49,6 +49,12 @@ struct CommandLineLayout
 	std::vector<CommandLineElement> v_Order;	// Element's order
 };
 
+struct MatchingSchema
+{
+	int layoutIndex;
+	
+};
+
 struct CommandLineDefinition
 {
 	/*
@@ -106,5 +112,7 @@ public:
 	
 	virtual int suggest_Contents_(std::string sCurrentCmd, int n_CursorPos, std::vector<std::string>& vOutput) = 0;
 	virtual int isMatch(CommandLineDefinition cmd_Def, std::string sCmdLine) = 0;
+
+	virtual int is_PotentialMatch(CommandLineDefinition pattern, std::vector<std::string> v_Token) = 0;
 };
 #endif /* APP_MAINAPP_INTERFACE_LIB_IAUTOCOMPLETION_H_ */

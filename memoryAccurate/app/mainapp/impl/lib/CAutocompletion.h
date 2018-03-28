@@ -21,6 +21,9 @@ public:
 	int suggest_Contents_(std::string sCurrentCmd, int n_CursorPos, std::vector<std::string>& vOutput);
 	int isMatch(CommandLineDefinition cmd_Def, std::string sCmdLine);
 
+	int is_PotentialMatch(CommandLineDefinition pattern, std::vector<std::string> v_Token);
+
+	int  value_Dictionary_(std::string name, std::vector<std::string>);
 private:
 	int splitParams(std::string cmdLine, std::vector<std::string>& vOutput);
 };

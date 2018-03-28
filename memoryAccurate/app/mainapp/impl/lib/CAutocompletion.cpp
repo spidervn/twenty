@@ -330,3 +330,61 @@ int CAutocompletion::splitParams(std::string cmdLine, std::vector<std::string>& 
 	printf("Run the test\r\n");
 	return 0;
 }
+
+int CAutocompletion::is_PotentialMatch(CommandLineDefinition pattern, std::vector<std::string> v_Token)
+{
+	/*
+		CmdElementValueType = [
+			const,
+			switchers[name/alias/valueDictionary],
+			options[a/b/c/d/:custom],
+			value[valueDictionary]
+		]
+
+		CmdLayout = [
+			{name, type},
+			{name, type}*,	// Pattern
+			{name, type},	// 
+			{name, type},
+		]
+	 */
+
+
+	/*
+	// What is the definition of a command ?
+	// CommandLine definition string:
+	// {cmd_name:const} [{name:type},{name:type},{name:type}]+  {name:type}*
+	// 
+	// Element
+	//
+		Element01 = {
+			name: 
+			type: const/switchers/options/value
+			
+			const_value: 1,
+			switcher: {
+				switcher_name,
+				switcher_alias,
+				switcherValueDict: [value1,value2,value3, <dictionaryController>],
+			},
+
+			options: {
+				[value1, value2, value3 ]
+			},
+
+			value: <valueController>
+		}
+	*/
+	return 0;
+}
+
+
+int CAutocompletion::value_Dictionary_(std::string name, std::vector<std::string>)
+{
+	if (name == "quiz_quizcode")
+	{
+		// Load every code here
+	}
+
+	return 0;
+}
