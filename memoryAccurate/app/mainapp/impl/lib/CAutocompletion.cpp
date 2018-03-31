@@ -349,7 +349,6 @@ int CAutocompletion::is_PotentialMatch(CommandLineDefinition pattern, std::vecto
 		]
 	 */
 
-
 	/*
 	// What is the definition of a command ?
 	// CommandLine definition string:
@@ -375,15 +374,61 @@ int CAutocompletion::is_PotentialMatch(CommandLineDefinition pattern, std::vecto
 			value: <valueController>
 		}
 	*/
+
+	// const char* szType = "const/switchers/options/value";
+	// Parse Element
+
+	for (int i=0;i<pattern.vLayout.size();i++)
+	{
+		// Find every matching
+		pattern.vLayout[i].v_Order[0].vOption[0].c_str();
+
+		// 
+		// layoutScore(layout, vToken)					: the higher score is, the more match they are 
+		// potential_Layout_Score_(layout, vToken)
+		// 
+	}
+
 	return 0;
 }
 
-
-int CAutocompletion::value_Dictionary_(std::string name, std::vector<std::string>)
+int CAutocompletion::layout_Diff(CommandLineLayout lay_Out, std::vector<std::string> v_Token)
 {
+	// Dummy method
+	for (int i=0;i<lay_Out.v_Order.size();++i)
+	{
+		// Compare 
+	}
+
+	// 
+	// Dummy method 
+	// 
+	/*
+		D1. Scan each element from left to right.
+		D2. Check if 
+		D3. 
+		For every Elements 
+			Check if Match()
+	 */
+
+	return 0;
+}
+/*
+ * This function produces all suggestion about name of value dictionary
+ * 	For example: 
+ * 		file_path:	
+ * 				Return the files in current path.
+ */
+int CAutocompletion::value_Dictionary_(std::string name, std::vector<std::string> &v_Out)
+{
+	v_Out.clear();
 	if (name == "quiz_quizcode")
 	{
 		// Load every code here
+	}
+	else if (name == "file_path")
+	{
+		// return the available file name here
 	}
 
 	return 0;

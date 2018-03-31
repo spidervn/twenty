@@ -23,9 +23,11 @@ public:
 
 	int is_PotentialMatch(CommandLineDefinition pattern, std::vector<std::string> v_Token);
 
-	int  value_Dictionary_(std::string name, std::vector<std::string>);
+	int value_Dictionary_(std::string name, std::vector<std::string>&);
 private:
 	int splitParams(std::string cmdLine, std::vector<std::string>& vOutput);
+
+	int layout_Diff(CommandLineLayout lay_Out, std::vector<std::string> v_Token);
 };
 
 #endif /* APP_MAINAPP_IMPL_LIB_CAUTOCOMPLETION_H_ */

@@ -8,6 +8,7 @@
 #include "mainapp/impl/ui/CWinQuiz.h"
 
 #include "mainapp/impl/lib/CMemoryTest.h"
+#include "mainapp/impl/lib/CAutocompletion.h"
 
 using namespace std;
 
@@ -20,11 +21,17 @@ int main()
 
 	delete icmd;*/
 
+	/*
 	ICursesApp* pApp_;
 	ICursesWinQuiz* iwin = new CWinQuiz();
 
 	iwin->doModal();
 	delete iwin;
+	*/
 
+
+	IAutocompletion* pAuto = new CAutocompletion();
+
+	pAuto->isMatch(CommandLineDefinition(), "aaa bbb 'tgsss'");
 	return 0;
 }
