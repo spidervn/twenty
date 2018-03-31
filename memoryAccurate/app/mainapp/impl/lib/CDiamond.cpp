@@ -33,7 +33,8 @@ IDiamond* CDiamond::firstRelation()
     {
         return _relations_[0];
     }
-    else {
+    else 
+    {
         return NULL;
     }
 }

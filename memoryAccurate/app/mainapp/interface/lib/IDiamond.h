@@ -20,4 +20,15 @@ public:
     virtual int addRelation(IDiamond* p);
 };
 
+// Abstract class for Diamond ecosystem
+class IDiamondEcosystem
+{
+public:
+    virtual ~IDiamondEcosystem() {}
+    virtual int declare(IDiamond* ) = 0;
+    virtual int declareEdge(IDiamond*, IDiamond*) = 0;
+
+    virtual int query() = 0;
+};
+
 #endif

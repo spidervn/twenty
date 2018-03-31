@@ -146,4 +146,5 @@ public:
 
 	virtual int is_PotentialMatch(CommandLineDefinition pattern, std::vector<std::string> v_Token) = 0;
 };
+
 #endif /* APP_MAINAPP_INTERFACE_LIB_IAUTOCOMPLETION_H_ */
