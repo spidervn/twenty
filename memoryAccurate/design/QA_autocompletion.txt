@@ -1,0 +1,112 @@
+Autocompletion:
+	scan_autocompletion_()
+
+	scan_element(layout, tokens)
+		input: 
+			layout
+			tokens
+		output: 
+			matching_schema
+
+	scan_next_element(element, tokens_, s)
+		input: 
+			element,
+			tokens,
+			s: start scanning token position
+		output:
+			matched? 
+			s1: match position
+			len: number of token 
+
+
+	auto_complete(cmddef, cmdLine, position)
+		tokens = parseToken(cmdLine)
+		selectedToken = findSelected(cmdLine, position, tokens)
+
+		matches = findEveryMatchingSchema(cmddef.layouts, tokens)		
+		matches_selected = { match | match in matches, match.match_data.position contains selectedToken }
+
+		if (matches_selected.size() > 0)
+		{
+			suggest = { e.posible_values |  e in matches_selected.element } 
+		}
+
+		return suggest
+
+Structs
+	matching_schema {
+		result: 0,
+		match_data: [
+			element, 
+			position,
+			len
+		]
+	}
+
+
+Q01) The method for finding selected token?
+	Input: 
+		(cmd, i)
+		Where
+			cmd: Command Line (string)
+			i: position of cursor (zero index)
+	Output:
+		(t, j)			
+		Where
+			t: array of tokens (Words)
+			j: index of word (in t) which has the same value with cmd[i] character.
+
+A01) 
+	t = parseToken(cmd)
+	j = (?)
+	
+	// Find j (y)
+	around_i = str(at_most_5_characters_around_include_i)
+	c = find(t, around_i)	// Candidates
+
+	if c.size() == 1
+		j = c[0]
+	else
+	{
+		for (c1 in c)
+		{
+			s = cmd.index_of(c1)
+
+			if (s>= i && i < s + c1.size())
+			{
+				j = c1
+			}
+		}
+	}
+
+Q02) Quick way for concat two vector ?
+	input(v1,v2)
+	output(v)
+	
+	Method1
+		v.insert(v.end(), v1.begin(), v1.end())
+		v.insert(v.end(), v2.begin(), v2.end())
+		
+		<=>
+
+		v = concat(v1,v2)
+
+	Method2
+		v = v1
+		v << v2
+
+Q03) Filter a vector by a condition ?
+	Input:
+		(v, a_condition)
+		
+		Where:
+			v is a vector of data 
+			a_condition the condition for filter elements
+	Output:
+		v2
+	
+	it = v.begin()
+	while (it = v.find_if(it, a_condition) != v.end())
+	{
+		v2.push_back(*it);
+	}
