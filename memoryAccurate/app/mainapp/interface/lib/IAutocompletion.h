@@ -36,17 +36,48 @@ struct CommandSwitcher
 
 #define CMDLINE_ELEMENT_TYPE_CONST 		1
 #define CMDLINE_ELEMENT_TYPE_SWITCHER 	2
-#define CMDLINE_ELEMENT_TYPE_VALUE 		3
+#define CMDLINE_ELEMENT_TYPE_OPTION 	3
+#define CMDLINE_ELEMENT_TYPE_VALUE 		4
 struct CommandLineElement
 {
-	int type;
+	int type;								 
+			/*
+				=1 const,
+				=2 switchers[name/alias/valueDictionary]
+				=3 options[a/b/c/d/:custom]
+				=4 value[valueDictionary]
+			*/
 	std::string value; 						// Type == const or value
 	std::vector<std::string> _vSwitchers;	// Type==Swicher
+	std::vector<std::string> vOption;		// Available options
+
+	CommandLineElement()
+	{
+		type = CMDLINE_ELEMENT_TYPE_CONST;
+	}
 };
+
+#define CMDLINE_LAYOUT_MASK_ALONE 1
+#define CMDLINE_LAYOUT_MASK_ZERO_TO_MULTIPLE 2
+#define CMDLINE_LAYOUT_MASK_ONE_TO_MULTIPLE 1
 
 struct CommandLineLayout
 {
 	std::vector<CommandLineElement> v_Order;	// Element's order
+	std::vector<int> vMask;						// Mask for each order
+												//
+
+	CommandLineLayout()
+	{		
+		v_Order.clear();
+		vMask.clear();
+	}
+
+	int add(CommandLineElement element, int mask_)
+	{
+		v_Order.push_back(element);
+		vMask.push_back(mask_);
+	}
 };
 
 struct MatchingSchema
@@ -115,4 +146,5 @@ public:
 
 	virtual int is_PotentialMatch(CommandLineDefinition pattern, std::vector<std::string> v_Token) = 0;
 };
+
 #endif /* APP_MAINAPP_INTERFACE_LIB_IAUTOCOMPLETION_H_ */

@@ -349,7 +349,6 @@ int CAutocompletion::is_PotentialMatch(CommandLineDefinition pattern, std::vecto
 		]
 	 */
 
-
 	/*
 	// What is the definition of a command ?
 	// CommandLine definition string:
@@ -375,15 +374,182 @@ int CAutocompletion::is_PotentialMatch(CommandLineDefinition pattern, std::vecto
 			value: <valueController>
 		}
 	*/
+
+	// const char* szType = "const/switchers/options/value";
+	// Parse Element
+
+	for (int i=0;i<pattern.vLayout.size();i++)
+	{
+		// Find every matching
+		pattern.vLayout[i].v_Order[0].vOption[0].c_str();
+
+		// 
+		// layoutScore(layout, vToken)					: the higher score is, the more match they are 
+		// potential_Layout_Score_(layout, vToken)
+		// 
+	}
+
 	return 0;
 }
 
-
-int CAutocompletion::value_Dictionary_(std::string name, std::vector<std::string>)
+int CAutocompletion::layout_Diff(CommandLineLayout lay_Out, std::vector<std::string> v_Token)
 {
+	// Dummy method
+	for (int i=0;i<lay_Out.v_Order.size();++i)
+	{
+		// Compare 
+	}
+
+	// 
+	// Dummy method 
+	// 
+	/*
+		D1. Scan each element from left to right.
+		D2. Check 
+				element.values.match(Token)				
+		D3. 
+		For every Elements 
+			Check if Match()
+	 */
+
+	/*
+		ScanOneElement = sce: (element, v_token[s,e]) -> (result, l1)
+							s: start position for scanning.
+							e: end position for scanning.
+
+							result = 0: Matched	
+									 1: Unmached
+							l : length of token for match the element (in case result==Matched)
+
+		s = 0
+		e = v_Token.size()
+		for (element in layout)
+		{
+			result = sce(element, v_Token, s, e, len)
+
+			if (result == Matched)
+			{
+				s += len
+			}
+		}
+
+		What is the output of this algorithm ?
+			Multiple SCE:
+				(layout, v_token) -> ( {i, j, k} | i: layout1; j: start position; k length})
+		The result is the matching with highest score. 		
+     */
+
+	int recordScore = 0;
+	CommandLineLayout lo;
+	
+	// Valid data
+	if (lay_Out.v_Order.size() == lay_Out.vMask.size())
+	{
+		// Position for SCE function
+		for (size_t i = 0; i < lo.v_Order.size(); i++)
+		{	
+			if (lo.vMask[i] == CMDLINE_LAYOUT_MASK_ALONE)
+			{
+				
+			}
+			else if (lo.vMask[i] == CMDLINE_LAYOUT_MASK_ONE_TO_MULTIPLE)
+			{
+				
+			}
+			else if (lo.vMask[i] == CMDLINE_LAYOUT_MASK_ZERO_TO_MULTIPLE)
+			{
+				
+			}
+		}
+
+		
+	}
+	
+
+	return 0;
+}
+/*
+ * This function produces all suggestion about name of value dictionary
+ * 	For example: 
+ * 		file_path:	
+ * 				Return the files in current path.
+ */
+int CAutocompletion::value_Dictionary_(std::string name, std::vector<std::string> &v_Out)
+{
+	v_Out.clear();
 	if (name == "quiz_quizcode")
 	{
 		// Load every code here
+	}
+	else if (name == "file_path")
+	{
+		// return the available file name here
+	}
+
+	return 0;
+}
+
+int CAutocompletion::scan_One_Element_(CommandLineDefinition cmd_Def, CommandLineElement e, std::vector<std::string> v_Token, int start, int end, int& len)
+{
+	int n_Res = 1;	// Un-Matched
+	switch (e.type)
+	{
+		case CMDLINE_ELEMENT_TYPE_CONST:
+			
+			if (v_Token[start] == e.value) 
+			{
+				n_Res = 0; 	// Matched
+				len = 1;	// Match 01 string
+			}				
+			break;
+		case CMDLINE_ELEMENT_TYPE_OPTION:
+			bool b_Found = false;
+			for (size_t i = 0; i < e.vOption.size(); i++)
+			{
+				if (e.vOption[i] == v_Token[i])
+				{
+					b_Found = true;
+					break;
+				}
+			}
+
+			if (b_Found)
+			{
+				n_Res = 0;
+				len = 1;
+			}
+			break;
+		case CMDLINE_ELEMENT_TYPE_SWITCHER:
+			e._vSwitchers;
+			e._vSwitchers[0].c_str();
+
+			// Find commandLine definition here
+			for (size_t i = 0; i < e._vSwitchers.size(); i++)
+			{
+				bool b_Found = false;
+				CommandSwitcher sw;
+				for (size_t j = 0; j < cmd_Def.v_Switcher_.size(); j++)
+				{
+					if (e._vSwitchers[i] == cmd_Def.v_Switcher_[j].code) 
+					{
+						b_Found = true;
+						sw = cmd_Def.v_Switcher_[j];
+						break;
+					}
+				}
+
+				if (b_Found)
+				{
+				}
+			}
+
+			// Which switcher found 
+
+
+			break;
+		case CMDLINE_ELEMENT_TYPE_VALUE:
+		default:
+			break;
 	}
 
 	return 0;

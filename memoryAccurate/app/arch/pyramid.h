@@ -34,12 +34,11 @@ private:
 	//
 	std::map<int,IPyramid*> _populations;
 	friend class IPyramidArchitecture;
-protected:
 
+protected:
 	static const int TRIO = 3;
 	static const int PENTA = 5;
 	static const int HEPTA = 7;
-
 
 	virtual int pyramid_cout()
 	{
