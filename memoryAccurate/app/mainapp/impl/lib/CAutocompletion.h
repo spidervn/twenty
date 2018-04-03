@@ -31,6 +31,8 @@ private:
 	int layout_Diff(CommandLineLayout lay_Out, std::vector<std::string> v_Token);	// Different 
 
 	int scan_One_Element_(CommandLineDefinition cmd_Def, CommandLineElement e, std::vector<std::string> v_Token, int start, int end, int& len);
+
+	
 };
 
 #endif /* APP_MAINAPP_IMPL_LIB_CAUTOCOMPLETION_H_ */
