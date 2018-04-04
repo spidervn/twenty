@@ -1,4 +1,3 @@
-
 Very simple theory for solving Autocompletion problem.
 
 1. General Terminology 
@@ -32,69 +31,42 @@ Very simple theory for solving Autocompletion problem.
 
 		i1.1) Layout Assistant syntax
 			One_of(a,b,c...): one of a or b or c
-			
 
-	ii) MatchingSchema
-		
+	ii) MatchingSchema		
 
 2. Strategies and Problem solving
-
-Autocompletion:
-	scan_autocompletion_()
-
-	scan_element(layout, tokens)
-		input: 
-			layout
-			tokens
-		output: 
-			matching_schema
-
-	scan_next_element(element, tokens_, s)
-		input: 
-			element,
-			tokens,
-			s: start scanning token position
-		output:
-			matched? 
-			s1: match position
-			len: number of token 
-
-
-	auto_complete(cmddef, cmdLine, position)
-		tokens = parseToken(cmdLine)
-		selectedToken = findSelected(cmdLine, position, tokens)
-
-		matches = findEveryMatchingSchema(cmddef.layouts, tokens)		
-		matches_selected = { match | match in matches, match.match_data.position contains selectedToken }
-
-		if (matches_selected.size() > 0)
-		{
-			suggest = { e.posible_values |  e in matches_selected.element } 
-		}
-
-		return suggest
-
-Structs
-	matching_schema {
-		result: 0,
-		match_data: [
-			element, 
-			position,
-			len
-		]
-	}
-
-Q01) The method for finding selected token?
-	Input: 
-		(cmd, i)
-		Where
-			cmd: Command Line (string)
-			i: position of cursor (zero index)
-	Output:
-		(t, j)			
-		Where
-			t: array of tokens (Words)
-			j: index of word (in t) which has the same value with cmd[i] character.
+	Q01) The method for finding selected token?
+		Input: 
+			(cmd, i)
+			Where
+				cmd: Command Line (string)
+				i: position of cursor (zero index)
+		Output:
+			(t, j)			
+			Where
+				t: array of tokens (Words)
+				j: index of word (in t) which has the same value with cmd[i] character.
+	Q02) Quick way for concat two vector ?
+		input(v1,v2)
+		output(v)
+	Q03) Filter a vector by a condition ?
+		Input:
+			(v, a_condition)
+			
+			Where:
+				v is a vector of data 
+				a_condition the condition for filter elements
+		Output:
+			v2
+	Q04) Method for finding every MatchingSchema?
+		Input: (cmd_def, t)
+			Where:
+				cmd_def: Command line definition
+				t: tokens (Array of string)
+		Output: array_of m
+			Where
+				m: is one Matching Schema.			
+	Q05) An example for CommandLineSyntax
 
 
 
@@ -121,10 +93,6 @@ A01)
 		}
 	}
 
-Q02) Quick way for concat two vector ?
-	input(v1,v2)
-	output(v)
-
 A02)	
 	Method1
 		v.insert(v.end(), v1.begin(), v1.end())
@@ -137,16 +105,6 @@ A02)
 		v = v1
 		v << v2
 
-Q03) Filter a vector by a condition ?
-	Input:
-		(v, a_condition)
-		
-		Where:
-			v is a vector of data 
-			a_condition the condition for filter elements
-	Output:
-		v2
-
 A03) 
 	it = v.begin()
 	while (it = v.find_if(it, a_condition) != v.end())
@@ -154,11 +112,93 @@ A03)
 		v2.push_back(*it);
 	}
 
-Q04) Method for finding every MatchingSchema?
-	Input: (cmd_def, t)
-		Where:
-			cmd_def: Command line definition
-			t: tokens (Array of string)
-	Output: array_of m
-		Where
-			m: is one Matching Schema.
+A05) 
+	CommandLineSyntax {
+		name: "quiz",
+
+		element_dict: [
+			"cmd_name" : {
+				type: option,
+				values: [ "do", "add", "delete", "edit" ,"controller:quiz_cmd_name" ]
+			},
+
+			"-v" : {
+				type: switcher,
+				optional: true,
+				standingAlone: true,
+				aliases: [ "--verbose" ]
+			},
+
+			"quiz_code": {
+				type: value,
+				values: "controller:quiz_quiz_code",
+				optional: 0.5
+			}
+		],
+
+		layouts: [
+			"quiz cmd_name zero_to_many(["-v"]) quiz_code",
+			"quiz add zero_to_many(["-v"])",
+		]
+	}
+
+3. Implementation 
+	Pro_01) Sugestion
+		Input: c_def, cmd, i
+			Where
+				c_def: CommandLineSyntax
+				cmd: Current typing command 
+				i: Cursor position 
+		Output: r, a_m
+			Where:
+				r: result of 
+				a_m: Array of matching Schema
+						If a_m.size() == 0 <=> No matching schema
+I2) Suggestion
+	Implement_01)
+		Autocompletion:
+		scan_autocompletion_()
+		
+		scan_element(layout, tokens)
+			input: 
+				layout
+				tokens
+			output: 
+				matching_schema
+
+		scan_next_element(element, tokens_, s)
+			input: 
+				element,
+				tokens,
+				s: start scanning token position
+			output:
+				matched? 
+				s1: match position
+				len: number of token 
+
+
+		auto_complete(c_def, cmd, i) {
+
+			tokens_ = parseToken(cmd)
+			tSelect = whichSelected(cmd, i, tokens_)
+
+			matches = findEveryMatchingSchema(c_def.layouts, tokens_)
+			matches_selected = { match | match in matches, match.match_data.position contains selectedToken }
+
+			if (matches_selected.size() > 0)
+			{
+				suggest = { e.posible_values |  e in matches_selected.element } 
+			}
+
+			return suggest
+		}
+
+		Structs
+			matching_schema {
+				result: 0,
+				match_data: [
+					element, 
+					position,
+					len
+				]
+			}		
